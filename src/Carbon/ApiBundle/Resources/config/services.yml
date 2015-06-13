@@ -2,6 +2,9 @@ services:
 #    carbon_api.example:
 #        class: Carbon\ApiBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
-   carbon_api.query_builder:
-       class: Carbon\ApiBundle\Service\QueryBuilder
-       # arguments: [@service_id, "plain_value", %parameter%]
+   carbon_api.grid:
+       class: Carbon\ApiBundle\Grid\CarbonGrid
+       arguments: [@request_stack]
+   carbon_api.serialization_helper:
+       class: Carbon\ApiBundle\Service\SerializationHelper
+       arguments: [@jms_serializer, @request_stack]

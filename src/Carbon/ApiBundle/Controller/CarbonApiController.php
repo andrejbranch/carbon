@@ -18,44 +18,22 @@ abstract class CarbonApiController extends Controller
      *
      * @return Symfony\Component\HttpFoundation\Response response with serialized resources
      */
-    protected function _handleGet()
+    protected function handleGet()
     {
-        $entityRepository = $this->_getEntityRepository();
+        $entityRepository = $this->getEntityRepository();
 
-        $result = $this->_findEntities(
-            $entityRepository,
-            $this->getRequest()->query->all()
+        $request = $this->getRequest();
+
+        $result = $this->getGrid()->getResult($entityRepository);
+
+        $data = $this->getSerializationHelper()->serialize(
+            $this->getGrid()->getResult(
+                $this->getEntityRepository()
+            ),
+            $request
         );
 
-        $data = $this->_getSerializer()->serialize($result, 'json');
-
         return new Response($data);
-    }
-
-    /**
-     * Find a resource(s) based on an array of params
-     *
-     * @param  Doctrine\ORM\EntityRepository $entityRepository
-     * @param  array $params
-     * @return array of entities found
-     */
-    protected function _findEntities($entityRepository, $params)
-    {
-        return $this->get('carbon_api.query_builder')->buildQuery($entityRepository, $params);
-    }
-
-    /**
-     * Get the repository class for the given resource/entity
-     *
-     * @return Doctrine\ORM\EntityRepository
-     */
-    protected function _getEntityRepository()
-    {
-        if (!defined('static::RESOURCE_ENTITY')) {
-            throw new \LogicException('No resource entity is defined. Did you add the RESOURCE_ENTITY const to your resource controller?');
-        }
-
-        return $this->_getEntityManager()->getRepository(static::RESOURCE_ENTITY);
     }
 
     /**
@@ -63,18 +41,37 @@ abstract class CarbonApiController extends Controller
      *
      * @return Doctrine\ORM\EntityManager
      */
-    protected function _getEntityManager()
+    protected function getEntityManager()
     {
         return $this->get('doctrine.orm.default_entity_manager');
     }
 
     /**
-     * Get JMS Serializer
+     * Get the repository class for the given resource/entity
      *
-     * @return JMS\Serializer\Serializer;
+     * @return Doctrine\ORM\EntityRepository
      */
-    protected function _getSerializer()
+    protected function getEntityRepository()
     {
-        return $this->get('jms_serializer');
+        if (!defined('static::RESOURCE_ENTITY')) {
+            throw new \LogicException('No resource entity is defined. Did you add the RESOURCE_ENTITY const to your resource controller?');
+        }
+
+        return $this->getEntityManager()->getRepository(static::RESOURCE_ENTITY);
+    }
+
+    /**
+     * Get the serialization helper
+     *
+     * @return Carbon\ApiBundle\Service\Serialization\Helper
+     */
+    protected function getSerializationHelper()
+    {
+        return $this->get('carbon_api.serialization_helper');
+    }
+
+    protected function getGrid()
+    {
+        return $this->get('carbon_api.grid');
     }
 }

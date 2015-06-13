@@ -20,6 +20,6 @@ class CardController extends CarbonApiController
      */
     public function handleGet()
     {
-        return parent::_handleGet();
+        return parent::handleGet();
     }
 }

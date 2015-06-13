@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use JMS\Serializer\Annotation\Exclude;
+use JMS\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="CardRepository")
@@ -51,24 +52,28 @@ class Card
     /**
      * @ORM\Id @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @Groups({"Default"})
      * @var int the cards id
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Groups({"Default"})
      * @var string the name of the card
      */
     private $name;
 
     /**
      * @ORM\Column(type="string", length=8)
+     * @Groups({"Default"})
      * @var string the suit type of the card
      */
     private $suit;
 
     /**
      * @ORM\Column(type="integer", length=2)
+     * @Groups({"power"})
      * @var int the relative power of the card
      */
     private $power;
