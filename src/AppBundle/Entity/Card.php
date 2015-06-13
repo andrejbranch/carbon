@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\ApiBundle\Annotation\Searchable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use JMS\Serializer\Annotation\Exclude;
@@ -50,7 +51,8 @@ class Card
     );
 
     /**
-     * @ORM\Id @ORM\Column(type="integer")
+     * @ORM\Id
+     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
      * @Groups({"Default"})
      * @var int the cards id
@@ -60,6 +62,7 @@ class Card
     /**
      * @ORM\Column(type="string", length=5)
      * @Groups({"Default"})
+     * @Searchable(name="name")
      * @var string the name of the card
      */
     private $name;
@@ -67,6 +70,7 @@ class Card
     /**
      * @ORM\Column(type="string", length=8)
      * @Groups({"Default"})
+     * @Searchable(name="suit")
      * @var string the suit type of the card
      */
     private $suit;

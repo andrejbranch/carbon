@@ -24,8 +24,6 @@ abstract class CarbonApiController extends Controller
 
         $request = $this->getRequest();
 
-        $result = $this->getGrid()->getResult($entityRepository);
-
         $data = $this->getSerializationHelper()->serialize(
             $this->getGrid()->getResult(
                 $this->getEntityRepository()
