@@ -38,25 +38,34 @@ abstract class Grid implements GridInterface
     const GRID_ORDER_BY_TYPE_HEADER = "X-CARBON_GRID_ORDER_BY_TYPE";
 
     /**
-     * The default per page for the grid
-     *
-     * @var int
+     * @var int The default per page for the grid
      */
     const GRID_PER_PAGE = 25;
 
     /**
-     * The default per page for the grid
-     *
-     * @var int
+     * @var int The default per page for the grid
      */
     const GRID_LIKE_SEARCH_HEADER = "X-CARBON_GRID_LIKE_SEARCH";
 
     /**
-     * How many results to return
-     *
-     * @var int
+     * @var int How many results to return
      */
     protected $perPage;
+
+    /**
+     * @var int the current page
+     */
+    protected $page;
+
+    /**
+     * @var int unpaginated total
+     */
+    protected $unpaginatedTotal;
+
+    /**
+     * @var int paginated total
+     */
+    protected $paginatedTotal;
 
     /**
      * Initialize new CarbonGrid instance
@@ -86,21 +95,33 @@ abstract class Grid implements GridInterface
     }
 
     /**
+     * Get the current page
+     *
+     * @return int
+     */
+    protected function getPage()
+    {
+        if ($this->page) {
+            return $this->page;
+        }
+
+        return $this->getHeader(self::GRID_PAGE_HEADER) ?: 1;
+    }
+
+    /**
      * Get how many results we must offset by
      *
      * @return int
      */
     protected function getOffset()
     {
-        $page = $this->getHeader(self::GRID_PAGE_HEADER) ?: 1;
-
-        return ($page - 1) * $this->getPerPage();
+        return ($this->getPage() - 1) * $this->getPerPage();
     }
 
     /**
      * Get the column we should order by
      *
-     * @return string
+     * @return array | null
      */
     protected function getOrderBy()
     {
@@ -117,9 +138,9 @@ abstract class Grid implements GridInterface
     /**
      * Get the like search text
      *
-     * @return text
+     * @return string | null
      */
-    protected function getLikeSearch()
+    protected function getLikeSearchString()
     {
         $likeSearchText = $this->getHeader(self::GRID_LIKE_SEARCH_HEADER);
 
@@ -139,5 +160,55 @@ abstract class Grid implements GridInterface
     protected function getHeader($header)
     {
         return $this->request->headers->get($header);
+    }
+
+    /**
+     * Set the unpaginated total
+     *
+     * @param int
+     */
+    protected function setUnpaginatedTotal($unpaginatedTotal)
+    {
+        $this->unpaginatedTotal = $unpaginatedTotal;
+    }
+
+    /**
+     * Set the paginated total
+     *
+     * @param int
+     */
+    protected function setPaginatedTotal($paginatedTotal)
+    {
+        $this->paginatedTotal = $paginatedTotal;
+    }
+
+    /**
+     * Determine if there is a next page
+     *
+     * @return boolean
+     */
+    public function hasNextPage()
+    {
+        return (($this->getPage() - 1) * $this->getPerPage() + $this->paginatedTotal) != $this->unpaginatedTotal;
+    }
+
+    /**
+     * Builds the grid response result
+     *
+     * @param  array $data response data
+     * @return array
+     */
+    protected function buildGridResponse(array $data)
+    {
+        $this->setPaginatedTotal(count($data));
+
+        return array(
+            'page' => $this->getPage(),
+            'perPage' => $this->getPerPage(),
+            'hasNextPage' => $this->hasNextPage(),
+            'unpaginatedTotal' => $this->unpaginatedTotal,
+            'paginatedTotal' => $this->paginatedTotal,
+            'data' => $data
+        );
     }
 }
