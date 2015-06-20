@@ -2,6 +2,7 @@
 
 namespace Carbon\ApiBundle\Grid;
 
+use Carbon\ApiBundle\Service\CarbonAnnotationReader;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class Grid implements GridInterface
@@ -48,6 +49,16 @@ abstract class Grid implements GridInterface
     const GRID_LIKE_SEARCH_HEADER = "X-CARBON_GRID_LIKE_SEARCH";
 
     /**
+     * @var Symfony\Component\HttpFoundation\RequestStack
+     */
+    protected $requestStack;
+
+    /**
+     * @var Doctrine\Common\Annotations\AnnotationReader
+     */
+    protected $annotationReader;
+
+    /**
      * @var int How many results to return
      */
     protected $perPage;
@@ -72,9 +83,10 @@ abstract class Grid implements GridInterface
      *
      * @param RequestStack $requestStack
      */
-    public function __construct(RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, CarbonAnnotationReader $annotationReader)
     {
         $this->request = $requestStack->getCurrentRequest();
+        $this->annotationReader = $annotationReader;
     }
 
     /**

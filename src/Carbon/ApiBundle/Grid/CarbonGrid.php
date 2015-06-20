@@ -2,8 +2,7 @@
 
 namespace Carbon\ApiBundle\Grid;
 
-use Carbon\ApiBundle\Annotation\Searchable;
-use Doctrine\Common\Annotations\AnnotationReader;
+use Carbon\ApiBundle\Service\CarbonAnnotationReader;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -52,7 +51,7 @@ class CarbonGrid extends Grid
 
             $searchExpressions = array();
 
-            $searchableColumns = $this->getSearchableColumns($repo);
+            $searchableColumns = $this->annotationReader->getSearchableColumns($repo->getClassName());
 
             if (count($searchableColumns) === 0) {
                 throw new \RunTimeException(sprintf(
@@ -89,49 +88,5 @@ class CarbonGrid extends Grid
         $result = $qb->getQuery()->getResult();
 
         return $this->buildGridResponse($result);
-    }
-
-    /**
-     * Get searchable columns for the entity.
-     *
-     * @param  EntityRepository $repo
-     * @return array
-     */
-    protected function getSearchableColumns(EntityRepository $repo)
-    {
-        $searchableColumns = array();
-        $reflClass = $this->getEntityReflectionClass($repo->getClassName());
-        $reader = $this->getReader();
-        foreach ($reflClass->getProperties() as $property) {
-            $annotations = $reader->getPropertyAnnotations($property);
-            foreach ($annotations as $annotation) {
-                if ($annotation instanceof Searchable) {
-                    $searchableColumns[] = $annotation->name;
-                }
-            }
-        }
-
-        return $searchableColumns;
-    }
-
-    /**
-     * Get annotation reader
-     *
-     * @return Doctrine\Common\Annotations\AnnotationReader
-     */
-    protected function getReader()
-    {
-        return new AnnotationReader();
-    }
-
-    /**
-     * Get reflection class for the entity
-     *
-     * @param  string $className the entities namespace
-     * @return \ReflectionClass
-     */
-    protected function getEntityReflectionClass($className)
-    {
-        return new \ReflectionClass($className);
     }
 }

@@ -2,8 +2,6 @@
 
 namespace Carbon\ApiBundle\Controller;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\ORM\Mapping\Column;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -50,7 +48,9 @@ abstract class CarbonApiController extends Controller
             'csrf_protection' => false,
         ));
 
-        foreach ($this->getEntityColumnNames() as $columnName) {
+        $columnNames = $this->getAnnotationReader()->getEntityColumnNames($entityClass);
+
+        foreach ($columnNames as $columnName) {
             $formBuilder->add($columnName);
         }
 
@@ -182,45 +182,12 @@ abstract class CarbonApiController extends Controller
     }
 
     /**
-     * Get column names for the entity.
+     * Get Carbon Annotation Reader
      *
-     * @return array
+     * @return Carbon\ApiBundle\Service\CarbonAnnotationReader
      */
-    protected function getEntityColumnNames()
+    protected function getAnnotationReader()
     {
-        $columns = array();
-        $reflClass = $this->getEntityReflectionClass($this->getEntityClass());
-        $reader = $this->getReader();
-        foreach ($reflClass->getProperties() as $property) {
-            $annotations = $reader->getPropertyAnnotations($property);
-            foreach ($annotations as $annotation) {
-                if ($annotation instanceof Column) {
-                    $columns[] = $annotation->name ?: $property->name;
-                }
-            }
-        }
-
-        return $columns;
-    }
-
-    /**
-     * Get annotation reader
-     *
-     * @return Doctrine\Common\Annotations\AnnotationReader
-     */
-    protected function getReader()
-    {
-        return new AnnotationReader();
-    }
-
-    /**
-     * Get reflection class for the entity
-     *
-     * @param  string $className the entities namespace
-     * @return \ReflectionClass
-     */
-    protected function getEntityReflectionClass($className)
-    {
-        return new \ReflectionClass($className);
+        return $this->get('carbon_api.annotation_reader');
     }
 }
