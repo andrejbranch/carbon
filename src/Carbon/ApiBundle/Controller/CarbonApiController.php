@@ -82,7 +82,9 @@ abstract class CarbonApiController extends Controller
             'csrf_protection' => false,
         ));
 
-        foreach ($this->getEntityColumnNames() as $columnName) {
+        $columnNames = $this->getAnnotationReader()->getEntityColumnNames($this->getEntityClass());
+
+        foreach ($columnNames as $columnName) {
             $formBuilder->add($columnName);
         }
 
