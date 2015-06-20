@@ -38,8 +38,9 @@ class CardController extends CarbonApiController
     }
 
     /**
-     * Handles the HTTP put request for the card entity
+     * Handles the HTTP PUT request for the card entity
      *
+     * @todo  figure out why PUT method has no request params
      * @Route("/card/{id}", name="card_put")
      * @Method("POST")
      * @return [type] [description]
@@ -47,5 +48,17 @@ class CardController extends CarbonApiController
     public function handlePut($id)
     {
         return parent::handlePut($id);
+    }
+
+    /**
+     * Handles the HTTP DELETE request for the card entity
+     *
+     * @Route("/card", name="card_delete")
+     * @Method("DELETE")
+     * @return [type] [description]
+     */
+    public function handleDelete()
+    {
+        return parent::handleDelete();
     }
 }

@@ -69,7 +69,7 @@ abstract class CarbonApiController extends Controller
     }
 
     /**
-     * Default put handling for resource update
+     * Default PUT handling for resource update
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
@@ -100,6 +100,30 @@ abstract class CarbonApiController extends Controller
         $this->getEntityManager()->flush();
 
         return new Response($this->getSerializationHelper()->serialize($entity));
+    }
+
+    /**
+     * Default DELETE handling for resource update
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    protected function handleDelete()
+    {
+        $gridResult = $this->getGrid()->getResult($this->getEntityRepository());
+
+        if (($foundResultsCount = count($gridResult['data'])) > 1 || $foundResultsCount === 0) {
+            return new Response(sprintf(
+                'Delete method expects one entity to be found for deletion, %s found from GET params',
+                $foundResultsCount
+            ), 401);
+        }
+
+        $entity = $gridResult['data'][0];
+
+        $this->getEntityManager()->remove($entity);
+        $this->getEntityManager()->flush();
+
+        return new Response(json_encode(array('success' => true)));
     }
 
     /**
@@ -134,7 +158,6 @@ abstract class CarbonApiController extends Controller
      */
     protected function getEntityRepository()
     {
-
         return $this->getEntityManager()->getRepository($this->getEntityClass());
     }
 
