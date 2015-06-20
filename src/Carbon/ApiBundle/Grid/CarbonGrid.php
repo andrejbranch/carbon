@@ -2,7 +2,6 @@
 
 namespace Carbon\ApiBundle\Grid;
 
-use Carbon\ApiBundle\Service\CarbonAnnotationReader;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -46,7 +45,8 @@ class CarbonGrid extends Grid
 
         // If we have a search string sent in the request header
         // add LIKE search expressions for the entity properties
-        // with the searchable annotation
+        // with the searchable annotation, then add LIKE search
+        // expressions to the query
         if ($likeSearch = $this->getLikeSearchString()) {
 
             $searchExpressions = array();

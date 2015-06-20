@@ -156,7 +156,7 @@ abstract class Grid implements GridInterface
     {
         $likeSearchText = $this->getHeader(self::GRID_LIKE_SEARCH_HEADER);
 
-        if ($likeSearchText) {
+        if ($likeSearchText !== NULL) {
             return "%".str_replace(' ', '%', $likeSearchText)."%";
         }
 

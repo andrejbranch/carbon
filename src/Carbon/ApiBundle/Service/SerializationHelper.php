@@ -12,8 +12,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 class SerializationHelper
 {
     /**
-     * HEADER name for specific serialization groups used by
-     * JMSSerializer
+     * HEADER name for specific serialization groups used by JMSSerializer
      *
      * @var string
      */
@@ -42,11 +41,7 @@ class SerializationHelper
 
     public function serialize($data)
     {
-        return $this->serializer->serialize(
-            $data,
-            'json',
-            $this->buildSerializationContext()
-        );
+        return $this->serializer->serialize($data, 'json', $this->buildSerializationContext());
     }
 
     /**

@@ -6,6 +6,14 @@ use Carbon\ApiBundle\Annotation\Searchable;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\ORM\Mapping\Column;
 
+/**
+ * The carbon annotation reader stores helper methods
+ * for carbon services and controllers to use for reading
+ * entity annotations.
+ *
+ * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ * @version 1.01
+ */
 class CarbonAnnotationReader
 {
     /**
@@ -36,7 +44,7 @@ class CarbonAnnotationReader
      * @param  string $entityClassName
      * @return array
      */
-    protected function getSearchableColumns($entityClassName)
+    public function getSearchableColumns($entityClassName)
     {
         $searchableColumns = array();
         $reflClass = $this->getEntityReflectionClass($entityClassName);
