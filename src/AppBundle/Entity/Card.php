@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints AS Constraint;
 
 /**
  * @ORM\Entity(repositoryClass="CardRepository")
@@ -63,6 +64,7 @@ class Card
      * @ORM\Column(type="string", length=5)
      * @Groups({"Default"})
      * @Searchable(name="name")
+     * @Constraint\NotNull(message="Name is required")
      * @var string the name of the card
      */
     private $name;
@@ -71,6 +73,7 @@ class Card
      * @ORM\Column(type="string", length=8)
      * @Groups({"Default"})
      * @Searchable(name="suit")
+     * @Constraint\NotNull(message="Suit is required")
      * @var string the suit type of the card
      */
     private $suit;
@@ -78,23 +81,10 @@ class Card
     /**
      * @ORM\Column(type="integer", length=2)
      * @Groups({"power"})
+     * @Constraint\NotNull(message="Power is required")
      * @var int the relative power of the card
      */
     private $power;
-
-    /**
-     * Initializes a new Card
-     *
-     * @param string $name
-     * @param string $suit
-     * @param int $power
-     */
-    public function __construct($name, $suit, $power)
-    {
-        $this->name = $name;
-        $this->suit = $suit;
-        $this->power = $power;
-    }
 
     /**
      * Converts the card object to a string value
@@ -155,7 +145,7 @@ class Card
     public function setSuit($suit)
     {
         if (!in_array($suit, self::$validSuits)) {
-            throw new \InvalidArgumentException(sprintf('%s is not a valid suit'));
+            throw new \InvalidArgumentException(sprintf('%s is not a valid suit', $suit));
         }
 
         $this->suit = $suit;

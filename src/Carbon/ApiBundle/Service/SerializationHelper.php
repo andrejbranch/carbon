@@ -63,7 +63,10 @@ class SerializationHelper
 
         if (isset($serializationGroups)) {
             $serializationGroups = explode(',', $serializationGroups);
-            $context->setGroups($serializationGroups);
+            $context
+                ->setGroups($serializationGroups)
+                ->enableMaxDepthChecks()
+            ;
         }
 
         return $context;

@@ -52,7 +52,18 @@ class CarbonGrid extends Grid
 
             $searchExpressions = array();
 
-            foreach ($this->getSearchableColumns($repo) as $columnName) {
+            $searchableColumns = $this->getSearchableColumns($repo);
+
+            if (count($searchableColumns) === 0) {
+                throw new \RunTimeException(sprintf(
+                    "No searchable properties are set on entity %s,
+                    did you forget to add the @Searchable annotation
+                    on the properties you want to search?",
+                    $repo->getClassName()
+                ));
+            }
+
+            foreach ($searchableColumns as $columnName) {
                 $paramName = 'LIKE_'.$columnName;
                 $searchExpressions[] = sprintf('%s.%s LIKE :%s', $alias, $columnName, $paramName);
                 $qb->setParameter($paramName, $likeSearch);
@@ -93,9 +104,8 @@ class CarbonGrid extends Grid
         $reader = $this->getReader();
         foreach ($reflClass->getProperties() as $property) {
             $annotations = $reader->getPropertyAnnotations($property);
-                foreach ($annotations as $annotation) {
+            foreach ($annotations as $annotation) {
                 if ($annotation instanceof Searchable) {
-                    $searchable = $annotation;
                     $searchableColumns[] = $annotation->name;
                 }
             }
