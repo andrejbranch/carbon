@@ -8,11 +8,11 @@ use Doctrine\ORM\EntityRepository;
  * The CarbonGrid is used to aid in building paginated
  * API responses when querying for a resource. The default
  * getResult method takes your entites repository class
- * and builds a query based on the get parameters and headers
+ * and builds a query based on the get parameters
  * sent from the request. See Carbon\ApiBundle\Grid\Grid for
- * the headers that must be sent for pagination.
+ * the query params that must be sent for pagination.
  *
- * If you are not overriding the default query, use the
+ * If you're not overriding the default query, use the
  * @Searchable annotation on the entity properties you want to
  * include in the like string search.
  *
@@ -32,7 +32,7 @@ class CarbonGrid extends Grid
      */
     public function getResult(EntityRepository $repo)
     {
-        $queryParams = $this->request->query->all();
+        $queryParams = $this->getQueryParams();
 
         $qb = $repo->createQueryBuilder($alias = 'a');
 
@@ -88,5 +88,15 @@ class CarbonGrid extends Grid
         $result = $qb->getQuery()->getResult();
 
         return $this->buildGridResponse($result);
+    }
+
+    /**
+     * Extract only model related parameters from the request
+     *
+     * @return array
+     */
+    protected function getQueryParams()
+    {
+        return array_diff_key($this->request->query->all(), array_flip($this->validGridQueryParams));
     }
 }

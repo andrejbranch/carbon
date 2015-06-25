@@ -8,35 +8,40 @@ use Symfony\Component\HttpFoundation\RequestStack;
 abstract class Grid implements GridInterface
 {
     /**
-     * Header to send in the request to override the
+     * Query param to send in the request to override the
      * grids per page
      *
      * @var string
      */
-    const GRID_PER_PAGE_HEADER = "X-CARBON_GRID_PER_PAGE";
+    const QUERY_PER_PAGE = "c_per_page";
 
     /**
-     * Header to send in the request to set the page
+     * Query param to send in the request to set the page
      *
      * @var string
      */
-    const GRID_PAGE_HEADER = "X-CARBON_GRID_PAGE";
+    const QUERY_PAGE = "c_page";
 
     /**
-     * Header to send in the request to set the
+     * Query param to send in the request to set the
      * column we should order the result set by
      *
      * @var string
      */
-    const GRID_ORDER_BY_HEADER = "X-CARBON_GRID_ORDER_BY";
+    const QUERY_ORDER_BY = "c_order_by";
 
     /**
-     * Header to send in the request to set the
-     * type we should order by ASC | DESC
+     * @var int The default per page for the grid
+     */
+    const QUERY_LIKE_SEARCH = "c_search";
+
+    /**
+     * Query param to send in the request to set the
+     * direction we should order by ASC | DESC
      *
      * @var string
      */
-    const GRID_ORDER_BY_TYPE_HEADER = "X-CARBON_GRID_ORDER_BY_TYPE";
+    const QUERY_ORDER_BY_DIRECTION = "c_order_by_dir";
 
     /**
      * @var int The default per page for the grid
@@ -44,9 +49,17 @@ abstract class Grid implements GridInterface
     const GRID_PER_PAGE = 25;
 
     /**
-     * @var int The default per page for the grid
+     * Array of valid query params
+     *
+     * @var array
      */
-    const GRID_LIKE_SEARCH_HEADER = "X-CARBON_GRID_LIKE_SEARCH";
+    protected $validGridQueryParams = array(
+        self::QUERY_PER_PAGE,
+        self::QUERY_PAGE,
+        self::QUERY_ORDER_BY,
+        self::QUERY_LIKE_SEARCH,
+        self::QUERY_ORDER_BY_DIRECTION,
+    );
 
     /**
      * @var Symfony\Component\HttpFoundation\RequestStack
@@ -101,7 +114,7 @@ abstract class Grid implements GridInterface
             return $this->perPage;
         }
 
-        return $this->perPage = $this->getHeader(self::GRID_PER_PAGE_HEADER)
+        return $this->perPage = $this->getQueryParam(self::QUERY_PER_PAGE)
             ?: self::GRID_PER_PAGE
         ;
     }
@@ -117,7 +130,7 @@ abstract class Grid implements GridInterface
             return $this->page;
         }
 
-        return $this->getHeader(self::GRID_PAGE_HEADER) ?: 1;
+        return $this->getQueryParam(self::QUERY_PAGE) ?: 1;
     }
 
     /**
@@ -137,10 +150,10 @@ abstract class Grid implements GridInterface
      */
     protected function getOrderBy()
     {
-        if ($orderBy = $this->getHeader(self::GRID_ORDER_BY_HEADER)) {
+        if ($orderBy = $this->getQueryParam(self::QUERY_ORDER_BY)) {
             return array(
                 $orderBy,
-                $this->getHeader(self::GRID_ORDER_BY_TYPE_HEADER),
+                $this->getQueryParam(self::QUERY_ORDER_BY_DIRECTION),
             );
         }
 
@@ -154,7 +167,7 @@ abstract class Grid implements GridInterface
      */
     protected function getLikeSearchString()
     {
-        $likeSearchText = $this->getHeader(self::GRID_LIKE_SEARCH_HEADER);
+        $likeSearchText = $this->getQueryParam(self::QUERY_LIKE_SEARCH);
 
         if ($likeSearchText !== NULL) {
             return "%".str_replace(' ', '%', $likeSearchText)."%";
@@ -164,14 +177,14 @@ abstract class Grid implements GridInterface
     }
 
     /**
-     * Get a header from the request
+     * Get a query param from the request
      *
-     * @param  string $header
+     * @param  string $param
      * @return mixed
      */
-    protected function getHeader($header)
+    protected function getQueryParam($param)
     {
-        return $this->request->headers->get($header);
+        return $this->request->query->get($param);
     }
 
     /**
