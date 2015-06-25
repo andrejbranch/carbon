@@ -38,6 +38,15 @@ abstract class CarbonApiController extends Controller
      */
     protected function handlePost()
     {
+        $request = $this->getRequest();
+
+        if (($contentType = $request->getContentType()) !== 'json') {
+            return new Response(sprintf(
+                'Content type must be json, %s given',
+                $contentType
+            ), 415);
+        }
+
         $entityClass = $this->getEntityClass();
         $entity = new $entityClass();
 
@@ -53,7 +62,7 @@ abstract class CarbonApiController extends Controller
 
         $form = $formBuilder->getForm();
 
-        $form->handleRequest($this->getRequest());
+        $form->bind(json_decode($request->getContent(), true));
 
         if (!$form->isValid()) {
             return new Response($form->getErrorsAsString(), 401);
@@ -70,13 +79,27 @@ abstract class CarbonApiController extends Controller
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    protected function handlePut($key)
+    protected function handlePut()
     {
-        $entity = $this->getEntityRepository()->find($key);
+        $request = $this->getRequest();
 
-        if (!$entity) {
-            return new Response(sprintf('No entity found with primary key %s', $key ), 401);
+        if (($contentType = $request->getContentType()) !== 'json') {
+            return new Response(sprintf(
+                'Content type must be json, %s given',
+                $contentType
+            ), 415);
         }
+
+        $gridResult = $this->getGrid()->getResult($this->getEntityRepository());
+
+        if (($gridResultCount = count($gridResult['data'])) > 1 || $gridResultCount === 0) {
+            return new Response(sprintf(
+                'Expected 1 filtered resource to update but found %s',
+                $gridResultCount
+            ), 404);
+        }
+
+        $entity = $gridResult['data'][0];
 
         $formBuilder = $this->createFormBuilder($entity, array(
             'csrf_protection' => false,
@@ -90,7 +113,7 @@ abstract class CarbonApiController extends Controller
 
         $form = $formBuilder->getForm();
 
-        $form->handleRequest($this->getRequest());
+        $form->bind(json_decode($request->getContent(), true));
 
         if (!$form->isValid()) {
             return new Response($form->getErrorsAsString(), 401);
