@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Carbon\ApiBundle\Annotation\Searchable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping AS ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation\Exclude;
 use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints AS Constraint;
@@ -12,6 +13,7 @@ use Symfony\Component\Validator\Constraints AS Constraint;
 /**
  * @ORM\Entity(repositoryClass="CardRepository")
  * @ORM\Table(name="cards")
+ * @Gedmo\Loggable
  *
  * The entity model for a card in a deck
  *
@@ -54,7 +56,7 @@ class Card
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Groups({"Default"})
      * @var int the cards id
      */
@@ -65,6 +67,8 @@ class Card
      * @Groups({"Default"})
      * @Searchable(name="name")
      * @Constraint\NotNull(message="Name is required")
+     * @Gedmo\Versioned
+     *
      * @var string the name of the card
      */
     private $name;
@@ -74,6 +78,7 @@ class Card
      * @Groups({"Default"})
      * @Searchable(name="suit")
      * @Constraint\NotNull(message="Suit is required")
+     *
      * @var string the suit type of the card
      */
     private $suit;
@@ -82,9 +87,19 @@ class Card
      * @ORM\Column(type="integer", length=2)
      * @Groups({"power"})
      * @Constraint\NotNull(message="Power is required")
+     * @Gedmo\Versioned
+     *
      * @var int the relative power of the card
      */
     private $power;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     *
+     * @var \DateTime $updated
+     */
+    private $updatedAt;
 
     /**
      * Converts the card object to a string value
@@ -179,5 +194,25 @@ class Card
     public function getPower()
     {
         return $this->power;
+    }
+
+    /**
+     * Get updated at date time
+     *
+     * @return \DateTime
+     */
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * Set updated at date time
+     *
+     * @return {void}
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
     }
 }

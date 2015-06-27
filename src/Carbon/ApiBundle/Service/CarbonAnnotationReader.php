@@ -28,6 +28,12 @@ class CarbonAnnotationReader
         $reader = $this->getReader();
         foreach ($reflClass->getProperties() as $property) {
             $annotations = $reader->getPropertyAnnotations($property);
+
+            // we should skip this column if its timestampable as Gedmo will handle its change
+            if ($reader->getPropertyAnnotation($property, 'Gedmo\Mapping\Annotation\Timestampable')) {
+                continue;
+            }
+
             foreach ($annotations as $annotation) {
                 if ($annotation instanceof Column) {
                     $columns[] = $annotation->name ?: $property->name;
