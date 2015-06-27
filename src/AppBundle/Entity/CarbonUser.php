@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
 use FOS\UserBundle\Model\User;
+use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
 
 /**
  * @ORM\Entity()
@@ -15,7 +16,7 @@ use FOS\UserBundle\Model\User;
  * @version 1.01
  * @author Andre Jon Branchizio <andrejbranch@gmail.com>
  */
-class CarbonUser extends  User
+class CarbonUser extends BaseUser
 {
     /**
      * @ORM\Id
@@ -30,6 +31,4 @@ class CarbonUser extends  User
         parent::__construct();
     }
 
-
 }
-

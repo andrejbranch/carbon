@@ -83,3 +83,7 @@ fos_user:
     db_driver: orm # other valid values are 'mongodb', 'couchdb' and 'propel'
     firewall_name: main
     user_class: "AppBundle\Entity\CarbonUser"
+
+uecode_api_key:
+    delivery: header #or header
+    parameter_name: api_key # defaults to `api_key`

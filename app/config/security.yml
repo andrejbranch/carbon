@@ -1,16 +1,21 @@
 security:
     providers:
-        fos_userbundle:
-            id: fos_user.user_provider.username
+        db:
+            id: uecode.api_key.provider.user_provider
 
     firewalls:
-        main:
+
+        authenticate:
+            pattern: ^/authenticate$
+            security: false
+            stateless: true
+
+        api:
             pattern: ^/
-            form_login:
-                provider: fos_userbundle
-                csrf_provider: security.csrf.token_manager # Use form.csrf_provider instead for Symfony <2.4
-            logout:       true
-            anonymous:    true
+            api_key: true
+            stateless: true
+            provider: db # Required if you have multiple providers and firewalls
+
         dev:
             pattern: ^/(_(profiler|wdt|error)|css|images|js)/
             security: false
@@ -26,7 +31,4 @@ security:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     access_control:
-        - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/admin/, role: ROLE_ADMIN }
+        # - { path: ^/authenticate$, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -20,6 +20,7 @@ class AppKernel extends Kernel
             new Carbon\ApiBundle\CarbonApiBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
             new FOS\UserBundle\FOSUserBundle(),
+            new Uecode\Bundle\ApiKeyBundle\UecodeApiKeyBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

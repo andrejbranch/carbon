@@ -28,7 +28,7 @@ abstract class CarbonApiController extends Controller
             $this->getEntityRepository()
         ));
 
-        return new Response($data);
+        return $this->getJsonResponse($data);
     }
 
     /**
@@ -71,7 +71,7 @@ abstract class CarbonApiController extends Controller
         $this->getEntityManager()->persist($entity);
         $this->getEntityManager()->flush();
 
-        return new Response($this->getSerializationHelper()->serialize($entity));
+        return $this->getJsonResponse($this->getSerializationHelper()->serialize($entity));
     }
 
     /**
@@ -121,7 +121,7 @@ abstract class CarbonApiController extends Controller
 
         $this->getEntityManager()->flush();
 
-        return new Response($this->getSerializationHelper()->serialize($entity));
+        return $this->getJsonResponse($this->getSerializationHelper()->serialize($entity));
     }
 
     /**
@@ -145,7 +145,7 @@ abstract class CarbonApiController extends Controller
         $this->getEntityManager()->remove($entity);
         $this->getEntityManager()->flush();
 
-        return new Response(json_encode(array('success' => true)));
+        return $this->getJsonResponse(json_encode(array('success' => true)));
     }
 
     /**
@@ -211,5 +211,16 @@ abstract class CarbonApiController extends Controller
     protected function getAnnotationReader()
     {
         return $this->get('carbon_api.annotation_reader');
+    }
+
+    /**
+     * Return a json response with content of provided json data
+     *
+     * @param  string $data json string
+     * @return Symfony\Component\HttpFoundation\Response
+     */
+    protected function getJsonResponse($data)
+    {
+        return new Response($data, 200, array('Content-Type' => 'application/json'));
     }
 }
