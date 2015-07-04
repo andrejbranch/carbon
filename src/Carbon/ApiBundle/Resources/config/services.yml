@@ -5,7 +5,7 @@ services:
 
    carbon_api.grid:
        class: Carbon\ApiBundle\Grid\CarbonGrid
-       arguments: [@request_stack, @carbon_api.annotation_reader]
+       arguments: [@request_stack, @carbon_api.annotation_reader, @doctrine.orm.default_entity_manager]
 
    carbon_api.serialization_helper:
        class: Carbon\ApiBundle\Service\SerializationHelper

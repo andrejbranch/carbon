@@ -13,6 +13,39 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class DefaultController extends BaseController
 {
     /**
+     * @Route("/authenticate", name="login_options")
+     * @Method("OPTIONS")
+     */
+    public function options(Request $request)
+    {
+        $response = new Response();
+
+        $data = array(
+            'POST' => array(
+                'description' => 'Authenticate a user and return the user object including the users API key',
+                'parameters' => array(
+                    'username' => array(
+                        'type' => 'string',
+                        'description' => 'Users email address',
+                    ),
+                    'password' => array(
+                        'type' => 'string',
+                        'description' => 'Users password',
+                    )
+                )
+            )
+        );
+
+        $response->setContent(json_encode($data, true));
+
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+
+        return $response;
+    }
+
+    /**
      * @Route("/authenticate", name="login")
      * @Method("POST")
      */

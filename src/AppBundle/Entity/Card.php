@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints AS Constraint;
  * @ORM\Entity(repositoryClass="CardRepository")
  * @ORM\Table(name="cards")
  * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  *
  * The entity model for a card in a deck
  *
@@ -58,6 +59,7 @@ class Card
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @Groups({"Default"})
+     *
      * @var int the cards id
      */
     private $id;
@@ -100,6 +102,11 @@ class Card
      * @var \DateTime $updated
      */
     private $updatedAt;
+
+    /**
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     */
+    private $deletedAt;
 
     /**
      * Converts the card object to a string value
@@ -214,5 +221,15 @@ class Card
     public function setUpdatedAt($updatedAt)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
     }
 }

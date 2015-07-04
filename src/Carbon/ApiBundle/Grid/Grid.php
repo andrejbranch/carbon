@@ -3,6 +3,7 @@
 namespace Carbon\ApiBundle\Grid;
 
 use Carbon\ApiBundle\Service\CarbonAnnotationReader;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 abstract class Grid implements GridInterface
@@ -13,14 +14,14 @@ abstract class Grid implements GridInterface
      *
      * @var string
      */
-    const QUERY_PER_PAGE = "c_per_page";
+    const QUERY_PER_PAGE = "cPerPage";
 
     /**
      * Query param to send in the request to set the page
      *
      * @var string
      */
-    const QUERY_PAGE = "c_page";
+    const QUERY_PAGE = "cPage";
 
     /**
      * Query param to send in the request to set the
@@ -28,12 +29,12 @@ abstract class Grid implements GridInterface
      *
      * @var string
      */
-    const QUERY_ORDER_BY = "c_order_by";
+    const QUERY_ORDER_BY = "cOrderBy";
 
     /**
      * @var int The default per page for the grid
      */
-    const QUERY_LIKE_SEARCH = "c_search";
+    const QUERY_LIKE_SEARCH = "cSearch";
 
     /**
      * Query param to send in the request to set the
@@ -41,7 +42,17 @@ abstract class Grid implements GridInterface
      *
      * @var string
      */
-    const QUERY_ORDER_BY_DIRECTION = "c_order_by_dir";
+    const QUERY_ORDER_BY_DIRECTION = "cOrderByDirection";
+
+    /**
+     * Query param specifying whether to disable Gedmo
+     * softdeleteable filter allowing soft deleted entities
+     * to be returned in the search results. Valid values are
+     * 0 for false and 1 for true
+     *
+     * @var int
+     */
+    const QUERY_SHOW_DELETED = "cShowDeleted";
 
     /**
      * @var int The default per page for the grid
@@ -59,6 +70,7 @@ abstract class Grid implements GridInterface
         self::QUERY_ORDER_BY,
         self::QUERY_LIKE_SEARCH,
         self::QUERY_ORDER_BY_DIRECTION,
+        self::QUERY_SHOW_DELETED,
     );
 
     /**
@@ -70,6 +82,11 @@ abstract class Grid implements GridInterface
      * @var Doctrine\Common\Annotations\AnnotationReader
      */
     protected $annotationReader;
+
+    /**
+     * @var Doctrine\ORM\EntityManager
+     */
+    protected $em;
 
     /**
      * @var int How many results to return
@@ -96,10 +113,16 @@ abstract class Grid implements GridInterface
      *
      * @param RequestStack $requestStack
      */
-    public function __construct(RequestStack $requestStack, CarbonAnnotationReader $annotationReader)
+    public function __construct(
+        RequestStack $requestStack,
+        CarbonAnnotationReader $annotationReader,
+        EntityManager $em
+
+    )
     {
         $this->request = $requestStack->getCurrentRequest();
         $this->annotationReader = $annotationReader;
+        $this->em = $em;
     }
 
     /**
@@ -115,7 +138,7 @@ abstract class Grid implements GridInterface
         }
 
         return $this->perPage = $this->getQueryParam(self::QUERY_PER_PAGE)
-            ?: self::GRID_PER_PAGE
+            ?: static::GRID_PER_PAGE
         ;
     }
 
@@ -177,6 +200,16 @@ abstract class Grid implements GridInterface
     }
 
     /**
+     * Is cShowDeleted param set to true
+     *
+     * @return boolean
+     */
+    protected function shouldShowDeleted()
+    {
+        return TRUE === (bool) $this->getQueryParam(self::QUERY_SHOW_DELETED);
+    }
+
+    /**
      * Get a query param from the request
      *
      * @param  string $param
@@ -212,7 +245,7 @@ abstract class Grid implements GridInterface
      *
      * @return boolean
      */
-    public function hasNextPage()
+    protected function hasNextPage()
     {
         return (($this->getPage() - 1) * $this->getPerPage() + $this->paginatedTotal) != $this->unpaginatedTotal;
     }

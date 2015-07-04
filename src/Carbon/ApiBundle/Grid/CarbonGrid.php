@@ -72,6 +72,11 @@ class CarbonGrid extends Grid
 
         }
 
+        if ($this->shouldShowDeleted()) {
+            $filter = $this->em->getFilters()->enable('softdeleteable');
+            $filter->disableForEntity($repo->getClassName());
+        }
+
         if ($orderBy = $this->getOrderBy()) {
             $qb->orderBy(sprintf('%s.%s', $alias, $orderBy[0]), $orderBy[1]);
         }
