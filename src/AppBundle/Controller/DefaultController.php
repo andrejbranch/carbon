@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseController;
+use JMS\Serializer\SerializationContext;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -75,10 +76,21 @@ class DefaultController extends BaseController
             throw new AccessDeniedHttpException("Password does not match password on record");
         }
 
-        $result = array('apiKey' => $user->getApiKey());
+        $userData = array(
+            'id' => $user->getId(),
+            'userName' => $user->getUsername(),
+            'usernameCanonical' => $user->getUsernameCanonical(),
+            'email' => $user->getEmail(),
+            'email' => $user->getEmailCanonical(),
+            'enabled' => $user->isEnabled(),
+            'lastLogin' => $user->getLastLogin(),
+            'apiKey' => $user->getApiKey(),
+        );
 
-        $response = new Response(json_encode($result));
+        $response = new Response(json_encode($userData));
         $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
 
         return $response;
     }
