@@ -22,8 +22,7 @@ class PostUploadListener
 
         $file = $event->getFile();
 
-        // $subject = $event->getSubject();
-        $this->container->get('logger')->info(sprintf('PostUploadListener: %s', $file->getFilename()));
+        $logger->info(sprintf('PostUploadListener: handling post upload for attachment %s', $file->getFilename()));
 
         $user->setAvatarPath($file->getFilename());
 

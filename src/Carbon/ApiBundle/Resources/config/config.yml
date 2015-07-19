@@ -41,10 +41,11 @@ oneup_uploader:
     mappings:
         profile:
             frontend: blueimp # or any uploader you use in the frontend
+            namer: carbon_api.upload_namer
             storage:
                 service:              ~
                 type:                 filesystem
                 filesystem:           ~
-                directory:            %kernel.root_dir%/../uploads
+                directory:            %kernel.root_dir%/../uploads/profile
                 stream_wrapper:       ~
                 sync_buffer_size:     100K
