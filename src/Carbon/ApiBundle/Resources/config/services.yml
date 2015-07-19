@@ -1,15 +1,20 @@
 services:
-#    carbon_api.example:
-#        class: Carbon\ApiBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
 
-   carbon_api.grid:
+    carbon_api.grid:
        class: Carbon\ApiBundle\Grid\CarbonGrid
        arguments: [@request_stack, @carbon_api.annotation_reader, @doctrine.orm.default_entity_manager]
 
-   carbon_api.serialization_helper:
+    carbon_api.serialization_helper:
        class: Carbon\ApiBundle\Service\SerializationHelper
        arguments: [@jms_serializer, @request_stack]
 
-   carbon_api.annotation_reader:
+    carbon_api.annotation_reader:
        class: Carbon\ApiBundle\Service\CarbonAnnotationReader
+
+    carbon_api.post_upload_listener:
+        class: Carbon\ApiBundle\Listener\PostUploadListener
+        arguments: ['@service_container']
+        tags:
+            - name: kernel.event_listener
+              event: oneup_uploader.post_persist
+              method: onPostUpload

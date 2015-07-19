@@ -1,3 +1,4 @@
-carbon_api_homepage:
-    path:     /hello/{name}
-    defaults: { _controller: CarbonApiBundle:Default:index }
+carbon_api_upload_options:
+    path:     /_uploader/{name}/upload
+    defaults: { _controller: CarbonApiBundle:Upload:options }
+    methods:  [OPTIONS]

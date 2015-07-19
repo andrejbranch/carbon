@@ -78,7 +78,7 @@ class DefaultController extends BaseController
 
         $userData = array(
             'id' => $user->getId(),
-            'userName' => $user->getUsername(),
+            'username' => $user->getUsername(),
             'usernameCanonical' => $user->getUsernameCanonical(),
             'email' => $user->getEmail(),
             'email' => $user->getEmailCanonical(),
@@ -90,7 +90,7 @@ class DefaultController extends BaseController
         $response = new Response(json_encode($userData));
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type');
+        $response->headers->set('Access-Control-Allow-Headers', '*');
 
         return $response;
     }

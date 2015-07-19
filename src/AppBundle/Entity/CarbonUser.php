@@ -26,9 +26,26 @@ class CarbonUser extends BaseUser
      */
     protected $id;
 
+    /**
+     * Path to avatar img
+     *
+     * @ORM\Column(type="string", nullable=true)
+     * @var string
+     */
+    protected $avatarPath;
+
     public function __construct()
     {
         parent::__construct();
     }
 
+    public function setAvatarPath($avatarPath)
+    {
+        $this->avatarPath = $avatarPath;
+    }
+
+    public function getAvatarPath()
+    {
+        return $this->avatarPath;
+    }
 }
