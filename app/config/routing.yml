@@ -8,7 +8,3 @@ fos_user:
 app:
     resource: "@AppBundle/Controller/"
     type:     annotation
-
-oneup_uploader:
-    resource: .
-    type: uploader

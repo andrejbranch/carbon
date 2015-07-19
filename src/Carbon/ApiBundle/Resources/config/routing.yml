@@ -2,3 +2,17 @@ carbon_api_upload_options:
     path:     /_uploader/{name}/upload
     defaults: { _controller: CarbonApiBundle:Upload:options }
     methods:  [OPTIONS]
+
+carbon_api_login_options:
+    path:     /authenticate
+    defaults: { _controller: CarbonApiBundle:Login:options }
+    methods:  [OPTIONS]
+
+carbon_api_login_authenticate:
+    path:     /authenticate
+    defaults: { _controller: CarbonApiBundle:Login:authenticate }
+    methods:  [POST]
+
+oneup_uploader:
+    resource: .
+    type: uploader

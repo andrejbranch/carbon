@@ -1,31 +1,18 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace Carbon\ApiBundle\Entity;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping\MappedSuperclass;
 use FOS\UserBundle\Model\User;
 use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
 
 /**
- * @ORM\Entity()
- * @ORM\Table(name="carbon_user")
- *
- * The entity model for a carbon user
- *
- * @version 1.01
- * @author Andre Jon Branchizio <andrejbranch@gmail.com>
+ * @MappedSuperclass
  */
 class CarbonUser extends BaseUser
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer")
-     * @ORM\GeneratedValue
-     * @var int the cards id
-     */
-    protected $id;
-
     /**
      * Path to avatar img
      *

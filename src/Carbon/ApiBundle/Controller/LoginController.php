@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace Carbon\ApiBundle\Controller;
 
 use FOS\UserBundle\Controller\SecurityController as BaseController;
 use JMS\Serializer\SerializationContext;
@@ -11,13 +11,9 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class DefaultController extends BaseController
+class LoginController extends BaseController
 {
-    /**
-     * @Route("/authenticate", name="login_options")
-     * @Method("OPTIONS")
-     */
-    public function options(Request $request)
+    public function optionsAction(Request $request)
     {
         $response = new Response();
 
@@ -46,10 +42,6 @@ class DefaultController extends BaseController
         return $response;
     }
 
-    /**
-     * @Route("/authenticate", name="login")
-     * @Method("POST")
-     */
     public function authenticateAction(Request $request)
     {
         $content = json_decode($request->getContent(), true);
@@ -64,7 +56,7 @@ class DefaultController extends BaseController
         $um = $this->get('fos_user.user_manager');
         $user = $um->findUserByUsernameOrEmail($username);
 
-        if (!$user instanceof \AppBundle\Entity\CarbonUser) {
+        if (!$user instanceof \Carbon\ApiBundle\Entity\CarbonUser) {
             throw new AccessDeniedHttpException("No matching user account found");
         }
 

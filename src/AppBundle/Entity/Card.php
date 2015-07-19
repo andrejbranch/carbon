@@ -105,6 +105,7 @@ class Card
 
     /**
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     * @Gedmo\Versioned
      */
     private $deletedAt;
 
