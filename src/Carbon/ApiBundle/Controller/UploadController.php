@@ -18,7 +18,7 @@ class UploadController extends Controller
 
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, apikey');
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, apikey, Content-Disposition');
 
         return $response;
     }
