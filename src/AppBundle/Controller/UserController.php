@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
+use Doctrine\ORM\EntityNotFoundException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
