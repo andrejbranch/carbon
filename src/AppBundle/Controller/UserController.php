@@ -49,7 +49,7 @@ class UserController extends CarbonApiController
      *
      * @return [type] [description]
      */
-    public function deleteAction()
+    public function deleteAction($id)
     {
         // get user id from the request
 
