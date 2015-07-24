@@ -41,4 +41,40 @@ class UserController extends CarbonApiController
     {
         return $this->handleGet();
     }
+
+
+    /**
+     * @Route("/user/{id}", name="user_delete")
+     * @Method("DELETE")
+     *
+     * @return [type] [description]
+     */
+    public function deleteAction()
+    {
+        // get user id from the request
+
+        // get the entity manager out of the container
+        $em = $this->getDoctrine()->getManager();
+
+        // get entity's reposityory class
+        $userId = $em->getRepository('AppBundle:User')->find($id);
+
+        // find the user you want to deactivate
+            //throw exception if not found
+        if (!$userId)
+        {
+            throw $this->EntityNotFoundException();
+        }
+
+        else
+        {
+            // set user enabled = false
+            $userId->setEnabled(false);
+            $em->flush();
+
+            //return a response like
+            return new Repsonse(’hey nigga this bitch ass user has been deactived...good job bitch tits!’)
+        }
+
+
 }
