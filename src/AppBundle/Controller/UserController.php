@@ -8,6 +8,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\EntityNotFoundException;
 
 class UserController extends CarbonApiController
 {
@@ -54,27 +55,21 @@ class UserController extends CarbonApiController
         // get user id from the request
 
         // get the entity manager out of the container
-        $em = $this->getDoctrine()->getManager();
+        $em = $this->getEntityManager();
 
         // get entity's reposityory class
-        $userId = $em->getRepository('AppBundle:User')->find($id);
+        $user = $this->getEntityRepository()->find($id);
 
         // find the user you want to deactivate
             //throw exception if not found
-        if (!$userId)
-        {
-            throw $this->EntityNotFoundException();
+        if (!$user){
+            throw new EntityNotFoundException(sprintf('User %s not found', $id));
         }
 
-        else
-        {
-            // set user enabled = false
-            $userId->setEnabled(false);
-            $em->flush();
+        // set user enabled = false
+        $userId->setEnabled(false);
+        $em->flush();
 
-            //return a response like
-            return new Repsonse(’hey nigga this bitch ass user has been deactived...good job bitch tits!’)
-        }
-
-
+        //return a response like
+        return $this->getJsonResponse(json_encode(array('success' => 'sucess')));
 }
