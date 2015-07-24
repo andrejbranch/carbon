@@ -4,12 +4,10 @@ namespace AppBundle\Controller;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Doctrine\ORM\EntityNotFoundException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\EntityNotFoundException;
 
 class UserController extends CarbonApiController
 {
@@ -68,9 +66,10 @@ class UserController extends CarbonApiController
         }
 
         // set user enabled = false
-        $userId->setEnabled(false);
+        $user->setEnabled(false);
         $em->flush();
 
         //return a response like
         return $this->getJsonResponse(json_encode(array('success' => 'sucess')));
+    }
 }
