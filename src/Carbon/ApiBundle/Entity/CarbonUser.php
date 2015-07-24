@@ -5,7 +5,6 @@ namespace Carbon\ApiBundle\Entity;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
-use FOS\UserBundle\Model\User;
 use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
 
 /**
@@ -14,25 +13,36 @@ use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
 class CarbonUser extends BaseUser
 {
     /**
-     * Path to avatar img
+     * The profile photo/avatar attachment
      *
-     * @ORM\Column(type="string", nullable=true)
-     * @var string
+     * @ORM\OneToOne(targetEntity="Carbon\ApiBundle\Entity\Attachment")
+     * @ORM\JoinColumn(name="avatar_attachment_id", nullable=true)
+     * @var Carbon\ApiBundle\Entity\Attachment
      */
-    protected $avatarPath;
+    protected $avatarAttachment;
 
     public function __construct()
     {
         parent::__construct();
     }
 
-    public function setAvatarPath($avatarPath)
+    public function setAvatarAttachment(Attachment $avatarAttachment)
     {
-        $this->avatarPath = $avatarPath;
+        $this->avatarAttachment = $avatarAttachment;
     }
 
-    public function getAvatarPath()
+    public function getAvatarAttachment()
     {
-        return $this->avatarPath;
+        return $this->avatarAttachment;
+    }
+
+    /**
+     * Does the user have an avatar or not
+     *
+     * @return boolean
+     */
+    public function hasAvatar()
+    {
+        return NULL !== $this->avatarAttachment->getId();
     }
 }

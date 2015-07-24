@@ -10,6 +10,11 @@ security:
             security: false
             stateless: true
 
+        download:
+            pattern: ^/attachment/\d*/download$
+            security: false
+            stateless: true
+
         api:
             pattern: ^/
             stateless: true

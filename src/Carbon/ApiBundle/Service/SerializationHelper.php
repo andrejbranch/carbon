@@ -3,6 +3,7 @@
 namespace Carbon\ApiBundle\Service;
 
 use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\HttpFoundation\RequestStack;
 
@@ -31,17 +32,30 @@ class SerializationHelper
     /**
      * Initializes a new SerializationHelper instance
      *
-     * @param JMS\Serializer\Serializer $serializer
+     * @param RequestStack $requestStack
      */
-    public function __construct(Serializer $serializer, RequestStack $requestStack)
+    public function __construct(RequestStack $requestStack, $metaDataDir)
     {
-        $this->serializer = $serializer;
+        $this->serializer = $this->buildSerializer($metaDataDir);
         $this->request = $requestStack->getCurrentRequest();
     }
 
     public function serialize($data)
     {
         return $this->serializer->serialize($data, 'json', $this->buildSerializationContext());
+    }
+
+    /**
+     * Customize the build of JMS serializer
+     *
+     * @return JMS\Serializer\Serializer
+     */
+    public function buildSerializer($metaDataDir)
+    {
+        return SerializerBuilder::create()
+            ->addMetadataDir($metaDataDir)
+            ->build()
+        ;
     }
 
     /**

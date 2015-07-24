@@ -2,6 +2,7 @@
 
 namespace Carbon\ApiBundle\Listener;
 
+use Carbon\ApiBundle\Entity\Attachment;
 use Oneup\UploaderBundle\Event\PostPersistEvent;
 use Symfony\Component\DependencyInjection\Container;
 
@@ -24,10 +25,21 @@ class PostUploadListener
 
         $logger->info(sprintf('PostUploadListener: handling post upload for attachment %s', $file->getFilename()));
 
-        $user->setAvatarPath($file->getFilename());
+        $uploadDir = realpath($this->container->getParameter('carbon_api.upload_dir')) . DIRECTORY_SEPARATOR;
+
+        $downloadPath = str_replace($uploadDir, '', $file->getRealPath());
+
+        $attachment = new Attachment();
+        $attachment->setName($file->getFilename());
+        $attachment->setDownloadPath($downloadPath);
+        $attachment->setMimeType($file->getMimeType());
+        $attachment->setSize($file->getSize());
+
+        $user->setAvatarAttachment($attachment);
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
 
+        $em->persist($attachment);
         $em->persist($user);
         $em->flush();
     }

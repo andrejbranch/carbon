@@ -221,6 +221,13 @@ abstract class CarbonApiController extends Controller
      */
     protected function getJsonResponse($data)
     {
-        return new Response($data, 200, array('Content-Type' => 'application/json'));
+        $sentHeaders = array_keys($this->getRequest()->headers->all());
+        $sentHeaders[] = 'apikey';
+
+        return new Response($data, 200, array(
+            'Content-Type' => 'application/json',
+            'Access-Control-Allow-Origin' => '*',
+            'Access-Control-Allow-Headers' => implode($sentHeaders, ','),
+        ));
     }
 }

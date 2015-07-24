@@ -1,6 +1,10 @@
 imports:
     - { resource: doctrine_extensions.yml }
 
+parameters:
+
+    carbon_api.upload_dir: "%kernel.root_dir%/../uploads"
+
 # Doctrine Configuration
 doctrine:
     dbal:
@@ -46,6 +50,6 @@ oneup_uploader:
                 service:              ~
                 type:                 filesystem
                 filesystem:           ~
-                directory:            %kernel.root_dir%/../uploads/profile
+                directory:            %carbon_api.upload_dir%/profile
                 stream_wrapper:       ~
                 sync_buffer_size:     100K
