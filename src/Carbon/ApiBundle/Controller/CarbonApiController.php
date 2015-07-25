@@ -113,7 +113,7 @@ abstract class CarbonApiController extends Controller
 
         $form = $formBuilder->getForm();
 
-        $form->bind(json_decode($request->getContent(), true));
+        $form->submit(json_decode($request->getContent(), true), false);
 
         if (!$form->isValid()) {
             return new Response($form->getErrorsAsString(), 401);

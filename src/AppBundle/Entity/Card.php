@@ -57,7 +57,7 @@ class Card
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Groups({"Default"})
+     * @Groups({"default"})
      *
      * @var int the cards id
      */
@@ -68,6 +68,7 @@ class Card
      * @Searchable(name="name")
      * @Constraint\NotNull(message="Name is required")
      * @Gedmo\Versioned
+     * @Groups({"default"})
      *
      * @var string the name of the card
      */
@@ -77,6 +78,7 @@ class Card
      * @ORM\Column(type="string", length=8)
      * @Searchable(name="suit")
      * @Constraint\NotNull(message="Suit is required")
+     * @Groups({"default"})
      *
      * @var string the suit type of the card
      */
@@ -86,6 +88,7 @@ class Card
      * @ORM\Column(type="integer", length=2)
      * @Constraint\NotNull(message="Power is required")
      * @Gedmo\Versioned
+     * @Groups({"default"})
      *
      * @var int the relative power of the card
      */
@@ -94,6 +97,7 @@ class Card
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
+     * @Groups({"default"})
      *
      * @var \DateTime $updated
      */
