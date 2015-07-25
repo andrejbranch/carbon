@@ -1,0 +1,6 @@
+Carbon\ApiBundle\Entity\CarbonUser:
+  exclusion_policy: ALL
+  properties:
+    avatarAttachment:
+      expose: true
+      groups: [default]

@@ -73,9 +73,10 @@ class SerializationHelper
             $groups = explode(',', $groups);
         }
 
-        if (isset($groups)) {
-            $context->setGroups($groups);
-        }
+        // require that default group is always used
+        $groups[] = 'default';
+
+        $context->setGroups($groups);
 
         $context->enableMaxDepthChecks();
 

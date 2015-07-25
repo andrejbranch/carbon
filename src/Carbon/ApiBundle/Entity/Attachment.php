@@ -5,6 +5,7 @@ namespace Carbon\ApiBundle\Entity;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation as JMS;
 use Symfony\Component\Validator\Constraints AS Constraint;
 
 /**
@@ -22,12 +23,14 @@ class Attachment
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     * @JMS\Groups({"default"})
      * @var int the attachment id
      */
     protected $id;
 
     /**
      * @ORM\Column(type="string", length=55)
+     * @JMS\Groups({"default"})
      *
      * @var string the name of the original file
      */
@@ -35,6 +38,7 @@ class Attachment
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @JMS\Groups({"default"})
      *
      * @var string path to the file for downloads
      */
@@ -42,6 +46,7 @@ class Attachment
 
     /**
      * @ORM\Column(type="string")
+     * @JMS\Groups({"default"})
      *
      * @var string mime type of the attachment
      */
@@ -49,12 +54,14 @@ class Attachment
 
     /**
      * @ORM\Column(type="integer")
+     * @JMS\Groups({"default"})
      *
      * @var int attachments file size in bytes
      */
     private $size;
 
     /**
+     * @JMS\Groups({"default"})
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      *
@@ -63,6 +70,7 @@ class Attachment
     private $updatedAt;
 
     /**
+     * @JMS\Groups({"default"})
      * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
      */
     private $deletedAt;

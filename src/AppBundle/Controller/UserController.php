@@ -40,6 +40,6 @@ class UserController extends CarbonApiController
      */
     public function getAction()
     {
-        return $this->handleGet();
+        return parent::handleGet();
     }
 }
