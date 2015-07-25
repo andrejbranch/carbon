@@ -68,18 +68,11 @@ class LoginController extends BaseController
             throw new AccessDeniedHttpException("Password does not match password on record");
         }
 
-        $userData = array(
-            'id' => $user->getId(),
-            'username' => $user->getUsername(),
-            'usernameCanonical' => $user->getUsernameCanonical(),
-            'email' => $user->getEmail(),
-            'email' => $user->getEmailCanonical(),
-            'enabled' => $user->isEnabled(),
-            'lastLogin' => $user->getLastLogin(),
-            'apiKey' => $user->getApiKey(),
-        );
+        $userData = $this->get('carbon_api.serialization_helper')
+            ->serialize($user, array('default', 'apikey'))
+        ;
 
-        $response = new Response(json_encode($userData));
+        $response = new Response($userData);
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set('Access-Control-Allow-Headers', '*');

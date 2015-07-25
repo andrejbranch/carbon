@@ -1,4 +1,0 @@
-AppBundle\Entity\User:
-    properties:
-        id:
-            type: string

@@ -45,7 +45,6 @@ class Card
 
     /**
      * @var array valid suit values
-     * @exclude
      */
     public static $validSuits = array(
         self::SUIT_CLUB,
@@ -66,7 +65,6 @@ class Card
 
     /**
      * @ORM\Column(type="string", length=5)
-     * @Groups({"Default"})
      * @Searchable(name="name")
      * @Constraint\NotNull(message="Name is required")
      * @Gedmo\Versioned
@@ -77,7 +75,6 @@ class Card
 
     /**
      * @ORM\Column(type="string", length=8)
-     * @Groups({"Default"})
      * @Searchable(name="suit")
      * @Constraint\NotNull(message="Suit is required")
      *
@@ -87,7 +84,6 @@ class Card
 
     /**
      * @ORM\Column(type="integer", length=2)
-     * @Groups({"power"})
      * @Constraint\NotNull(message="Power is required")
      * @Gedmo\Versioned
      *

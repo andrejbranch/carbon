@@ -40,9 +40,9 @@ class SerializationHelper
         $this->request = $requestStack->getCurrentRequest();
     }
 
-    public function serialize($data)
+    public function serialize($data, $groups = array())
     {
-        return $this->serializer->serialize($data, 'json', $this->buildSerializationContext());
+        return $this->serializer->serialize($data, 'json', $this->buildSerializationContext($groups));
     }
 
     /**
@@ -64,19 +64,20 @@ class SerializationHelper
      *
      * @return JMS\Serializer\SerializationContext
      */
-    protected function buildSerializationContext()
+    protected function buildSerializationContext(array $groups = array())
     {
         $context = new SerializationContext();
 
-        $serializationGroups = $this->request->headers->get(self::HEADER_SERIALIZATION_GROUPS);
-
-        if (isset($serializationGroups)) {
-            $serializationGroups = explode(',', $serializationGroups);
-            $context
-                ->setGroups($serializationGroups)
-                ->enableMaxDepthChecks()
-            ;
+        if (0 === count($groups)) {
+            $groups = $this->request->headers->get(self::HEADER_SERIALIZATION_GROUPS);
+            $groups = explode(',', $groups);
         }
+
+        if (isset($groups)) {
+            $context->setGroups($groups);
+        }
+
+        $context->enableMaxDepthChecks();
 
         return $context;
     }

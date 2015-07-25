@@ -6,7 +6,7 @@ services:
 
     carbon_api.serialization_helper:
         class: Carbon\ApiBundle\Service\SerializationHelper
-        arguments: [@request_stack, '/']
+        arguments: [@request_stack, '%carbon_api.jms_metadata_dir%']
 
     carbon_api.annotation_reader:
         class: Carbon\ApiBundle\Service\CarbonAnnotationReader
