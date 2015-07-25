@@ -42,34 +42,42 @@ class UserController extends CarbonApiController
         return $this->handleGet();
     }
 
+    /**
+     * Handles the HTTP PUT request for the user entity
+     *
+     * @todo  figure out why PUT method has no request params
+     * @Route("/user", name="user_put")
+     * @Method("PUT")
+     * @return [type] [description]
+     */
+    public function handlePut()
+    {
+        return parent::handlePut();
+    }
 
     /**
      * @Route("/user/{id}", name="user_delete")
      * @Method("DELETE")
      *
-     * @return [type] [description]
+     * @param $id user id
+     * @return Response
      */
     public function deleteAction($id)
     {
-        // get user id from the request
-
-        // get the entity manager out of the container
         $em = $this->getEntityManager();
-
-        // get entity's reposityory class
         $user = $this->getEntityRepository()->find($id);
 
-        // find the user you want to deactivate
-            //throw exception if not found
-        if (!$user){
+        if (!$user) {
             throw new EntityNotFoundException(sprintf('User %s not found', $id));
         }
 
-        // set user enabled = false
+        if ($this->getUser()->getId() === (int) $id) {
+            throw new \RuntimeException('You cannot delete yourself.');
+        }
+
         $user->setEnabled(false);
         $em->flush();
 
-        //return a response like
         return $this->getJsonResponse(json_encode(array('success' => 'sucess')));
     }
 }
