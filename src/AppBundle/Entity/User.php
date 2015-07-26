@@ -22,6 +22,7 @@ class User extends CarbonUser
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue
+     *
      * @var int the cards id
      */
     protected $id;

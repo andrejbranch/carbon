@@ -6,6 +6,7 @@ use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
+use Symfony\Component\Validator\Constraints AS Constraint;
 
 /**
  * @MappedSuperclass
@@ -20,6 +21,22 @@ class CarbonUser extends BaseUser
      * @var Carbon\ApiBundle\Entity\Attachment
      */
     protected $avatarAttachment;
+
+    /**
+     * @ORM\Column(type="string", length=55)
+     * @Constraint\NotNull(message="First name is required")
+     *
+     * @var string the users first name
+     */
+    protected $firstName;
+
+    /**
+     * @ORM\Column(type="string", length=55)
+     * @Constraint\NotNull(message="Last name is required")
+     *
+     * @var string the users last name
+     */
+    protected $lastName;
 
     public function __construct()
     {
@@ -44,5 +61,55 @@ class CarbonUser extends BaseUser
     public function hasAvatar()
     {
         return NULL !== $this->avatarAttachment->getId();
+    }
+
+    /**
+     * Set the users first name
+     *
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * Get the users first name
+     *
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * Set the users last name
+     *
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * Get the users last name
+     *
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * Get the users full name
+     *
+     * @return string
+     */
+    public function getFullName()
+    {
+        return $this->firstName . ' ' . $this->lastName;
     }
 }
