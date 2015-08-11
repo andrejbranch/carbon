@@ -4,6 +4,10 @@ namespace AppBundle\Controller;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Doctrine\ORM\EntityNotFoundException;
+use FOS\UserBundle\Event\FilterUserResponseEvent;
+use FOS\UserBundle\Event\FormEvent;
+use FOS\UserBundle\Event\GetResponseUserEvent;
+use FOS\UserBundle\FOSUserEvents;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -40,6 +44,62 @@ class UserController extends CarbonApiController
     public function getAction()
     {
         return parent::handleGet();
+    }
+
+    /**
+     * Handles the HTTP PUT request for the user entity
+     *
+     * @todo  figure out why PUT method has no request params
+     * @Route("/user", name="user_post")
+     * @Method("POST")
+     * @return [type] [description]
+     */
+    public function handlePost()
+    {
+        /** @var $userManager \FOS\UserBundle\Model\UserManagerInterface */
+        $userManager = $this->get('fos_user.user_manager');
+
+        /** @var $dispatcher \Symfony\Component\EventDispatcher\EventDispatcherInterface */
+        $dispatcher = $this->get('event_dispatcher');
+
+        $user = $userManager->createUser();
+        $user->setEnabled(true);
+
+        $request = $this->getRequest();
+
+        $event = new GetResponseUserEvent($user, $request);
+        $dispatcher->dispatch(FOSUserEvents::REGISTRATION_INITIALIZE, $event);
+
+        if (null !== $event->getResponse()) {
+            return $event->getResponse();
+        }
+
+        $form = $this->createForm('user', $user);
+
+        $form->submit(json_decode($this->getRequest()->getContent(), true));
+
+        if ($form->isValid()) {
+
+            $event = new FormEvent($form, $request);
+
+            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_SUCCESS, $event);
+
+            $userManager->updateUser($user);
+
+            $response = $this->getJsonResponse(json_encode(array('success' => 'success')));
+
+            $dispatcher->dispatch(FOSUserEvents::REGISTRATION_COMPLETED, new FilterUserResponseEvent($user, $request, $response));
+
+            return $response;
+
+        }
+
+        $errors = array();
+        foreach ($form->getErrors(true) as $error) {
+            $errors[$error->getOrigin()->getName()] = $error->getMessage();
+        }
+
+        return $this->getJsonResponse(json_encode($errors), 405);
     }
 
     /**

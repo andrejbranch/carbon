@@ -2,6 +2,7 @@
 
 namespace Carbon\ApiBundle\Service;
 
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
 use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializationContext;
@@ -53,6 +54,7 @@ class SerializationHelper
     public function buildSerializer($metaDataDir)
     {
         return SerializerBuilder::create()
+            ->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy())
             ->addMetadataDir($metaDataDir)
             ->build()
         ;

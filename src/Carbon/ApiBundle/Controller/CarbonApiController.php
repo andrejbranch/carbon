@@ -3,6 +3,7 @@
 namespace Carbon\ApiBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -24,7 +25,9 @@ abstract class CarbonApiController extends Controller
 
         $request = $this->getRequest();
 
-        $data = $this->getSerializationHelper()->serialize($this->getGrid()->getResult(
+        $isDataTableRequest = $this->isDataTableRequest($request);
+
+        $data = $this->getSerializationHelper()->serialize($this->getGrid($isDataTableRequest)->getResult(
             $this->getEntityRepository()
         ));
 
@@ -196,10 +199,17 @@ abstract class CarbonApiController extends Controller
     /**
      * Get Carbon Grid
      *
+     * @param  boolean $useDataTableGrid
      * @return Carbon\ApiBundle\Grid\CarbonGrid
      */
-    protected function getGrid()
+    protected function getGrid($useDataTableGrid = false)
     {
+        if ($useDataTableGrid) {
+
+            return $this->get('carbon_api.data_table_grid');
+
+        }
+
         return $this->get('carbon_api.grid');
     }
 
@@ -214,17 +224,36 @@ abstract class CarbonApiController extends Controller
     }
 
     /**
+     * Check the request params to determine if this request is
+     * from jquery data tables
+     *
+     * @param  Request $request
+     * @return boolean
+     */
+    protected function isDataTableRequest(Request $request)
+    {
+        return NULL !== $request->get('draw');
+    }
+
+    /**
      * Return a json response with content of provided json data
      *
      * @param  string $data json string
      * @return Symfony\Component\HttpFoundation\Response
      */
-    protected function getJsonResponse($data)
+    protected function getJsonResponse($data, $status = 200)
     {
         $sentHeaders = array_keys($this->getRequest()->headers->all());
-        $sentHeaders[] = 'apikey';
 
-        return new Response($data, 200, array(
+        if (!in_array('apikey', $sentHeaders)) {
+            $sentHeaders[] = 'apikey';
+        }
+
+        if (!in_array('Content-Type', $sentHeaders)) {
+            $sentHeaders[] = 'Content-Type';
+        }
+
+        return new Response($data, $status, array(
             'Content-Type' => 'application/json',
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Headers' => implode($sentHeaders, ','),

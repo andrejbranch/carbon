@@ -6,10 +6,19 @@ use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping AS ORM;
 use Doctrine\ORM\Mapping\MappedSuperclass;
 use Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser as BaseUser;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints AS Constraint;
 
 /**
  * @MappedSuperclass
+ * @UniqueEntity(
+ *     fields={"email"},
+ *     message="The email address provided is already associated with another account."
+ * )
+ * @UniqueEntity(
+ *     fields={"username"},
+ *     message="The username provided is already associated with another account."
+ * )
  */
 class CarbonUser extends BaseUser
 {

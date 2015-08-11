@@ -1,45 +1,23 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace Carbon\ApiBundle\Grid;
 
-use Carbon\ApiBundle\Controller\CarbonApiController;
-use Doctrine\ORM\EntityNotFoundException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityRepository;
 
-class UserGridController extends CarbonApiController
+/**
+ * Data table grid used with jquery data table integration
+ */
+class DataTableGrid extends Grid
 {
     /**
-     * @var string The namespace of the resource entity
-     */
-    const RESOURCE_ENTITY = "AppBundle\Entity\User";
-
-    /**
-     * @Route("/user/grid", name="user_grid_options")
-     * @Method("OPTIONS")
+     * Default handling of jquery data tables filter requests
      *
-     * @return [type] [description]
+     * @param  EntityRepository $repo
+     * @return array
      */
-    public function optionsAction()
+    public function getResult(EntityRepository $repo)
     {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
-     * @Route("/user/grid", name="user_grid")
-     * @Method("GET")
-     *
-     * @return [type] [description]
-     */
-    public function gridAction()
-    {
-        $request = $this->getRequest();
+        $request = $this->request;
 
         $columns = $request->get('columns');
         $search = $request->get('search');
@@ -52,8 +30,6 @@ class UserGridController extends CarbonApiController
         $searchableColumns = array_filter($columns, function ($column) {
             return $column['searchable'] == 'true';
         });
-
-        $repo = $this->getEntityRepository();
 
         $qb = $repo->createQueryBuilder($alias = 'a');
 
@@ -80,20 +56,12 @@ class UserGridController extends CarbonApiController
 
         $result = $qb->getQuery()->getResult();
 
-
         $responseData = array(
             'recordsTotal' => $recordsTotal,
             'recordsFiltered' => $recordsTotal,
             'data' => $result,
         );
 
-        return $this->getJsonResponse($this->getSerializationHelper()->serialize($responseData));
-
-        // $columns = $request->get('columns');
-
-        // var_dump($columns);
-        // die;
-
-        // return parent::handleGet();
+        return $responseData;
     }
 }

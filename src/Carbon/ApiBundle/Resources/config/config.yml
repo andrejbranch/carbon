@@ -5,6 +5,7 @@ parameters:
 
     carbon_api.upload_dir: "%kernel.root_dir%/../uploads"
 
+
 # Doctrine Configuration
 doctrine:
     dbal:
