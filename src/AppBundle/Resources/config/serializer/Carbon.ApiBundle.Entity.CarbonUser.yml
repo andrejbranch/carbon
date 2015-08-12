@@ -12,7 +12,11 @@ Carbon\ApiBundle\Entity\CarbonUser:
           groups: [default]
     virtual_properties:
         getFullName:
-            serialized_name: full_name
+            serialized_name: fullName
             expose: true
             type: string
+            groups: [default]
+        getRoleValues:
+            expose: true
+            type: array
             groups: [default]

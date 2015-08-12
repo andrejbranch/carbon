@@ -133,6 +133,19 @@ class CarbonUser extends BaseUser
 
     /**
      * Returns an ARRAY of Role objects with the default Role object appended.
+     *
+     * @return array
+     */
+    public function getRoleValues()
+    {
+        return $this->roles->map(function ($role) {
+            return $role->getRole();
+        })->toArray();
+    }
+
+    /**
+     * Returns an ARRAY of Role objects with the default Role object appended.
+     * @VirtualProperty
      * @return array
      */
     public function getRoles()
