@@ -32,3 +32,9 @@ services:
         arguments: ['@logger']
         tags:
             - { name: kernel.event_listener, event: kernel.response, method: onKernelResponse}
+
+    carbon_api.class_metadata_listener:
+        class: Carbon\ApiBundle\Listener\ClassMetadataListener
+        arguments: ['@logger']
+        tags:
+            - { name: doctrine.event_listener, event: loadClassMetadata }
