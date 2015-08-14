@@ -18,9 +18,13 @@ class ClassMetadataListener
     {
         $classMetadata = $eventArgs->getClassMetadata();
 
-        // $this->logger->info('ClassMetadataListener: ' . get_class($classMetadata));
-
         if ($classMetadata->reflClass->name == 'FOS\UserBundle\Model\User') {
+
+            unset($classMetadata->fieldMappings['roles']);
+
+        }
+
+        if ($classMetadata->reflClass->name == 'FOS\UserBundle\Model\Group') {
 
             unset($classMetadata->fieldMappings['roles']);
 

@@ -7,21 +7,10 @@ use JMS\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\Role\RoleInterface;
 
 /**
- * Role Entity
- *
- * @ORM\Entity
- * @ORM\Table(name="role")
+ * @ORM\MappedSuperclass
  */
 class Role implements RoleInterface
 {
-    /**
-     * @ORM\Id
-     * @ORM\Column(type="integer", name="id")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     * @Groups({"default"})
-     */
-    private $id;
-
     /**
      * @ORM\Column(type="string", name="role", unique=true)
      * @Groups({"default"})
@@ -36,6 +25,11 @@ class Role implements RoleInterface
     public function __construct($role)
     {
         $this->role = $role;
+    }
+
+    public function __toString()
+    {
+        return $this->role;
     }
 
     /**

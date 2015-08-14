@@ -8,15 +8,15 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoleController extends CarbonApiController
+class GroupController extends CarbonApiController
 {
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\Role";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Group";
 
     /**
-     * @Route("/role", name="role_options")
+     * @Route("/group", name="group_options")
      * @Method("OPTIONS")
      *
      * @return Response
@@ -31,7 +31,7 @@ class RoleController extends CarbonApiController
     }
 
     /**
-     * @Route("/role", name="role_get")
+     * @Route("/group", name="group_get")
      * @Method("GET")
      *
      * @return Response

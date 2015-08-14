@@ -16,7 +16,3 @@ Carbon\ApiBundle\Entity\CarbonUser:
             expose: true
             type: string
             groups: [default]
-        getRoleValues:
-            expose: true
-            type: array
-            groups: [default]
