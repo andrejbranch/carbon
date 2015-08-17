@@ -243,7 +243,8 @@ abstract class CarbonApiController extends Controller
      */
     protected function getJsonResponse($data, $status = 200)
     {
-        $sentHeaders = array_keys($this->getRequest()->headers->all());
+        $request = $this->getRequest();
+        $sentHeaders = array_keys($request->headers->all());
 
         if (!in_array('apikey', $sentHeaders)) {
             $sentHeaders[] = 'apikey';
@@ -257,6 +258,7 @@ abstract class CarbonApiController extends Controller
             'Content-Type' => 'application/json',
             'Access-Control-Allow-Origin' => '*',
             'Access-Control-Allow-Headers' => implode($sentHeaders, ','),
+            'Access-Control-Allow-Methods' => $request->headers->get('Access-Control-Request-Method'),
         ));
     }
 }

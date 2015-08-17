@@ -137,7 +137,7 @@ abstract class Grid implements GridInterface
             return $this->perPage;
         }
 
-        return $this->perPage = $this->getQueryParam(self::QUERY_PER_PAGE)
+        return $this->perPage = (int) $this->getQueryParam(self::QUERY_PER_PAGE)
             ?: static::GRID_PER_PAGE
         ;
     }

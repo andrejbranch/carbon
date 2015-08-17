@@ -116,14 +116,21 @@ class UserController extends CarbonApiController
     }
 
     /**
-     * @Route("/user/{id}", name="user_delete")
+     * @Route("/user", name="user_delete")
      * @Method("DELETE")
      *
-     * @param $id user id
      * @return Response
      */
-    public function deleteAction($id)
+    public function deleteAction()
     {
+        $id = $this->getRequest()->get('id');
+
+        if (!$id) {
+
+            throw new \RuntimeException('User id not specified in request');
+
+        }
+
         $em = $this->getEntityManager();
         $user = $this->getEntityRepository()->find($id);
 
