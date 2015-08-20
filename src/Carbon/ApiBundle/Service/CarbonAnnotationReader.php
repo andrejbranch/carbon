@@ -54,6 +54,7 @@ class CarbonAnnotationReader
     {
         $searchableColumns = array();
         $reflClass = $this->getEntityReflectionClass($entityClassName);
+
         $reader = $this->getReader();
         foreach ($reflClass->getProperties() as $property) {
             $annotations = $reader->getPropertyAnnotations($property);
