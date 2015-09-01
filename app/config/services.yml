@@ -12,3 +12,8 @@ services:
         class: AppBundle\Form\Type\UserFormType
         tags:
             - { name: form.type, alias: user }
+
+    app.form.type.division:
+        class: AppBundle\Form\Type\DivisionFormType
+        tags:
+            - { name: form.type, alias: division }

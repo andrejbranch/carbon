@@ -18,7 +18,7 @@ class SerializationHelper
      *
      * @var string
      */
-    const HEADER_SERIALIZATION_GROUPS = 'X-CARBON_SERIALIZATION_GROUPS';
+    const HEADER_SERIALIZATION_GROUPS = 'X-CARBON-SERIALIZATION-GROUPS';
 
     /**
      * @var JMS\Serializer\Serializer
