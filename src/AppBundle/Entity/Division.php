@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\MaterializedPathRepository")
@@ -21,6 +22,26 @@ class Division
     protected $id;
 
     /**
+     * @ORM\Column(name="has_dimension", type="boolean")
+     * @JMS\Groups({"default"})
+     */
+    protected $hasDimension = false;
+
+    /**
+     * @ORM\Column(name="height", type="integer", length=2, nullable=true)
+     * @JMS\Groups({"default"})
+     * @Assert\Range(min=1, max=20)
+     */
+    protected $height;
+
+    /**
+     * @ORM\Column(name="width", type="integer", length=2, nullable=true)
+     * @JMS\Groups({"default"})
+     * @Assert\Range(min=1, max=20)
+     */
+    protected $width;
+
+    /**
      * @Gedmo\TreePath
      * @ORM\Column(name="path", type="string", length=3000, nullable=true)
      * @JMS\Groups({"default"})
@@ -33,6 +54,12 @@ class Division
      * @JMS\Groups({"default"})
      */
     protected $title;
+
+    /**
+     * @ORM\Column(name="parent_id", type="integer")
+     * @JMS\Groups({"default"})
+     */
+    protected $parentId;
 
     /**
      * @Gedmo\TreeParent
@@ -62,6 +89,36 @@ class Division
         return $this->id;
     }
 
+    public function getHasDimension()
+    {
+        return $this->hasDimension;
+    }
+
+    public function setHasDimension($hasDimension)
+    {
+        $this->hasDimension = (bool) $hasDimension;
+    }
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    public function setWidth($width)
+    {
+        $this->width = (int) $width;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
+    public function setHeight($height)
+    {
+        $this->height = (int) $height;
+    }
+
     public function setTitle($title)
     {
         $this->title = $title;
@@ -77,15 +134,9 @@ class Division
         $this->parent = $parent;
     }
 
-    /**
-     * @JMS\VirtualProperty()
-     * @JMS\Groups({"default"})
-     *
-     * @return int
-     */
     public function getParentId()
     {
-        return $this->parent ? $this->parent->getId() : null;
+        return $this->parentId;
     }
 
     public function getParent()

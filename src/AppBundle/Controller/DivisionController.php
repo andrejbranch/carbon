@@ -6,6 +6,7 @@ use AppBundle\Entity\Division;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Response;
 
 class DivisionController extends CarbonApiController
 {
@@ -30,7 +31,7 @@ class DivisionController extends CarbonApiController
     }
 
     /**
-     * Handles the HTTP get request for the card entity
+     * Handles the HTTP get request for the division entity
      *
      * @Route("/division", name="division_get")
      * @Method("GET")

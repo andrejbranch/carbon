@@ -37,10 +37,20 @@ class CarbonGrid extends Grid
         $qb = $repo->createQueryBuilder($alias = 'a');
 
         foreach ($queryParams as $k => $v) {
-            $qb
-                ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
-                ->setParameter($k, $v)
-            ;
+
+            if (strtolower($v) === 'null') {
+
+                $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
+
+            } else {
+
+                $qb
+                    ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
+                    ->setParameter($k, $v)
+                ;
+
+            }
+
         }
 
         // If we have a search string sent in the request header

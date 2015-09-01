@@ -15,6 +15,9 @@ class DivisionFormType extends AbstractType
     {
         $builder
             ->add('title', 'text')
+            ->add('hasDimension', 'checkbox')
+            ->add('height', 'integer')
+            ->add('width', 'integer')
             ->add('parent', 'entity', array(
                 'class' => 'AppBundle:Division',
                 'property' => 'parent_id',
