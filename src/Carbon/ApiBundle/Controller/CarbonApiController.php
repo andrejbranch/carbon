@@ -254,6 +254,10 @@ abstract class CarbonApiController extends Controller
             $sentHeaders[] = 'Content-Type';
         }
 
+        if (!in_array('X-CARBON-SERIALIZATION-GROUPS', $sentHeaders)) {
+            $sentHeaders[] = 'X-CARBON-SERIALIZATION-GROUPS';
+        }
+
         return new Response($data, $status, array(
             'Content-Type' => 'application/json',
             'Access-Control-Allow-Origin' => '*',
