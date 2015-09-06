@@ -17,3 +17,8 @@ services:
         class: AppBundle\Form\Type\DivisionFormType
         tags:
             - { name: form.type, alias: division }
+
+    app.form.type.sample:
+        class: AppBundle\Form\Type\SampleFormType
+        tags:
+            - { name: form.type, alias: sample }

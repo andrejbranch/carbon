@@ -56,7 +56,7 @@ class Division
     protected $title;
 
     /**
-     * @ORM\Column(name="parent_id", type="integer")
+     * @ORM\Column(name="parent_id", type="integer", nullable=true)
      * @JMS\Groups({"default"})
      */
     protected $parentId;
@@ -67,6 +67,7 @@ class Division
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="parent_id", referencedColumnName="id", onDelete="CASCADE")
      * })
+     * @JMS\Groups({"parent"})
      */
     protected $parent;
 
@@ -83,6 +84,12 @@ class Division
      * @JMS\MaxDepth(2)
      */
     protected $children;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Sample", mappedBy="division")
+     * @JMS\Groups({"samples"})
+     */
+    protected $samples;
 
     public function getId()
     {
