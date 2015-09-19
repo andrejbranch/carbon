@@ -4,6 +4,7 @@ namespace Carbon\ApiBundle\Entity;
 
 use FOS\UserBundle\Model\Group as BaseGroup;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
 
 /**
  * @ORM\MappedSuperclass

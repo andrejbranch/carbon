@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
 
 /**
@@ -21,6 +22,52 @@ class Sample
      * @JMS\Groups({"default"})
      */
     private $id;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=300)
+     * @JMS\Groups({"default"})
+     */
+    private $name;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="text")
+     * @JMS\Groups({"default"})
+     */
+    private $description;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="notes", type="text", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    private $notes;
+
+    /**
+     * @var User $createdBy
+     *
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     * @JMS\Groups({"default"})
+     * @JMS\MaxDepth(1)
+     */
+    private $createdBy;
+
+    /**
+     * @var User $updatedBy
+     *
+     * @Gedmo\Blameable(on="update")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
+     * @JMS\Groups({"default"})
+     * @JMS\MaxDepth(1)
+     */
+    private $updatedBy;
 
     /**
      * @var integer
@@ -59,22 +106,6 @@ class Sample
      * @JMS\Groups({"default"})
      */
     private $divisionColumn;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text")
-     * @JMS\Groups({"default"})
-     */
-    private $description;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=300)
-     * @JMS\Groups({"default"})
-     */
-    private $name;
 
     /**
      * Get id
@@ -222,5 +253,35 @@ class Sample
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Get created by user
+     *
+     * @return AppBundle\Entity\User
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Get updated by user
+     *
+     * @return AppBundle\Entity\User
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updateBy;
+    }
+
+    /**
+     * Get notes
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
     }
 }
