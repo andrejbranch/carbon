@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
@@ -10,6 +11,8 @@ use JMS\Serializer\Annotation AS JMS;
  * Sample
  *
  * @ORM\Entity(repositoryClass="AppBundle\Entity\SampleRepository")
+ * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class Sample
 {
@@ -28,6 +31,7 @@ class Sample
      *
      * @ORM\Column(name="name", type="string", length=300)
      * @JMS\Groups({"default"})
+     * @Carbon\Searchable(name="name")
      */
     private $name;
 
@@ -36,6 +40,7 @@ class Sample
      *
      * @ORM\Column(name="description", type="text")
      * @JMS\Groups({"default"})
+     * @Carbon\Searchable(name="name")
      */
     private $description;
 
@@ -44,6 +49,7 @@ class Sample
      *
      * @ORM\Column(name="notes", type="text", nullable=true)
      * @JMS\Groups({"default"})
+     * @Carbon\Searchable(name="name")
      */
     private $notes;
 
@@ -106,6 +112,31 @@ class Sample
      * @JMS\Groups({"default"})
      */
     private $divisionColumn;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     * @JMS\Groups({"default"})
+     */
+    private $createdAt;
+
+    /**
+     * @var \DateTime $updated
+     *
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     * @JMS\Groups({"default"})
+     */
+    private $updatedAt;
+
+    /**
+     * @ORM\Column(name="deletedAt", type="datetime", nullable=true)
+     * @Gedmo\Versioned
+     * @JMS\Groups({"default"})
+     */
+    private $deletedAt;
 
     /**
      * Get id
@@ -283,5 +314,25 @@ class Sample
     public function getNotes()
     {
         return $this->notes;
+    }
+
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
+    }
+
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    public function getUpdatedAt()
+    {
+        return $this->updatedAt;
     }
 }

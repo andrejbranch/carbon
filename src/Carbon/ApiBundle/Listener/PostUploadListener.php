@@ -29,6 +29,8 @@ class PostUploadListener
 
         $downloadPath = str_replace($uploadDir, '', $file->getRealPath());
 
+        $oldAttachment = $user->getAvatarAttachment();
+
         $attachment = new Attachment();
         $attachment->setName($file->getFilename());
         $attachment->setDownloadPath($downloadPath);
@@ -38,6 +40,14 @@ class PostUploadListener
         $user->setAvatarAttachment($attachment);
 
         $em = $this->container->get('doctrine.orm.default_entity_manager');
+
+        // now delete old profile photo
+        if ($oldAttachment) {
+
+            unlink($uploadDir . $oldAttachment->getDownloadPath());
+            $em->remove($oldAttachment);
+
+        }
 
         $em->persist($attachment);
         $em->persist($user);
