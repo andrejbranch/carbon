@@ -2,6 +2,9 @@
 
 namespace AppBundle\Form\Type;
 
+use AppBundle\Form\DataTransformer\SampleTypeTransformer;
+use AppBundle\Form\DataTransformer\StorageContainerTransformer;
+use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -11,18 +14,59 @@ class SampleFormType extends AbstractType
 {
     private $class;
 
+    public function __construct(EntityManager $em)
+    {
+        $this->em = $em;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
             ->add('name', 'text')
             ->add('description', 'text')
+            ->add('status', 'text')
+            ->add('storageBuffer', 'text')
+            ->add('vectorName', 'text')
             ->add('divisionRow', 'text')
             ->add('divisionColumn', 'integer')
+
+            // dna
+            ->add('concentration', 'number', array(
+                'precision' => 3,
+            ))
+            ->add('concentrationUnits', 'text')
+            ->add('dnaSequence', 'text')
+            ->add('aminoAcidSequence', 'text')
+            ->add('aminoAcidCount', 'integer')
+            ->add('molecularWeight', 'number', array(
+                'precision' => 3,
+            ))
+            ->add('extinctionCoefficient', 'number', array(
+                'precision' => 3,
+            ))
+            ->add('purificationTags', 'text')
+
             ->add('division', 'entity', array(
                 'class' => 'AppBundle:Division',
                 'property' => 'division_id',
                 'multiple' => false
             ))
+            ->add('storageContainer', 'entity', array(
+                'class' => 'AppBundle:StorageContainer',
+                'multiple' => false
+            ))
+            ->add('sampleType', 'entity', array(
+                'class' => 'AppBundle:SampleType',
+                'multiple' => false
+            ))
+        ;
+
+        $builder->get('sampleType')
+            ->addViewTransformer(new SampleTypeTransformer($this->em))
+        ;
+
+        $builder->get('storageContainer')
+            ->addViewTransformer(new StorageContainerTransformer($this->em))
         ;
     }
 

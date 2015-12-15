@@ -20,5 +20,6 @@ services:
 
     app.form.type.sample:
         class: AppBundle\Form\Type\SampleFormType
+        arguments: [@doctrine.orm.default_entity_manager]
         tags:
             - { name: form.type, alias: sample }

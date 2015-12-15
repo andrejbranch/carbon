@@ -7,6 +7,8 @@ use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Exception\MethodNotAllowedException;
+use Symfony\Component\Routing\Exception\NotFoundHttpException;
 
 class SampleController extends CarbonApiController
 {
@@ -76,7 +78,37 @@ class SampleController extends CarbonApiController
      */
     public function handlePut()
     {
-        return parent::handlePut();
+        $sampleId = $this->getRequest()->get('id');
+
+        if (!$sampleId) {
+            throw new MethodNotAllowedException('Id get parameter must be set');
+        }
+
+        $sample = $this->getEntityRepository()->find($sampleId);
+
+        if (NULL === $sample) {
+            throw new NotFoundHttpException(sprintf(
+                'Sample %s not found',
+                $sampleId
+            ));
+        }
+
+        $form = $this->createForm('sample', $sample);
+        $form->submit(json_decode($this->getRequest()->getContent(), TRUE));
+
+        // foreach ($form->getErrors(true, false) as $error) {
+        //     var_dump(2222);
+        //     // var_dump($error->getMessage());
+        // }
+        // die;
+        if (!$form->isValid()) {
+            return new Response($form->getErrorsAsString(), 401);
+        }
+
+        $this->getEntityManager()->persist($sample);
+        $this->getEntityManager()->flush();
+
+        return $this->getJsonResponse($this->getSerializationHelper()->serialize($sample));
     }
 
     /**
