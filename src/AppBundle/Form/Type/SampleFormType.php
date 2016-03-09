@@ -59,6 +59,18 @@ class SampleFormType extends AbstractType
                 'class' => 'AppBundle:SampleType',
                 'multiple' => false
             ))
+
+            // sera
+            ->add('species', 'text')
+
+            // bacterial, yeast, & mammalian cells
+            ->add('cellLine', 'text')
+
+            // chemical compound
+            ->add('mass', 'number', array(
+                'precision' => 3,
+            ))
+
         ;
 
         $builder->get('sampleType')

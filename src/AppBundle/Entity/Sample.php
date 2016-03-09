@@ -310,6 +310,32 @@ class Sample
      */
     private $purificationTags;
 
+    /**
+     * @var string $species
+     *
+     * @ORM\Column(name="species", type="string", length=300, nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    private $species;
+
+    /**
+     * @var string $cellLine
+     *
+     * @ORM\Column(name="cell_line", type="string", length=300, nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    private $cellLine;
+
+    /**
+     * @var float $mass
+     *
+     * @ORM\Column(name="mass", type="decimal", precision=20, scale=3, nullable=true)
+     * @Gedmo\Versioned
+     * @JMS\Groups({"default"})
+     * @JMS\Type("double")
+     */
+    private $mass;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
@@ -683,4 +709,33 @@ class Sample
         $this->purificationTags = $purificationTags;
     }
 
+    public function getSpecies()
+    {
+        return $this->species;
+    }
+
+    public function setSpecies($species)
+    {
+        $this->species = $species;
+    }
+
+    public function getCellLine()
+    {
+        return $this->cellLine;
+    }
+
+    public function setCellLine($cellLine)
+    {
+        $this->cellLine = $cellLine;
+    }
+
+    public function getMass()
+    {
+        return $this->mass;
+    }
+
+    public function setMass($mass)
+    {
+        $this->mass = $mass;
+    }
 }
