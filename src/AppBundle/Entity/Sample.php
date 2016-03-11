@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Sample
@@ -191,9 +192,10 @@ class Sample
      * @var StorageContainer $storageContainer
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\StorageContainer")
-     * @ORM\JoinColumn(name="storage_container_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="storage_container_id", referencedColumnName="id", nullable=false)
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
+     * @Assert\NotNull()
      */
     private $storageContainer;
 
@@ -336,9 +338,20 @@ class Sample
      */
     private $mass;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Sample")
+     * @ORM\JoinTable(name="sample_linked_sample",
+     *      joinColumns={@ORM\JoinColumn(name="child_sample_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="parent_sample_id", referencedColumnName="id")}
+     * )
+     * @JMS\Groups({"default"})
+     */
+    private $linkedSamples;
+
     public function __construct()
     {
         $this->projects = new ArrayCollection();
+        $this->linkedSamples = new ArrayCollection();
     }
 
     /**
@@ -737,5 +750,15 @@ class Sample
     public function setMass($mass)
     {
         $this->mass = $mass;
+    }
+
+    public function getLinkedSamples()
+    {
+        return $this->linkedSamples;
+    }
+
+    public function setLinkedSamples(ArrayCollection $linkedSamples)
+    {
+        $this->linkedSamples = $linkedSamples;
     }
 }

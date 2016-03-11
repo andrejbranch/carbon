@@ -4,6 +4,7 @@ namespace AppBundle\Form\Type;
 
 use AppBundle\Form\DataTransformer\SampleTypeTransformer;
 use AppBundle\Form\DataTransformer\StorageContainerTransformer;
+use AppBundle\Form\DataTransformer\LinkedSamplesTransformer;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -53,7 +54,7 @@ class SampleFormType extends AbstractType
             ))
             ->add('storageContainer', 'entity', array(
                 'class' => 'AppBundle:StorageContainer',
-                'multiple' => false
+                'multiple' => false,
             ))
             ->add('sampleType', 'entity', array(
                 'class' => 'AppBundle:SampleType',
@@ -71,6 +72,10 @@ class SampleFormType extends AbstractType
                 'precision' => 3,
             ))
 
+            ->add('linkedSamples', 'entity', array(
+                'class' => 'AppBundle:Sample',
+                'multiple' => true
+            ))
         ;
 
         $builder->get('sampleType')
@@ -79,6 +84,10 @@ class SampleFormType extends AbstractType
 
         $builder->get('storageContainer')
             ->addViewTransformer(new StorageContainerTransformer($this->em))
+        ;
+
+        $builder->get('linkedSamples')
+            ->addViewTransformer(new LinkedSamplesTransformer($this->em))
         ;
     }
 

@@ -54,6 +54,8 @@ abstract class Grid implements GridInterface
      */
     const QUERY_SHOW_DELETED = "cShowDeleted";
 
+    const QUERY_NOT = "cNot";
+
     /**
      * @var int The default per page for the grid
      */
@@ -268,5 +270,10 @@ abstract class Grid implements GridInterface
             'paginatedTotal' => $this->paginatedTotal,
             'data' => $data
         );
+    }
+
+    public function getFilteredValueMap()
+    {
+        return $this->getQueryParam(self::QUERY_NOT);
     }
 }

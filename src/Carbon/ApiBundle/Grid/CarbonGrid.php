@@ -38,6 +38,10 @@ class CarbonGrid extends Grid
 
         foreach ($queryParams as $k => $v) {
 
+            if (is_array($v)) {
+                continue;
+            }
+
             if (strtolower($v) === 'null') {
 
                 $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
@@ -47,6 +51,23 @@ class CarbonGrid extends Grid
                 $qb
                     ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
                     ->setParameter($k, $v)
+                ;
+
+            }
+
+        }
+
+        if ($filteredValueMap = $this->getFilteredValueMap()) {
+
+            foreach ($filteredValueMap as $prop => $filteredValues) {
+
+                $param = sprintf('%s_not_in', $prop);
+
+                $qb
+                    ->andWhere($qb->expr()->notIn(
+                        $alias . '.' . $prop,
+                        $filteredValues
+                    ))
                 ;
 
             }
