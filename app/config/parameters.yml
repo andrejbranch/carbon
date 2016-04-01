@@ -1,0 +1,14 @@
+# This file is auto-generated during the composer install
+parameters:
+    database_host: 127.0.0.1
+    database_port: null
+    database_name: carbon
+    database_user: root
+    database_password: null
+    mailer_transport: smtp
+    mailer_host: 127.0.0.1
+    mailer_user: null
+    mailer_password: null
+    secret: 5d92cfc4b5affafc405b9efa1ff1fee2ef7ba824
+
+    carbon_api.jms_metadata_dir: "%kernel.root_dir%/../src/AppBundle/Resources/config/serializer"
