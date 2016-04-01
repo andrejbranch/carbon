@@ -8,6 +8,6 @@
 /composer.phar
 /vendor/
 /web/bundles/
-composer.lock
 /uploads/
 *.DS_Store
+
