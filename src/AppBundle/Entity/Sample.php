@@ -65,7 +65,7 @@ class Sample
      *
      * @ORM\Column(name="description", type="text")
      * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="name")
+     * @Carbon\Searchable(name="description")
      */
     private $description;
 
@@ -85,9 +85,15 @@ class Sample
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
      * @JMS\Groups({"default"})
-     * @JMS\MaxDepth(1)
      */
     private $createdBy;
+
+    /**
+     * Created by id
+     * @ORM\Column(name="created_by_id", type="integer", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    private $createdById;
 
     /**
      * @var User $updatedBy
@@ -99,6 +105,13 @@ class Sample
      * @JMS\MaxDepth(1)
      */
     private $updatedBy;
+
+    /**
+     * Created by id
+     * @ORM\Column(name="updated_by_id", type="integer", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    private $updatedById;
 
     /**
      * @var integer
@@ -178,6 +191,13 @@ class Sample
      * @JMS\Groups({"default"})
      */
     private $sampleType;
+
+    /**
+     * Created by id
+     * @ORM\Column(name="sample_type_id", type="integer", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    private $sampleTypeId;
 
     /**
      * @var float $volume
@@ -338,15 +358,7 @@ class Sample
      */
     private $mass;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Sample")
-     * @ORM\JoinTable(name="sample_linked_sample",
-     *      joinColumns={@ORM\JoinColumn(name="child_sample_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="parent_sample_id", referencedColumnName="id")}
-     * )
-     * @JMS\Groups({"default"})
-     */
-    private $linkedSamples;
+    public $linkedSamples;
 
     public function __construct()
     {
@@ -503,6 +515,16 @@ class Sample
     }
 
     /**
+     * Get created by id
+     *
+     * @return integer
+     */
+    public function getCreatedById()
+    {
+        return $this->createdById;
+    }
+
+    /**
      * Get created by user
      *
      * @return AppBundle\Entity\User
@@ -520,6 +542,16 @@ class Sample
     public function getUpdatedBy()
     {
         return $this->updateBy;
+    }
+
+    /**
+     * Get updated by id
+     *
+     * @return integer
+     */
+    public function getUpdatedById()
+    {
+        return $this->updatedById;
     }
 
     /**
@@ -565,6 +597,11 @@ class Sample
     public function getSampleType()
     {
         return $this->sampleType;
+    }
+
+    public function getSampleTypeId()
+    {
+        return $this->sampleTypeId;
     }
 
     public function setSampleType(SampleType $sampleType = null)
@@ -752,13 +789,4 @@ class Sample
         $this->mass = $mass;
     }
 
-    public function getLinkedSamples()
-    {
-        return $this->linkedSamples;
-    }
-
-    public function setLinkedSamples(ArrayCollection $linkedSamples)
-    {
-        $this->linkedSamples = $linkedSamples;
-    }
 }

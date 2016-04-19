@@ -10,5 +10,3 @@ parameters:
     mailer_user: null
     mailer_password: null
     secret: 5d92cfc4b5affafc405b9efa1ff1fee2ef7ba824
-
-    carbon_api.jms_metadata_dir: "%kernel.root_dir%/../src/AppBundle/Resources/config/serializer"

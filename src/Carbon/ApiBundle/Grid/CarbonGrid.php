@@ -32,26 +32,38 @@ class CarbonGrid extends Grid
      */
     public function getResult(EntityRepository $repo)
     {
-        $queryParams = $this->getQueryParams();
-
         $qb = $repo->createQueryBuilder($alias = 'a');
+
+        return $this->handleQueryFilters($qb, $alias, $repo->getClassName());
+    }
+
+    public function handleQueryFilters($qb, $alias, $className)
+    {
+        $queryParams = $this->getQueryParams();
 
         foreach ($queryParams as $k => $v) {
 
             if (is_array($v)) {
-                continue;
-            }
 
-            if (strtolower($v) === 'null') {
-
-                $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
+                $qb->andWhere($qb->expr()->in(
+                    $alias . '.' . $k,
+                    $v
+                ));
 
             } else {
 
-                $qb
-                    ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
-                    ->setParameter($k, $v)
-                ;
+                if (strtolower($v) === 'null') {
+
+                    $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
+
+                } else {
+
+                    $qb
+                        ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
+                        ->setParameter($k, $v)
+                    ;
+
+                }
 
             }
 
@@ -82,14 +94,14 @@ class CarbonGrid extends Grid
 
             $searchExpressions = array();
 
-            $searchableColumns = $this->annotationReader->getSearchableColumns($repo->getClassName());
+            $searchableColumns = $this->annotationReader->getSearchableColumns($className);
 
             if (count($searchableColumns) === 0) {
                 throw new \RunTimeException(sprintf(
                     "No searchable properties are set on entity %s,
                     did you forget to add the @Searchable annotation
                     on the properties you want to search?",
-                    $repo->getClassName()
+                   $className
                 ));
             }
 
@@ -105,7 +117,7 @@ class CarbonGrid extends Grid
 
         if ($this->shouldShowDeleted()) {
             $filter = $this->em->getFilters()->enable('softdeleteable');
-            $filter->disableForEntity($repo->getClassName());
+            $filter->disableForEntity($className);
         }
 
         if ($orderBy = $this->getOrderBy()) {
@@ -124,6 +136,7 @@ class CarbonGrid extends Grid
         $result = $qb->getQuery()->getResult();
 
         return $this->buildGridResponse($result);
+
     }
 
     /**

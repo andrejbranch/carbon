@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\DataTransformer;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\SampleLinkedSample;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -37,30 +37,66 @@ class LinkedSamplesTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object (SampleType) is not found.
      */
-    public function reverseTransform($samplesArray)
+    public function reverseTransform($linkedSamplesMap)
     {
-        if (empty($samplesArray)) {
-            return $samplesArray;
+        $removingIds = $linkedSamplesMap['removing'];
+        $addingIds = $linkedSamplesMap['adding'];
+        $parentId = $linkedSamplesMap['parentId'];
+
+        if (empty($removingIds) && empty($addingIds)) {
+            return;
         }
 
-        $samples = array();
+        $repo = $this->em->getRepository('AppBundle:SampleLinkedSample');
 
-        foreach ($samplesArray as $sample) {
+        foreach ($removingIds as $removingId) {
 
-            $sample = $this->em->getRepository('AppBundle:Sample')
-                ->find($sample['id'])
-            ;
+            $sampleLinkedSample = $repo->find(array(
+                'parentSample' => $parentId,
+                'childSample' => $removingId
+            ));
 
-            if (NULL === $sample) {
-                throw new TransformationFailedException(sprintf(
-                    'Sample with id %s does not exist', $sample['id']
-                ));
+            if ($sampleLinkedSample) {
+
+                $this->em->remove($sampleLinkedSample);
+
             }
 
-            $samples[] = $sample->getId();
+            $sampleLinkedSample = $repo->find(array(
+                'parentSample' => $removingId,
+                'childSample' => $parentId
+            ));
+
+            if ($sampleLinkedSample) {
+
+                $this->em->remove($sampleLinkedSample);
+
+            }
 
         }
 
-        return $samples;
+        foreach ($addingIds as $addingId) {
+
+            $sampleLinkedSample = new SampleLinkedSample();
+
+            $sampleLinkedSample2 = new SampleLinkedSample();
+
+            $sampleRepo = $this->em->getRepository('AppBundle:Sample');
+
+            $parentSample = $sampleRepo->find($parentId);
+            $childSample = $sampleRepo->find($addingId);
+
+            $sampleLinkedSample->setParentSample($parentSample);
+            $sampleLinkedSample->setChildSample($childSample);
+
+            $sampleLinkedSample2->setParentSample($childSample);
+            $sampleLinkedSample2->setChildSample($parentSample);
+
+            $this->em->persist($sampleLinkedSample);
+            $this->em->persist($sampleLinkedSample2);
+
+        }
+
+        $this->em->flush();
     }
 }

@@ -27,9 +27,9 @@ abstract class CarbonApiController extends Controller
 
         $isDataTableRequest = $this->isDataTableRequest($request);
 
-        $data = $this->getSerializationHelper()->serialize($this->getGrid($isDataTableRequest)->getResult(
-            $this->getEntityRepository()
-        ));
+        $data = $this->getSerializationHelper()->serialize(
+            $this->getGrid($isDataTableRequest)->getResult($this->getEntityRepository())
+        );
 
         return $this->getJsonResponse($data);
     }

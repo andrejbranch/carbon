@@ -73,6 +73,7 @@ abstract class Grid implements GridInterface
         self::QUERY_LIKE_SEARCH,
         self::QUERY_ORDER_BY_DIRECTION,
         self::QUERY_SHOW_DELETED,
+        self::QUERY_NOT,
     );
 
     /**

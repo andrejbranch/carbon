@@ -8,6 +8,7 @@ imports:
 # http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     locale: en
+    carbon_api.jms_metadata_dir: "%kernel.root_dir%/../src/AppBundle/Resources/config/serializer"
 
 framework:
     #esi:             ~

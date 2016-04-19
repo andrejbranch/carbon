@@ -72,9 +72,7 @@ class SampleFormType extends AbstractType
                 'precision' => 3,
             ))
 
-            ->add('linkedSamples', 'entity', array(
-                'class' => 'AppBundle:Sample',
-                'multiple' => true
+            ->add('linkedSamples', 'hidden', array(
             ))
         ;
 
