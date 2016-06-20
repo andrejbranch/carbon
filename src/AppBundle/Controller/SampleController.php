@@ -96,11 +96,6 @@ class SampleController extends CarbonApiController
         $form = $this->createForm('sample', $sample);
         $form->submit(json_decode($this->getRequest()->getContent(), TRUE));
 
-        // foreach ($form->getErrors(true, false) as $error) {
-        //     var_dump(2222);
-        //     // var_dump($error->getMessage());
-        // }
-        // die;
         if (!$form->isValid()) {
             return new Response($form->getErrorsAsString(), 401);
         }

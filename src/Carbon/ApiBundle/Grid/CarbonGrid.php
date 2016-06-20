@@ -43,29 +43,82 @@ class CarbonGrid extends Grid
 
         foreach ($queryParams as $k => $v) {
 
-            if (is_array($v)) {
+            if (array_key_exists('in', $v)) {
 
                 $qb->andWhere($qb->expr()->in(
                     $alias . '.' . $k,
-                    $v
+                    $v['in']
                 ));
 
-            } else {
+            }
 
-                if (strtolower($v) === 'null') {
+            if (array_key_exists('GTE', $v)) {
 
+                $qb->andWhere(sprintf('%s.%s >= :%sGTE', $alias, $k, $k))
+                    ->setParameter($k . 'GTE', $v['GTE'], 'decimal')
+                ;
+
+            }
+
+            if (array_key_exists('LTE', $v)) {
+
+                $qb->andWhere(sprintf('%s.%s <= :%sLTE', $alias, $k, $k))
+                    ->setParameter($k . 'LTE', $v['LTE'], 'decimal')
+                ;
+
+            }
+
+            if (array_key_exists('EQ', $v)) {
+
+                $qb->andWhere(sprintf('%s.%s = :%sEQ', $alias, $k, $k))
+                    ->setParameter($k . 'EQ', $v['EQ'], 'decimal')
+                ;
+
+            }
+
+            if (array_key_exists('IN', $v)) {
+
+                $qb->andWhere($qb->expr()->in(
+                    $alias . '.' . $k,
+                    $v['IN']
+                ));
+
+            }
+
+            if (array_key_exists('NULL', $v)) {
+
+                if ((bool) $v['NULL']) {
                     $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
-
-                } else {
-
-                    $qb
-                        ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
-                        ->setParameter($k, $v)
-                    ;
-
                 }
 
             }
+
+            // foreach ($v['in'] as $in) {
+            //     var_dump($in);
+            // }
+            // if (is_array($v)) {
+
+            //     $qb->andWhere($qb->expr()->in(
+            //         $alias . '.' . $k,
+            //         $v
+            //     ));
+
+            // } else {
+
+            //     if (strtolower($v) === 'null') {
+
+            //         $qb->andWhere(sprintf('%s.%s IS NULL', $alias, $k));
+
+            //     } else {
+
+            //         $qb
+            //             ->andWhere(sprintf('%s.%s = :%s', $alias, $k, $k))
+            //             ->setParameter($k, $v)
+            //         ;
+
+            //     }
+
+            // }
 
         }
 

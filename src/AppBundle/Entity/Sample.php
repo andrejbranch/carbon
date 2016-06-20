@@ -699,6 +699,18 @@ class Sample
         $this->concentrationUnits = $concentrationUnits;
     }
 
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getConcentrationString()
+    {
+        return $this->concentration
+            ? $this->concentration . ' ' . $this->concentrationUnits
+            : ''
+        ;
+    }
+
     public function getDnaSequence()
     {
         return $this->dnaSequence;

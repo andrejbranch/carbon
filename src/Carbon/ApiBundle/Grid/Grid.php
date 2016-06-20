@@ -56,6 +56,12 @@ abstract class Grid implements GridInterface
 
     const QUERY_NOT = "cNot";
 
+    // const QUERY_OPERATORS = array(
+    //     'EQ' => '=',
+    //     'LTE' => '<=',
+    //     'GTE' => '<='
+    // );
+
     /**
      * @var int The default per page for the grid
      */

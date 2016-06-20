@@ -39,9 +39,9 @@ class LinkedSamplesTransformer implements DataTransformerInterface
      */
     public function reverseTransform($linkedSamplesMap)
     {
-        $removingIds = $linkedSamplesMap['removing'];
-        $addingIds = $linkedSamplesMap['adding'];
-        $parentId = $linkedSamplesMap['parentId'];
+        $removingIds = isset($linkedSamplesMap['removing']) ? $linkedSamplesMap['removing'] : array();
+        $addingIds = isset($linkedSamplesMap['adding']) ? $linkedSamplesMap['adding'] : array();
+        $parentId = isset($linkedSamplesMap['parentId']) ? $linkedSamplesMap['parentId'] : null;
 
         if (empty($removingIds) && empty($addingIds)) {
             return;
