@@ -11,9 +11,10 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 {
     private $manager;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, $sample)
     {
         $this->em = $em;
+        $this->parentSample = $sample;
     }
 
     /**
@@ -41,7 +42,7 @@ class LinkedSamplesTransformer implements DataTransformerInterface
     {
         $removingIds = isset($linkedSamplesMap['removing']) ? $linkedSamplesMap['removing'] : array();
         $addingIds = isset($linkedSamplesMap['adding']) ? $linkedSamplesMap['adding'] : array();
-        $parentId = isset($linkedSamplesMap['parentId']) ? $linkedSamplesMap['parentId'] : null;
+        $parentId = $this->parentSample->getId();
 
         if (empty($removingIds) && empty($addingIds)) {
             return;
@@ -83,7 +84,8 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 
             $sampleRepo = $this->em->getRepository('AppBundle:Sample');
 
-            $parentSample = $sampleRepo->find($parentId);
+            // $parentSample = $sampleRepo->find($parentId);
+            $parentSample = $this->parentSample;
             $childSample = $sampleRepo->find($addingId);
 
             $sampleLinkedSample->setParentSample($parentSample);
@@ -97,6 +99,5 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 
         }
 
-        $this->em->flush();
     }
 }

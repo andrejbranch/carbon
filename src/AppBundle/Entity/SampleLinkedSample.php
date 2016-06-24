@@ -20,6 +20,16 @@ class SampleLinkedSample
     /**
      * @var integer
      *
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Groups({"default"})
+     */
+    private $id;
+
+    /**
+     * @var integer
+     *
      * @ORM\Column(name="parent_sample_id", type="integer")
      * @JMS\Groups({"default"})
      */
@@ -29,7 +39,6 @@ class SampleLinkedSample
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Sample")
      * @ORM\JoinColumn(name="parent_sample_id", nullable=false)
      * @JMS\Groups({"default"})
-     * @ORM\Id
      */
     private $parentSample;
 
@@ -45,7 +54,6 @@ class SampleLinkedSample
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Sample")
      * @ORM\JoinColumn(name="child_sample_id", nullable=false)
      * @JMS\Groups({"default"})
-     * @ORM\Id
      */
     private $childSample;
 

@@ -8,6 +8,8 @@ use AppBundle\Form\DataTransformer\LinkedSamplesTransformer;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
@@ -72,8 +74,9 @@ class SampleFormType extends AbstractType
                 'precision' => 3,
             ))
 
-            ->add('linkedSamples', 'hidden', array(
-            ))
+            ->add('linkedSamples', 'hidden')
+
+
         ;
 
         $builder->get('sampleType')
@@ -85,8 +88,10 @@ class SampleFormType extends AbstractType
         ;
 
         $builder->get('linkedSamples')
-            ->addViewTransformer(new LinkedSamplesTransformer($this->em))
+            ->addViewTransformer(new LinkedSamplesTransformer($this->em, $builder->getForm()->getData()))
         ;
+
+
     }
 
     public function configureOptions(OptionsResolver $resolver)
