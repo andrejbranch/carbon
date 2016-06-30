@@ -604,6 +604,11 @@ class Sample
         return $this->sampleTypeId;
     }
 
+    public function setSampleTypeId($sampleTypeId)
+    {
+        $this->sampleTypeId = $sampleTypeId;
+    }
+
     public function setSampleType(SampleType $sampleType = null)
     {
         $this->sampleType = $sampleType;

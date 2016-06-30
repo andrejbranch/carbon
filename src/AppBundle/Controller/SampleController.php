@@ -97,6 +97,11 @@ class SampleController extends CarbonApiController
         $form->submit(json_decode($this->getRequest()->getContent(), TRUE));
 
         if (!$form->isValid()) {
+            var_dump($form->get('storageContainer')->getViewData());
+            var_dump($form->get('storageContainer')->getData());
+            var_dump($form->get('storageContainer')->getErrorsAsString());
+
+            die;
             return new Response($form->getErrorsAsString(), 401);
         }
 

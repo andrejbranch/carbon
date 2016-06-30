@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Uecode\Bundle\ApiKeyBundle\UecodeApiKeyBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
+            // new Ddeboer\DataImportBundle\DdeboerDataImportBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

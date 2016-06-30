@@ -23,3 +23,6 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: sample }
+
+    sample.importer:
+        class: AppBundle\Service\SampleImporter

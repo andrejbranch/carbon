@@ -76,7 +76,6 @@ class SampleFormType extends AbstractType
 
             ->add('linkedSamples', 'hidden')
 
-
         ;
 
         $builder->get('sampleType')
