@@ -23,7 +23,10 @@ class SampleImporter
             'totalAminoAcids' => 'Total Amino Acids',
             'molecularWeight' => 'Molecular Weight',
             'extinctionCoefficient' => 'Extinction Coefficient',
-            'purificationTags' => 'Purification Tags'
+            'purificationTags' => 'Purification Tags',
+            'division' => 'Division',
+            'divisionRow' => 'Division Row',
+            'divisionColumn' => 'Division Column',
 
         )
     );

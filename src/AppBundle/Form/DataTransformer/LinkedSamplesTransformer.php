@@ -52,7 +52,7 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 
         foreach ($removingIds as $removingId) {
 
-            $sampleLinkedSample = $repo->find(array(
+            $sampleLinkedSample = $repo->findOneBy(array(
                 'parentSample' => $parentId,
                 'childSample' => $removingId
             ));
@@ -63,7 +63,7 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 
             }
 
-            $sampleLinkedSample = $repo->find(array(
+            $sampleLinkedSample = $repo->findOneBy(array(
                 'parentSample' => $removingId,
                 'childSample' => $parentId
             ));

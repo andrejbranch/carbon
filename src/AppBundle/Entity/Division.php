@@ -2,14 +2,17 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\ApiBundle\Annotation AS Carbon;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="Gedmo\Tree\Entity\Repository\MaterializedPathRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\DivisionRepository")
  * @Gedmo\Tree(type="materializedPath")
+ * @Gedmo\Loggable
  */
 class Division
 {
@@ -42,6 +45,30 @@ class Division
     protected $width;
 
     /**
+     * @ORM\Column(name="availableSlots", type="integer", length=3, nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    protected $availableSlots;
+
+    /**
+     * @ORM\Column(name="usedSlots", type="integer", length=3, nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    protected $usedSlots;
+
+    /**
+     * @ORM\Column(name="totalSlots", type="integer", length=3, nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    protected $totalSlots;
+
+    /**
+     * @ORM\Column(name="percentFull", type="decimal", precision=20, scale=3, nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    protected $percentFull;
+
+    /**
      * @Gedmo\TreePath
      * @ORM\Column(name="path", type="string", length=3000, nullable=true)
      * @JMS\Groups({"default"})
@@ -52,6 +79,8 @@ class Division
      * @Gedmo\TreePathSource
      * @ORM\Column(name="title", type="string", length=64)
      * @JMS\Groups({"default"})
+     * @Assert\NotBlank()
+     * @Carbon\Searchable(name="title")
      */
     protected $title;
 
@@ -90,6 +119,26 @@ class Division
      * @JMS\Groups({"samples"})
      */
     protected $samples;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DivisionSampleType", mappedBy="division")
+     */
+    protected $divisionSampleTypes;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DivisionStorageContainer", mappedBy="division")
+     */
+    protected $divisionStorageContainers;
+
+    public $sampleTypes;
+
+    public $storageContainers;
+
+    public function __construct()
+    {
+        $this->divisionSampleTypes = new ArrayCollection();
+        $this->divisionStorageContainers = new ArrayCollection();
+    }
 
     public function getId()
     {
@@ -164,5 +213,106 @@ class Division
     public function getLevel()
     {
         return $this->level;
+    }
+
+    public function addDivisionSampleType(DivisionSampleType $divisionSampleType)
+    {
+        $this->divisionSampleTypes->add($divisionSampleType);
+    }
+
+    public function removeSampleType(DivisionSampleType $divisionSampleType)
+    {
+        $this->divisionSampleTypes->removeElement($divisionSampleType);
+    }
+
+    public function addDivisionStorageContainer(DivisionStorageContainer $divisionStorageContainer)
+    {
+        $this->divisionStorageContainer->add($divisionStorageContainer);
+    }
+
+    public function removeDivisionStorageContainer(DivisionStorageContainer $divisionStorageContainer)
+    {
+        $this->divisionStorageContainer->removeElement($divisionStorageContainer);
+    }
+
+    public function getSampleTypes()
+    {
+        return $this->sampleTypes;
+    }
+
+    public function getAvailableSlots()
+    {
+        return $this->availableSlots;
+    }
+
+    public function setAvailableSlots($availableSlots)
+    {
+        $this->availableSlots = $availableSlots;
+    }
+
+    public function getUsedSlots()
+    {
+        return $this->usedSlots;
+    }
+
+    public function setUsedSlots($usedSlots)
+    {
+        $this->usedSlots = $usedSlots;
+    }
+
+    public function getTotalSlots()
+    {
+        return $this->totalSlots;
+    }
+
+    public function setTotalSlots($totalSlots)
+    {
+        $this->totalSlots = $totalSlots;
+    }
+
+    public function getPercentFull()
+    {
+        return $this->percentFull;
+    }
+
+    public function setPercentFull($percentFull)
+    {
+        $this->percentFull = $percentFull;
+    }
+
+    public function getSamples()
+    {
+        return $this->samples;
+    }
+
+    public function hasDimension()
+    {
+        return $this->hasDimension;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getPercentFullString()
+    {
+        if (!$this->hasDimension()) {
+            return 'N/A';
+        }
+
+        return $this->percentFull . '%';
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getDimensionString()
+    {
+        if (!$this->hasDimension()) {
+            return 'N/A';
+        }
+
+        return $this->getHeight() . ' x ' . $this->getWidth();
     }
 }

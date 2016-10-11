@@ -18,6 +18,11 @@ class SampleController extends CarbonApiController
     const RESOURCE_ENTITY = "AppBundle\Entity\Sample";
 
     /**
+     * @var string The form type for this resource
+     */
+    const FORM_TYPE = "sample";
+
+    /**
      * @Route("/sample", name="sample_options")
      * @Method("OPTIONS")
      *
@@ -37,7 +42,8 @@ class SampleController extends CarbonApiController
      *
      * @Route("/sample", name="sample_get")
      * @Method("GET")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleGet()
     {
@@ -45,27 +51,55 @@ class SampleController extends CarbonApiController
     }
 
     /**
+     * @Route("/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match_options")
+     * @Method("OPTIONS")
+     *
+     * @return Response
+     */
+    public function optionsMatchAction($sampleTypeId, $storageContainerId)
+    {
+        $response = new Response();
+
+        $data = array('success' => 'success');
+
+        return $this->getJsonResponse(json_encode($data));
+    }
+
+    /**
+     * Handles the HTTP get request for the division entity
+     *
+     * @Route("/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function handleLocationMatch($sampleTypeId, $storageContainerId)
+    {
+        $data = $this->getGrid()->getResult($this->getEntityRepository());
+
+        $sampleType = $this->getEntityManager()->getRepository('AppBundle:SampleType')->find($sampleTypeId);
+        $storageContainer = $this->getEntityManager()->getRepository('AppBundle:StorageContainer')->find($storageContainerId);
+
+        $locationDecider = $this->get('sample.location_decider');
+
+        $matchedDivisions = $locationDecider->decideLocation($sampleType, $storageContainer);
+
+        $serialized = $this->getSerializationHelper()->serialize($matchedDivisions);
+
+        return $this->getJsonResponse($serialized);
+    }
+
+    /**
      * Handles the HTTP get request for the card entity
      *
      * @Route("/sample", name="sample_post")
      * @Method("POST")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePost()
     {
-        $sample = new Sample();
-
-        $form = $this->createForm('sample', $sample);
-        $form->submit(json_decode($this->getRequest()->getContent(), true));
-
-        if (!$form->isValid()) {
-            return new Response($form->getErrorsAsString(), 401);
-        }
-
-        $this->getEntityManager()->persist($sample);
-        $this->getEntityManager()->flush();
-
-        return $this->getJsonResponse($this->getSerializationHelper()->serialize($sample));
+        return parent::handlePost();
     }
 
     /**
@@ -74,41 +108,12 @@ class SampleController extends CarbonApiController
      * @todo  figure out why PUT method has no request params
      * @Route("/sample", name="sample_put")
      * @Method("PUT")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePut()
     {
-        $sampleId = $this->getRequest()->get('id');
-
-        if (!$sampleId) {
-            throw new MethodNotAllowedException('Id get parameter must be set');
-        }
-
-        $sample = $this->getEntityRepository()->find($sampleId);
-
-        if (NULL === $sample) {
-            throw new NotFoundHttpException(sprintf(
-                'Sample %s not found',
-                $sampleId
-            ));
-        }
-
-        $form = $this->createForm('sample', $sample);
-        $form->submit(json_decode($this->getRequest()->getContent(), TRUE));
-
-        if (!$form->isValid()) {
-            var_dump($form->get('storageContainer')->getViewData());
-            var_dump($form->get('storageContainer')->getData());
-            var_dump($form->get('storageContainer')->getErrorsAsString());
-
-            die;
-            return new Response($form->getErrorsAsString(), 401);
-        }
-
-        $this->getEntityManager()->persist($sample);
-        $this->getEntityManager()->flush();
-
-        return $this->getJsonResponse($this->getSerializationHelper()->serialize($sample));
+        return parent::handlePut();
     }
 
     /**
@@ -116,7 +121,8 @@ class SampleController extends CarbonApiController
      *
      * @Route("/sample", name="sample_delete")
      * @Method("DELETE")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleDelete()
     {

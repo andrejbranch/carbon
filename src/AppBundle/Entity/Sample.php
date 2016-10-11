@@ -55,8 +55,10 @@ class Sample
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=300)
+     * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      * @Carbon\Searchable(name="name")
+     * @Assert\NotBlank()
      */
     private $name;
 
@@ -66,6 +68,7 @@ class Sample
      * @ORM\Column(name="description", type="text")
      * @JMS\Groups({"default"})
      * @Carbon\Searchable(name="description")
+     * @Assert\NotBlank()
      */
     private $description;
 
@@ -127,6 +130,7 @@ class Sample
      *   @ORM\JoinColumn(name="division_id", referencedColumnName="id")
      * })
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $division;
 
@@ -135,6 +139,7 @@ class Sample
      *
      * @ORM\Column(name="division_row", type="string", length=1, nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $divisionRow;
 
@@ -143,6 +148,7 @@ class Sample
      *
      * @ORM\Column(name="division_column", type="integer", length=1, nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $divisionColumn;
 
@@ -806,4 +812,12 @@ class Sample
         $this->mass = $mass;
     }
 
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getId() . ': ' . $this->getName();
+    }
 }

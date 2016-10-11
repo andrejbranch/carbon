@@ -16,6 +16,11 @@ class DivisionController extends CarbonApiController
     const RESOURCE_ENTITY = "AppBundle\Entity\Division";
 
     /**
+     * @var string The form type for this resource
+     */
+    const FORM_TYPE = "division";
+
+    /**
      * @Route("/division", name="division_options")
      * @Method("OPTIONS")
      *
@@ -35,7 +40,8 @@ class DivisionController extends CarbonApiController
      *
      * @Route("/division", name="division_get")
      * @Method("GET")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleGet()
     {
@@ -47,23 +53,12 @@ class DivisionController extends CarbonApiController
      *
      * @Route("/division", name="division_post")
      * @Method("POST")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePost()
     {
-        $division = new Division();
-
-        $form = $this->createForm('division', $division);
-        $form->submit(json_decode($this->getRequest()->getContent(), true));
-
-        if (!$form->isValid()) {
-            return new Response($form->getErrorsAsString(), 401);
-        }
-
-        $this->getEntityManager()->persist($division);
-        $this->getEntityManager()->flush();
-
-        return $this->getJsonResponse($this->getSerializationHelper()->serialize($division));
+        return parent::handlePost();
     }
 
     /**
@@ -72,7 +67,8 @@ class DivisionController extends CarbonApiController
      * @todo  figure out why PUT method has no request params
      * @Route("/division", name="division_put")
      * @Method("PUT")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePut()
     {
@@ -84,7 +80,8 @@ class DivisionController extends CarbonApiController
      *
      * @Route("/division", name="division_delete")
      * @Method("DELETE")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleDelete()
     {

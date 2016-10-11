@@ -5,6 +5,8 @@ namespace AppBundle\Form\Type;
 use AppBundle\Form\DataTransformer\SampleTypeTransformer;
 use AppBundle\Form\DataTransformer\StorageContainerTransformer;
 use AppBundle\Form\DataTransformer\LinkedSamplesTransformer;
+use Carbon\ApiBundle\Form\DataTransformer\CryoblockOTOTransformer;
+use Carbon\ApiBundle\Form\Type\CryoblockAbstractType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -13,7 +15,7 @@ use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class SampleFormType extends AbstractType
+class SampleFormType extends CryoblockAbstractType
 {
     private $class;
 
@@ -74,23 +76,32 @@ class SampleFormType extends AbstractType
                 'precision' => 3,
             ))
 
-            ->add('linkedSamples', 'hidden')
-
+            ->add('linkedSamples', 'hidden', array('mapped' => false))
         ;
 
         $builder->get('sampleType')
-            ->addViewTransformer(new SampleTypeTransformer($this->em))
+            ->addViewTransformer(new CryoblockOTOTransformer(
+                $this->em, 'AppBundle:SampleType'
+            ))
         ;
 
         $builder->get('storageContainer')
-            ->addViewTransformer(new StorageContainerTransformer($this->em))
+            ->addViewTransformer(new CryoblockOTOTransformer(
+                $this->em, 'AppBundle:StorageContainer'
+            ))
         ;
 
         $builder->get('linkedSamples')
             ->addViewTransformer(new LinkedSamplesTransformer($this->em, $builder->getForm()->getData()))
         ;
 
+        $builder->get('division')
+            ->addViewTransformer(new CryoblockOTOTransformer(
+                $this->em, 'AppBundle:Division'
+            ))
+        ;
 
+        parent::buildForm($builder, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)
