@@ -8,11 +8,6 @@ services:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
-    app.form.type.user:
-        class: AppBundle\Form\Type\UserFormType
-        tags:
-            - { name: form.type, alias: user }
-
     app.form.type.sample:
         class: AppBundle\Form\Type\SampleFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
@@ -45,9 +40,3 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: division }
-
-    app.form.type.group:
-        class: AppBundle\Form\Type\GroupFormType
-        arguments: ["@doctrine.orm.default_entity_manager"]
-        tags:
-            - { name: form.type, alias: group }

@@ -1,5 +1,0 @@
-Uecode\Bundle\ApiKeyBundle\Entity\ApiKeyUser:
-    exclusion_policy: ALL
-    properties:
-        apiKey:
-            groups: [apikey]

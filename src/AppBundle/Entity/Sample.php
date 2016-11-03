@@ -85,7 +85,7 @@ class Sample
      * @var User $createdBy
      *
      * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
      * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
      * @JMS\Groups({"default"})
      */
@@ -102,7 +102,7 @@ class Sample
      * @var User $updatedBy
      *
      * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
      * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
      * @JMS\Groups({"default"})
      * @JMS\MaxDepth(1)
@@ -533,7 +533,7 @@ class Sample
     /**
      * Get created by user
      *
-     * @return AppBundle\Entity\User
+     * @return Carbon\ApiBundle\User
      */
     public function getCreatedBy()
     {
@@ -543,7 +543,7 @@ class Sample
     /**
      * Get updated by user
      *
-     * @return AppBundle\Entity\User
+     * @return Carbon\ApiBundle\User
      */
     public function getUpdatedBy()
     {
