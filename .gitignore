@@ -2,6 +2,9 @@
 /app/cache/*
 !app/cache/.gitkeep
 /app/logs/*
+/app/config/config_dev.yml
+/app/config/config_prod.yml
+/app/config/parameters_dev.yml
 !app/logs/.gitkeep
 /app/phpunit.xml
 /bin/
@@ -10,4 +13,3 @@
 /web/bundles/
 /uploads/
 *.DS_Store
-

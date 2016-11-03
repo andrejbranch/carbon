@@ -21,6 +21,11 @@ class UserController extends CarbonApiController
     const RESOURCE_ENTITY = "AppBundle\Entity\User";
 
     /**
+     * @var string The form type for this resource
+     */
+    const FORM_TYPE = "user";
+
+    /**
      * @Route("/user", name="user_options")
      * @Method("OPTIONS")
      *

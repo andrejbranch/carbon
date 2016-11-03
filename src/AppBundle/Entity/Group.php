@@ -2,6 +2,7 @@
 
 namespace AppBundle\Entity;
 
+use Carbon\ApiBundle\Annotation AS Carbon;
 use Carbon\ApiBundle\Entity\Group as BaseGroup;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -22,16 +23,27 @@ class Group extends BaseGroup
     protected $id;
 
     /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Role")
-     * @ORM\JoinTable(name="group_role")
+     * @Carbon\Searchable(name="name")
+     * @JMS\Groups({"default"})
      */
-    protected $roles;
+    protected $name;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\GroupRole", mappedBy="group")
+     */
+    protected $groupRoles;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserGroup", mappedBy="group")
+     */
+    protected $groupUsers;
+
+    public $users;
 
     public function __construct()
     {
-        parent::__construct();
-
-        $this->roles = new ArrayCollection();
+        $this->groupRoles = new ArrayCollection();
+        $this->groupUsers = new ArrayCollection();
     }
 
     /**
@@ -43,5 +55,19 @@ class Group extends BaseGroup
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getName();
+    }
+
+    public function getGroupUsers()
+    {
+        return $this->groupUsers;
     }
 }

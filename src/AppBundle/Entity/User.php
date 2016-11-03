@@ -25,26 +25,21 @@ class User extends CarbonUser
      * @ORM\GeneratedValue
      * @JMS\Expose()
      * @JMS\Groups("default")
-     *
-     * @var int the cards id
      */
     protected $id;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Group")
-     * @ORM\JoinTable(name="user_group")
-     * @JMS\Expose()
-     * @JMS\Groups("default")
-     */
-    protected $groups;
-
     protected $roles = array();
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\UserGroup", mappedBy="user")
+     */
+    protected $userGroups;
 
     public function __construct()
     {
         parent::__construct();
 
-        $this->groups = new ArrayCollection();
+        $this->userGroups = new ArrayCollection();
     }
 
     /**
@@ -59,9 +54,9 @@ class User extends CarbonUser
     {
         $roles = $this->roles;
 
-        foreach ($this->getGroups() as $group) {
+        foreach ($this->userGroups as $userGroup) {
 
-            if ($groupRoles = $group->getRoles()) {
+            if ($groupRoles = $userGroup->getGroup()->getRoles()) {
 
                 $roles = array_merge($roles, array_map(function ($role) {
                     return $role->getRole();
@@ -70,5 +65,14 @@ class User extends CarbonUser
         }
 
         return array_unique($roles);
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getFullName();
     }
 }

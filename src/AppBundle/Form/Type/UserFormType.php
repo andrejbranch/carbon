@@ -2,12 +2,12 @@
 
 namespace AppBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
+use Carbon\ApiBundle\Form\Type\CryoblockAbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class UserFormType extends AbstractType
+class UserFormType extends CryoblockAbstractType
 {
     private $class;
 
@@ -20,6 +20,8 @@ class UserFormType extends AbstractType
             ->add('username', null, array('label' => 'form.username', 'translation_domain' => 'FOSUserBundle'))
             ->add('plainPassword', 'password')
         ;
+
+        parent::buildForm($builder, $options);
     }
 
     public function configureOptions(OptionsResolver $resolver)

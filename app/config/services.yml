@@ -45,3 +45,9 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: division }
+
+    app.form.type.group:
+        class: AppBundle\Form\Type\GroupFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: group }
