@@ -33,6 +33,7 @@ class DoctrineExtensionListener implements ContainerAwareInterface
             $loggable = $this->container->get('gedmo.listener.loggable');
             $blameable = $this->container->get('gedmo.listener.blameable');
             $blameable->setUserValue($securityContext->getToken()->getUser());
+            $loggable->setUsername($securityContext->getToken()->getUser()->getUsername());
         }
     }
 }

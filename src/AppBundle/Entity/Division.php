@@ -315,4 +315,13 @@ class Division
 
         return $this->getHeight() . ' x ' . $this->getWidth();
     }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getTitle();
+    }
 }

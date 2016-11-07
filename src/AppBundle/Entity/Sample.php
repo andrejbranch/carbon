@@ -66,6 +66,7 @@ class Sample
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      * @Carbon\Searchable(name="description")
      * @Assert\NotBlank()
@@ -230,6 +231,7 @@ class Sample
      *
      * @ORM\Column(name="storage_buffer", type="string", length=300, nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $storageBuffer;
 
@@ -238,6 +240,7 @@ class Sample
      *
      * @ORM\Column(name="status", type="string", nullable=false)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $status;
 
@@ -266,6 +269,7 @@ class Sample
      *
      * @ORM\Column(name="vector_name", type="string", nullable=true, length=150)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $vectorName;
 
@@ -276,6 +280,7 @@ class Sample
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      * @JMS\Type("double")
+     * @Gedmo\Versioned
      */
     private $concentration;
 
@@ -284,6 +289,7 @@ class Sample
      *
      * @ORM\Column(name="concentration_units", type="string", nullable=true, length=15)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $concentrationUnits;
 
@@ -292,6 +298,7 @@ class Sample
      *
      * @ORM\Column(name="dna_sequence", type="text", nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $dnaSequence;
 
@@ -300,6 +307,7 @@ class Sample
      *
      * @ORM\Column(name="amino_acid_sequence", type="text", nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $aminoAcidSequence;
 
@@ -308,6 +316,7 @@ class Sample
      *
      * @ORM\Column(name="amino_acid_count", type="integer", nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $aminoAcidCount;
 
@@ -335,6 +344,7 @@ class Sample
      *
      * @ORM\Column(name="purification_tags", type="string", nullable=true, length=150)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $purificationTags;
 
@@ -343,6 +353,7 @@ class Sample
      *
      * @ORM\Column(name="species", type="string", length=300, nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $species;
 
@@ -351,6 +362,7 @@ class Sample
      *
      * @ORM\Column(name="cell_line", type="string", length=300, nullable=true)
      * @JMS\Groups({"default"})
+     * @Gedmo\Versioned
      */
     private $cellLine;
 
@@ -627,7 +639,7 @@ class Sample
 
     public function setVolume($volume)
     {
-        $this->volume = $volume;
+        $this->volume = (string) $volume;
     }
 
     public function getStorageContainer()
@@ -691,7 +703,7 @@ class Sample
 
     public function setConcentration($concentration)
     {
-        $this->concentration = $concentration;
+        $this->concentration = (string) $concentration;
     }
 
     public function getConcentrationUnits()
@@ -759,7 +771,7 @@ class Sample
 
     public function setMolecularWeight($molecularWeight)
     {
-        $this->molecularWeight = $molecularWeight;
+        $this->molecularWeight = (string) $molecularWeight;
     }
 
     public function getExtinctionCoefficient()
@@ -769,7 +781,7 @@ class Sample
 
     public function setExtinctionCoefficient($extinctionCoefficient)
     {
-        $this->extinctionCoefficient = $extinctionCoefficient;
+        $this->extinctionCoefficient = (string) $extinctionCoefficient;
     }
 
     public function getPurificationTags()
@@ -809,7 +821,7 @@ class Sample
 
     public function setMass($mass)
     {
-        $this->mass = $mass;
+        $this->mass = (string) $mass;
     }
 
     /**
