@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -13,25 +13,10 @@ class ProjectController extends CarbonApiController
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\Project";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\Project";
 
     /**
-     * @Route("/project", name="project_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
-     * @Route("/project", name="project_get")
+     * @Route("/storage/project", name="project_get")
      * @Method("GET")
      *
      * @return Response

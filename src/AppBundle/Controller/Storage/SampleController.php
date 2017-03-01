@@ -1,11 +1,12 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use AppBundle\Entity\Sample;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Exception\MethodNotAllowedException;
 use Symfony\Component\Routing\Exception\NotFoundHttpException;
@@ -15,7 +16,7 @@ class SampleController extends CarbonApiController
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\Sample";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\Sample";
 
     /**
      * @var string The form type for this resource
@@ -23,25 +24,11 @@ class SampleController extends CarbonApiController
     const FORM_TYPE = "sample";
 
     /**
-     * @Route("/sample", name="sample_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
      * Handles the HTTP get request for the division entity
      *
-     * @Route("/sample", name="sample_get")
+     * @Route("/storage/sample", name="sample_get")
      * @Method("GET")
+     * @Security("is_granted('ROLE_USER')")
      *
      * @return Response
      */
@@ -51,24 +38,9 @@ class SampleController extends CarbonApiController
     }
 
     /**
-     * @Route("/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsMatchAction($sampleTypeId, $storageContainerId)
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
      * Handles the HTTP get request for the division entity
      *
-     * @Route("/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match")
+     * @Route("/storage/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match")
      * @Method("GET")
      *
      * @return Response
@@ -77,8 +49,8 @@ class SampleController extends CarbonApiController
     {
         $data = $this->getGrid()->getResult($this->getEntityRepository());
 
-        $sampleType = $this->getEntityManager()->getRepository('AppBundle:SampleType')->find($sampleTypeId);
-        $storageContainer = $this->getEntityManager()->getRepository('AppBundle:StorageContainer')->find($storageContainerId);
+        $sampleType = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType')->find($sampleTypeId);
+        $storageContainer = $this->getEntityManager()->getRepository('AppBundle:Storage\StorageContainer')->find($storageContainerId);
 
         $locationDecider = $this->get('sample.location_decider');
 
@@ -92,7 +64,7 @@ class SampleController extends CarbonApiController
     /**
      * Handles the HTTP get request for the card entity
      *
-     * @Route("/sample", name="sample_post")
+     * @Route("/storage/sample", name="sample_post")
      * @Method("POST")
      *
      * @return Response
@@ -106,7 +78,7 @@ class SampleController extends CarbonApiController
      * Handles the HTTP PUT request for the card entity
      *
      * @todo  figure out why PUT method has no request params
-     * @Route("/sample", name="sample_put")
+     * @Route("/storage/sample", name="sample_put")
      * @Method("PUT")
      *
      * @return Response
@@ -119,7 +91,7 @@ class SampleController extends CarbonApiController
     /**
      * Handles the HTTP DELETE request for the card entity
      *
-     * @Route("/sample", name="sample_delete")
+     * @Route("/storage/sample", name="sample_delete")
      * @Method("DELETE")
      *
      * @return Response

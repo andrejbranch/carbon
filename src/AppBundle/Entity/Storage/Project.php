@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,8 +9,8 @@ use JMS\Serializer\Annotation AS JMS;
 /**
  * Project
  *
- * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ProjectRepository")
+ * @ORM\Table(name="storage.project", schema="storage")
  */
 class Project
 {

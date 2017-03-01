@@ -26,7 +26,7 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('height', 'integer')
             ->add('width', 'integer')
             ->add('parent', 'entity', array(
-                'class' => 'AppBundle:Division',
+                'class' => 'AppBundle:Storage\Division',
                 'property' => 'parent_id',
                 'multiple' => false
             ))
@@ -58,7 +58,7 @@ class DivisionFormType extends CryoblockAbstractType
 
         $builder->get('parent')
             ->addViewTransformer(new CryoblockOTOTransformer(
-                $this->em, 'AppBundle:Division'
+                $this->em, 'AppBundle:Storage\Division'
             ))
         ;
 
@@ -68,7 +68,7 @@ class DivisionFormType extends CryoblockAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Division',
+            'data_class' => 'AppBundle\Entity\Storage\Division',
             'csrf_protection' => false,
         ));
     }

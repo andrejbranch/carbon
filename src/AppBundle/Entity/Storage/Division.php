@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -10,7 +10,8 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\DivisionRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\DivisionRepository")
+ * @ORM\Table(name="storage.division", schema="storage")
  * @Gedmo\Tree(type="materializedPath")
  * @Gedmo\Loggable
  */
@@ -48,25 +49,25 @@ class Division
      * @ORM\Column(name="availableSlots", type="integer", length=3, nullable=false)
      * @JMS\Groups({"default"})
      */
-    protected $availableSlots;
+    protected $availableSlots = 0;
 
     /**
      * @ORM\Column(name="usedSlots", type="integer", length=3, nullable=false)
      * @JMS\Groups({"default"})
      */
-    protected $usedSlots;
+    protected $usedSlots = 0;
 
     /**
      * @ORM\Column(name="totalSlots", type="integer", length=3, nullable=false)
      * @JMS\Groups({"default"})
      */
-    protected $totalSlots;
+    protected $totalSlots = 0;
 
     /**
      * @ORM\Column(name="percentFull", type="decimal", precision=20, scale=3, nullable=false)
      * @JMS\Groups({"default"})
      */
-    protected $percentFull;
+    protected $percentFull = 0;
 
     /**
      * @Gedmo\TreePath
@@ -121,12 +122,12 @@ class Division
     protected $samples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DivisionSampleType", mappedBy="division")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionSampleType", mappedBy="division")
      */
     protected $divisionSampleTypes;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DivisionStorageContainer", mappedBy="division")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionStorageContainer", mappedBy="division")
      */
     protected $divisionStorageContainers;
 

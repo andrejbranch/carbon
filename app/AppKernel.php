@@ -22,6 +22,7 @@ class AppKernel extends Kernel
             new FOS\UserBundle\FOSUserBundle(),
             new Uecode\Bundle\ApiKeyBundle\UecodeApiKeyBundle(),
             new Oneup\UploaderBundle\OneupUploaderBundle(),
+            new Doctrine\Bundle\MigrationsBundle\DoctrineMigrationsBundle(),
             // new Ddeboer\DataImportBundle\DdeboerDataImportBundle(),
         );
 

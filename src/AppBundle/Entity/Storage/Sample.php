@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -12,7 +12,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Sample
  *
- * @ORM\Entity(repositoryClass="AppBundle\Entity\SampleRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\SampleRepository")
+ * @ORM\Table(name="storage.sample", schema="storage")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -192,7 +193,7 @@ class Sample
     /**
      * @var SampleType $sampleType
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\SampleType")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\SampleType")
      * @ORM\JoinColumn(name="sample_type_id", referencedColumnName="id")
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
@@ -218,7 +219,7 @@ class Sample
     /**
      * @var StorageContainer $storageContainer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\StorageContainer")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\StorageContainer")
      * @ORM\JoinColumn(name="storage_container_id", referencedColumnName="id", nullable=false)
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
@@ -247,22 +248,12 @@ class Sample
     /**
      * @var Protocol $protocol
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Protocol")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Protocol")
      * @ORM\JoinColumn(name="protocol_id", referencedColumnName="id")
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
     private $protocol;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Project")
-     * @ORM\JoinTable(name="project_sample",
-     *      joinColumns={@ORM\JoinColumn(name="project_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="sample_id", referencedColumnName="id")}
-     * )
-     * @JMS\Groups({"default"})
-     */
-    private $projects;
 
     /**
      * @var string $vectorName
@@ -830,6 +821,6 @@ class Sample
      */
     public function getStringLabel()
     {
-        return $this->getId() . ': ' . $this->getName();
+        return $this->getName();
     }
 }

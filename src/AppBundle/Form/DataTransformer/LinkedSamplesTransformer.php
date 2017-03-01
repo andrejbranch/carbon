@@ -2,7 +2,7 @@
 
 namespace AppBundle\Form\DataTransformer;
 
-use AppBundle\Entity\SampleLinkedSample;
+use AppBundle\Entity\Storage\SampleLinkedSample;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -48,7 +48,7 @@ class LinkedSamplesTransformer implements DataTransformerInterface
             return;
         }
 
-        $repo = $this->em->getRepository('AppBundle:SampleLinkedSample');
+        $repo = $this->em->getRepository('AppBundle:Storage\SampleLinkedSample');
 
         foreach ($removingIds as $removingId) {
 
@@ -82,7 +82,7 @@ class LinkedSamplesTransformer implements DataTransformerInterface
 
             $sampleLinkedSample2 = new SampleLinkedSample();
 
-            $sampleRepo = $this->em->getRepository('AppBundle:Sample');
+            $sampleRepo = $this->em->getRepository('AppBundle:Storage\Sample');
 
             // $parentSample = $sampleRepo->find($parentId);
             $parentSample = $this->parentSample;

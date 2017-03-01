@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use AppBundle\Entity\Sample;
 use AppBundle\Service\Import\CryoblockDoctrineWriter;
@@ -26,22 +26,7 @@ use Carbon\ApiBundle\Validator\Constraints as CarbonAssert;
 class SampleImportController extends CarbonApiController
 {
     /**
-     * @Route("/sample-import/{sampleTypeId}", name="sample_import_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
-     * @Route("/sample-import/{sampleTypeId}", name="sample_import_download")
+     * @Route("/storage/sample-import/{sampleTypeId}", name="sample_import_download")
      * @Method("GET")
      *
      * @return Response
@@ -70,7 +55,7 @@ class SampleImportController extends CarbonApiController
     }
 
     /**
-     * @Route("/sample-import/{sampleTypeId}", name="sample_import_upload")
+     * @Route("/storage/sample-import/{sampleTypeId}", name="sample_import_upload")
      * @Method("POST")
      *
      * @return Response

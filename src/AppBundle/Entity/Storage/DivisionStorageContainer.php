@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\Storage\Sample;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Division Storage Container
  *
  * @ORM\Entity()
- * @ORM\Table(name="division_storage_container")
+ * @ORM\Table(name="storage.division_storage_container", schema="storage")
  */
 class DivisionStorageContainer
 {
@@ -37,7 +37,7 @@ class DivisionStorageContainer
     private $storageContainerId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\StorageContainer")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\StorageContainer")
      * @ORM\JoinColumn(name="storage_container_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -52,7 +52,7 @@ class DivisionStorageContainer
     private $divisionId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Division")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionStorageContainers")
      * @ORM\JoinColumn(name="division_id", nullable=false)
      * @JMS\Groups({"default"})
      */

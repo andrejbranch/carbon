@@ -5,6 +5,6 @@ carbon_api:
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
 
-app:
-    resource: "@AppBundle/Controller/"
+storage:
+    resource: "@AppBundle/Controller/Storage"
     type:     annotation

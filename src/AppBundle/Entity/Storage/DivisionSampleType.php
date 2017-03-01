@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\Storage\Sample;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Division Sample Type
  *
  * @ORM\Entity()
- * @ORM\Table(name="division_sample_type")
+ * @ORM\Table(name="storage.division_sample_type", schema="storage")
  */
 class DivisionSampleType
 {
@@ -37,7 +37,7 @@ class DivisionSampleType
     private $sampleTypeId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\SampleType")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\SampleType")
      * @ORM\JoinColumn(name="sample_type_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -52,7 +52,7 @@ class DivisionSampleType
     private $divisionId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Division")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionSampleTypes")
      * @ORM\JoinColumn(name="division_id", nullable=false)
      * @JMS\Groups({"default"})
      */

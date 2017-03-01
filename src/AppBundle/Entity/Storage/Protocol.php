@@ -1,14 +1,14 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * Protocol
  *
- * @ORM\Table()
  * @ORM\Entity(repositoryClass="AppBundle\Entity\ProtocolRepository")
+ * @ORM\Table(name="storage.protocol", schema="storage")
  */
 class Protocol
 {
@@ -81,7 +81,7 @@ class Protocol
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -104,7 +104,7 @@ class Protocol
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -127,7 +127,7 @@ class Protocol
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -150,7 +150,7 @@ class Protocol
     /**
      * Get notes
      *
-     * @return string 
+     * @return string
      */
     public function getNotes()
     {
@@ -173,7 +173,7 @@ class Protocol
     /**
      * Get createdBy
      *
-     * @return integer 
+     * @return integer
      */
     public function getCreatedBy()
     {
@@ -196,7 +196,7 @@ class Protocol
     /**
      * Get createdAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getCreatedAt()
     {
@@ -219,7 +219,7 @@ class Protocol
     /**
      * Get updatedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getUpdatedAt()
     {
@@ -242,7 +242,7 @@ class Protocol
     /**
      * Get deletedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getDeletedAt()
     {
@@ -265,7 +265,7 @@ class Protocol
     /**
      * Get archivedAt
      *
-     * @return \DateTime 
+     * @return \DateTime
      */
     public function getArchivedAt()
     {

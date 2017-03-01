@@ -61,7 +61,7 @@ swiftmailer:
 # Doctrine Configuration
 doctrine:
     dbal:
-        driver:   pdo_mysql
+        driver:   pdo_pgsql
         host:     "%database_host%"
         port:     "%database_port%"
         dbname:   "%database_name%"
@@ -89,3 +89,9 @@ doctrine:
             softdeleteable:
                 class: "Gedmo\\SoftDeleteable\\Filter\\SoftDeleteableFilter"
                 enabled: true
+
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/../src/Migration"
+    namespace: AppBundle\Migration
+    table_name: migration_versions
+    name: AppBundle Migrations

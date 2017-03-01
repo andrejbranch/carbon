@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,38 +12,23 @@ class DivisionStorageContainerController extends CarbonApiController
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\DivisionStorageContainer";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\DivisionStorageContainer";
 
     protected $resourceLinkMap = array(
         'division' => array(
-            'returnedEntity' => 'AppBundle\Entity\StorageContainer',
+            'returnedEntity' => 'AppBundle\Entity\Storage\StorageContainer',
             'joinColumn' => 'storageContainerId',
             'whereColumn' => 'divisionId',
         ),
         'storage-container' => array(
-            'returnedEntity' => 'AppBundle\Entity\Division',
+            'returnedEntity' => 'AppBundle\Entity\Storage\Division',
             'joinColumn' => 'divisionId',
             'whereColumn' => 'storageContainerId',
         )
     );
 
     /**
-     * @Route("/division-storage-container/{type}/{id}", name="division_storage_container_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
-     * @Route("/division-storage-container/{type}/{id}", name="division_storage_container_get")
+     * @Route("/storage/division-storage-container/{type}/{id}", name="division_storage_container_get")
      * @Method("GET")
      *
      * @return Response

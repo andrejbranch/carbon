@@ -1,8 +1,8 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\Storage\Sample;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Sample Linked Sample
  *
- * @ORM\Entity(repositoryClass="AppBundle\Entity\SampleLinkRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\SampleLinkRepository")
+ * @ORM\Table(name="storage.sample_linked_sample", schema="storage")
  */
 class SampleLinkedSample
 {
@@ -36,7 +37,7 @@ class SampleLinkedSample
     private $parentSampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Sample")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="parent_sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -51,7 +52,7 @@ class SampleLinkedSample
     private $childSampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Sample")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="child_sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */

@@ -2,9 +2,9 @@
 
 namespace AppBundle\Service;
 
-use AppBundle\Entity\Division;
-use AppBundle\Entity\SampleType;
-use AppBundle\Entity\StorageContainer;
+use AppBundle\Entity\Storage\Division;
+use AppBundle\Entity\Storage\SampleType;
+use AppBundle\Entity\Storage\StorageContainer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -59,17 +59,17 @@ class SampleLocationDecider
 
     public function getSampleTypeByName($name)
     {
-        return $this->em->getRepository('AppBundle:SampleType')->findOneBy(array('name' => $name));
+        return $this->em->getRepository('AppBundle:Storage\SampleType')->findOneBy(array('name' => $name));
     }
 
     public function getStorageContainerByName($name)
     {
-        return $this->em->getRepository('AppBundle:StorageContainer')->findOneBy(array('name' => $name));
+        return $this->em->getRepository('AppBundle:Storage\StorageContainer')->findOneBy(array('name' => $name));
     }
 
     private function getMatchedDivisionTest(SampleType $sampleType, StorageContainer $storageContainer, &$samples)
     {
-        $repo = $this->em->getRepository('AppBundle:Division');
+        $repo = $this->em->getRepository('AppBundle:Storage\Division');
 
         $matchedWithDimensions = $repo->findMatchedDivisionsWithDimension($sampleType, $storageContainer);
         $matchedDimensionless = $repo->findMatchedDimensionlessDivisions($sampleType, $storageContainer);
@@ -154,9 +154,10 @@ class SampleLocationDecider
         // // no matches
         // return array();
     }
+
     private function getMatchedDivision(SampleType $sampleType, StorageContainer $storageContainer)
     {
-        $repo = $this->em->getRepository('AppBundle:Division');
+        $repo = $this->em->getRepository('AppBundle:Storage\Division');
 
         $matchedWithDimensions = $repo->findMatchedDivisionsWithDimension($sampleType, $storageContainer);
         $matchedDimensionless = $repo->findMatchedDimensionlessDivisions($sampleType, $storageContainer);

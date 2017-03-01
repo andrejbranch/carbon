@@ -1,41 +1,32 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
-use AppBundle\Entity\SampleType;
+use AppBundle\Entity\Division;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 
-class SampleTypeController extends CarbonApiController
+class DivisionController extends CarbonApiController
 {
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\SampleType";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\Division";
 
     /**
-     * @Route("/sample-type", name="sample_type_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
+     * @var string The form type for this resource
      */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
+    const FORM_TYPE = "division";
 
     /**
      * Handles the HTTP get request for the division entity
      *
-     * @Route("/sample-type", name="sample_type_get")
+     * @Route("/storage/division", name="division_get")
      * @Method("GET")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleGet()
     {
@@ -45,9 +36,10 @@ class SampleTypeController extends CarbonApiController
     /**
      * Handles the HTTP get request for the card entity
      *
-     * @Route("/sample-type", name="sample_type_post")
+     * @Route("/storage/division", name="division_post")
      * @Method("POST")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePost()
     {
@@ -58,9 +50,10 @@ class SampleTypeController extends CarbonApiController
      * Handles the HTTP PUT request for the card entity
      *
      * @todo  figure out why PUT method has no request params
-     * @Route("/sample-type", name="sample_type_put")
+     * @Route("/storage/division", name="division_put")
      * @Method("PUT")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handlePut()
     {
@@ -70,9 +63,10 @@ class SampleTypeController extends CarbonApiController
     /**
      * Handles the HTTP DELETE request for the card entity
      *
-     * @Route("/sample-type", name="sample_type_delete")
+     * @Route("/storage/division", name="division_delete")
      * @Method("DELETE")
-     * @return [type] [description]
+     *
+     * @return Response
      */
     public function handleDelete()
     {

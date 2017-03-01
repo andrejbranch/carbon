@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use AppBundle\Entity\StorageContainer;
 use Carbon\ApiBundle\Controller\CarbonApiController;
@@ -13,27 +13,12 @@ class StorageContainerController extends CarbonApiController
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\StorageContainer";
-
-    /**
-     * @Route("/storage-container", name="storage_container_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\StorageContainer";
 
     /**
      * Handles the HTTP get request for the division entity
      *
-     * @Route("/storage-container", name="storage_container_get")
+     * @Route("/storage/storage-container", name="storage_container_get")
      * @Method("GET")
      * @return [type] [description]
      */
@@ -45,7 +30,7 @@ class StorageContainerController extends CarbonApiController
     /**
      * Handles the HTTP get request for the card entity
      *
-     * @Route("/storage-container", name="storage_container_post")
+     * @Route("/storage/storage-container", name="storage_container_post")
      * @Method("POST")
      * @return [type] [description]
      */
@@ -58,7 +43,7 @@ class StorageContainerController extends CarbonApiController
      * Handles the HTTP PUT request for the card entity
      *
      * @todo  figure out why PUT method has no request params
-     * @Route("/storage-container", name="storage_container_put")
+     * @Route("/storage/storage-container", name="storage_container_put")
      * @Method("PUT")
      * @return [type] [description]
      */
@@ -70,7 +55,7 @@ class StorageContainerController extends CarbonApiController
     /**
      * Handles the HTTP DELETE request for the card entity
      *
-     * @Route("/storage-container", name="storage_container_delete")
+     * @Route("/storage/storage-container", name="storage_container_delete")
      * @Method("DELETE")
      * @return [type] [description]
      */

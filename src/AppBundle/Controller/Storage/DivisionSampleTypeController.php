@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Controller;
+namespace AppBundle\Controller\Storage;
 
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -12,38 +12,23 @@ class DivisionSampleTypeController extends CarbonApiController
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\DivisionSampleType";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Storage\DivisionSampleType";
 
     protected $resourceLinkMap = array(
         'division' => array(
-            'returnedEntity' => 'AppBundle\Entity\SampleType',
+            'returnedEntity' => 'AppBundle\Entity\Storage\SampleType',
             'joinColumn' => 'sampleTypeId',
             'whereColumn' => 'divisionId',
         ),
         'sample-type' => array(
-            'returnedEntity' => 'AppBundle\Entity\Division',
+            'returnedEntity' => 'AppBundle\Entity\Storage\Division',
             'joinColumn' => 'divisionId',
             'whereColumn' => 'sampleTypeId',
         )
     );
 
     /**
-     * @Route("/division-sample-type/{type}/{id}", name="division_sample_type_options")
-     * @Method("OPTIONS")
-     *
-     * @return Response
-     */
-    public function optionsAction()
-    {
-        $response = new Response();
-
-        $data = array('success' => 'success');
-
-        return $this->getJsonResponse(json_encode($data));
-    }
-
-    /**
-     * @Route("/division-sample-type/{type}/{id}", name="division_sample_type_get")
+     * @Route("/storage/division-sample-type/{type}/{id}", name="division_sample_type_get")
      * @Method("GET")
      *
      * @return Response

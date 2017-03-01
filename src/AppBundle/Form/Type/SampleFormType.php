@@ -52,16 +52,16 @@ class SampleFormType extends CryoblockAbstractType
             ->add('purificationTags', 'text')
 
             ->add('division', 'entity', array(
-                'class' => 'AppBundle:Division',
+                'class' => 'AppBundle:Storage\Division',
                 'property' => 'division_id',
                 'multiple' => false
             ))
             ->add('storageContainer', 'entity', array(
-                'class' => 'AppBundle:StorageContainer',
+                'class' => 'AppBundle:Storage\StorageContainer',
                 'multiple' => false,
             ))
             ->add('sampleType', 'entity', array(
-                'class' => 'AppBundle:SampleType',
+                'class' => 'AppBundle:Storage\SampleType',
                 'multiple' => false
             ))
 
@@ -81,13 +81,13 @@ class SampleFormType extends CryoblockAbstractType
 
         $builder->get('sampleType')
             ->addViewTransformer(new CryoblockOTOTransformer(
-                $this->em, 'AppBundle:SampleType'
+                $this->em, 'AppBundle:Storage\SampleType'
             ))
         ;
 
         $builder->get('storageContainer')
             ->addViewTransformer(new CryoblockOTOTransformer(
-                $this->em, 'AppBundle:StorageContainer'
+                $this->em, 'AppBundle:Storage\StorageContainer'
             ))
         ;
 
@@ -97,7 +97,7 @@ class SampleFormType extends CryoblockAbstractType
 
         $builder->get('division')
             ->addViewTransformer(new CryoblockOTOTransformer(
-                $this->em, 'AppBundle:Division'
+                $this->em, 'AppBundle:Storage\Division'
             ))
         ;
 
@@ -107,7 +107,7 @@ class SampleFormType extends CryoblockAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Sample',
+            'data_class' => 'AppBundle\Entity\Storage\Sample',
             'csrf_protection' => false,
         ));
     }

@@ -1,18 +1,18 @@
 <?php
 
-namespace AppBundle\Entity;
+namespace AppBundle\Entity\Storage;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation AS JMS;
 
 /**
- * SampleType
+ * StorageContainer
  *
- * @ORM\Table()
- * @ORM\Entity(repositoryClass="AppBundle\Entity\SampleTypeRepository")
+ * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\StorageContainerRepository")
+ * @ORM\Table(name="storage.storage_container", schema="storage")
  */
-class SampleType
+class StorageContainer
 {
     /**
      * @var integer
@@ -33,7 +33,6 @@ class SampleType
      */
     private $name;
 
-
     /**
      * Get id
      *
@@ -48,7 +47,8 @@ class SampleType
      * Set name
      *
      * @param string $name
-     * @return SampleType
+     *
+     * @return StorageContainer
      */
     public function setName($name)
     {
@@ -65,5 +65,14 @@ class SampleType
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getName();
     }
 }
