@@ -15,6 +15,11 @@ security:
             security: false
             stateless: true
 
+        password_reset:
+            pattern: ^/user/password-reset.*$
+            security: false
+            stateless: true
+
         api:
             pattern: ^/
             stateless: true
