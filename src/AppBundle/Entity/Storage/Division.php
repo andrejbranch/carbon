@@ -77,6 +77,12 @@ class Division
     protected $path;
 
     /**
+     * @ORM\Column(name="sort", type="integer", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $sort;
+
+    /**
      * @Gedmo\TreePathSource
      * @ORM\Column(name="title", type="string", length=64)
      * @JMS\Groups({"default"})
@@ -216,6 +222,11 @@ class Division
         return $this->level;
     }
 
+    public function getSort()
+    {
+        return $this->sort;
+    }
+
     public function addDivisionSampleType(DivisionSampleType $divisionSampleType)
     {
         $this->divisionSampleTypes->add($divisionSampleType);
@@ -289,6 +300,11 @@ class Division
     public function hasDimension()
     {
         return $this->hasDimension;
+    }
+
+    public function setChildren($children)
+    {
+        $this->children = $children;
     }
 
     /**

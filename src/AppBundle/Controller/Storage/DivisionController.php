@@ -34,6 +34,35 @@ class DivisionController extends CarbonApiController
     }
 
     /**
+     * Handles the HTTP get request for the division entity
+     *
+     * @Route("/storage/division-tree", name="division_tree_get")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function handleGetTree()
+    {
+        $data = $this->getEntityRepository()->getRootNodes('sort');
+
+        foreach ($data as $division) {
+
+            $children = $this->getEntityRepository()->getChildren($division, false, 'sort');
+
+            if (count($children)) {
+
+                $division->setChildren($children);
+
+            }
+
+        }
+
+        $data = $this->getSerializationHelper()->serialize($data, array('children'));
+
+        return $this->getJsonResponse($data);
+    }
+
+    /**
      * Handles the HTTP get request for the card entity
      *
      * @Route("/storage/division", name="division_post")

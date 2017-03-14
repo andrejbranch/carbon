@@ -2,13 +2,13 @@
 parameters:
     database_host: 127.0.0.1
     database_port: null
-    database_name: symfony
-    database_user: root
+    database_name: scripps
+    database_user: andre
     database_password: null
-    mailer_transport: smtp
-    mailer_host: 127.0.0.1
-    mailer_user: null
-    mailer_password: null
-    secret: ThisTokenIsNotSoSecretChangeIt
-    app.name: cryoblock
-    frontend.url: 'localhost:9000/#/'
+    mailer_transport: gmail
+    mailer_host: smtp.gmail.com
+    mailer_user: andrejbranch@gmail.com
+    mailer_password: '*321eulala*'
+    secret: 5d92cfc4b5affafc405b9efa1ff1fee2ef7ba824
+    app.name: 'cryoblock'
+    frontend.url: 'andre.dev.carbon.com:9000/#/'

@@ -2,7 +2,7 @@
 
 namespace AppBundle\Listener;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\Storage\Sample;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Symfony\Bridge\Monolog\Logger;
 
