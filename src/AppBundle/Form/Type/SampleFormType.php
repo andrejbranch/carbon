@@ -77,6 +77,12 @@ class SampleFormType extends CryoblockAbstractType
             ))
 
             ->add('linkedSamples', 'hidden', array('mapped' => false))
+
+            ->add('projects', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'projectSamples',
+                'child_accessor' => 'project'
+            ))
         ;
 
         $builder->get('sampleType')

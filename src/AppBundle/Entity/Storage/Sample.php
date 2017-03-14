@@ -367,13 +367,14 @@ class Sample
      */
     private $mass;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\ProjectSample", mappedBy="sample")
+     */
+    protected $projectSamples;
+
     public $linkedSamples;
 
-    public function __construct()
-    {
-        $this->projects = new ArrayCollection();
-        $this->linkedSamples = new ArrayCollection();
-    }
+    public $projects;
 
     /**
      * Get id
