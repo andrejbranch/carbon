@@ -22,9 +22,12 @@ class DivisionFormType extends CryoblockAbstractType
     {
         $builder
             ->add('title', 'text')
+            ->add('description', 'text')
             ->add('hasDimension', 'checkbox')
             ->add('height', 'integer')
             ->add('width', 'integer')
+            ->add('lft', 'integer')
+            ->add('rgt', 'integer')
             ->add('parent', 'entity', array(
                 'class' => 'AppBundle:Storage\Division',
                 'property' => 'parent_id',

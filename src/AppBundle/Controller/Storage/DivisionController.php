@@ -43,21 +43,9 @@ class DivisionController extends CarbonApiController
      */
     public function handleGetTree()
     {
-        $data = $this->getEntityRepository()->getRootNodes('sort');
+        $data = $this->getEntityRepository()->childrenHierarchy();
 
-        foreach ($data as $division) {
-
-            $children = $this->getEntityRepository()->getChildren($division, false, 'sort');
-
-            if (count($children)) {
-
-                $division->setChildren($children);
-
-            }
-
-        }
-
-        $data = $this->getSerializationHelper()->serialize($data, array('children'));
+        $data = $this->getSerializationHelper()->serialize($data);
 
         return $this->getJsonResponse($data);
     }
@@ -78,7 +66,6 @@ class DivisionController extends CarbonApiController
     /**
      * Handles the HTTP PUT request for the card entity
      *
-     * @todo  figure out why PUT method has no request params
      * @Route("/storage/division", name="division_put")
      * @Method("PUT")
      *
@@ -86,7 +73,9 @@ class DivisionController extends CarbonApiController
      */
     public function handlePut()
     {
-        return parent::handlePut();
+        $response = parent::handlePut();
+
+        return $response;
     }
 
     /**
@@ -100,5 +89,41 @@ class DivisionController extends CarbonApiController
     public function handleDelete()
     {
         return parent::handleDelete();
+    }
+
+    /**
+     * Handles the HTTP POST request for moving a division
+     *
+     * @Route("/storage/division/{id}/move", name="division_move")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function move($id)
+    {
+        $request = $this->getRequest();
+        $content = $request->getContent();
+        $content = (json_decode($content, true));
+        $repo = $this->getEntityRepository();
+        $division = $repo->find($id);
+
+        if (isset($content['firstChildOf'])) {
+            $parent = $repo->find($content['firstChildOf']);
+            $repo->persistAsFirstChildOf($division, $parent);
+        }
+
+        if (isset($content['nextSiblingOf'])) {
+            $sibling = $repo->find($content['nextSiblingOf']);
+            $repo->persistAsNextSiblingOf($division, $sibling);
+        }
+
+        if (isset($content['previousSiblingOf'])) {
+            $sibling = $repo->find($content['previousSiblingOf']);
+            $repo->persistAsPrevSiblingOf($division, $sibling);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
     }
 }
