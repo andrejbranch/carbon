@@ -21,19 +21,26 @@ services:
         class: AppBundle\Service\SampleLocationDecider
         arguments: ["@doctrine.orm.default_entity_manager"]
 
+    division.manager:
+        class: AppBundle\Service\Storage\DivisionManager
+        arguments: ["@doctrine.orm.default_entity_manager"]
+
     sample.listener:
         class: AppBundle\Listener\SampleListener
         arguments: ["@logger"]
         tags:
-            - { name: doctrine.event_listener, event: postUpdate }
-            - { name: doctrine.event_listener, event: postPersist }
+            # - { name: doctrine.event_listener, event: postPersist }
+            # - { name: doctrine.event_listener, event: preUpdate }
+            - { name: doctrine.event_listener, event: onFlush }
+            # - { name: doctrine.event_listener, event: postFlush }
+            # - { name: doctrine.event_listener, event: preRemove }
+            # - { name: doctrine.event_listener, event: postRemove }
 
-    division.listener:
-        class: AppBundle\Listener\DivisionListener
-        arguments: ["@logger"]
-        tags:
-            - { name: doctrine.event_listener, event: postUpdate }
-            - { name: doctrine.event_listener, event: postPersist }
+    # division.listener:
+    #     class: AppBundle\Listener\DivisionListener
+    #     arguments: ["@logger"]
+    #     tags:
+    #         - { name: doctrine.event_listener, event: postPersist }
 
     app.form.type.division:
         class: AppBundle\Form\Type\DivisionFormType

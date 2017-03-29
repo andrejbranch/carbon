@@ -132,7 +132,7 @@ class Division
     /**
      * @ORM\OneToMany(targetEntity="Division", mappedBy="parent")
      * @JMS\Groups({"children"})
-     * @JMS\MaxDepth(10)
+     * @JMS\MaxDepth(2)
      */
     protected $children;
 

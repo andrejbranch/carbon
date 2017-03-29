@@ -100,4 +100,58 @@ class SampleController extends CarbonApiController
     {
         return parent::handleDelete();
     }
+
+    /**
+     * Handles the HTTP POST request for moving a division
+     *
+     * @Route("/storage/sample/storage-remove", name="sample_storage_remove")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function storageRemove()
+    {
+        $content = (json_decode($this->getRequest()->getContent(), true));
+        $repo = $this->getEntityRepository();
+
+        $sampleIds = $content['sampleIds'];
+        $status = $content['status'];
+
+        foreach ($sampleIds as $sampleId) {
+            $sample = $repo->find($sampleId);
+            $sample->setDivision(null);
+            $sample->setDivisionId(null);
+            $sample->setDivisionRow(null);
+            $sample->setDivisionColumn(null);
+            $sample->setStatus($status);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
+    }
+
+    /**
+     * Handles the HTTP POST request for moving a division
+     *
+     * @Route("/storage/sample/storage-move", name="sample_storage_move")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function storageMove()
+    {
+        $sampleMoveMap = (json_decode($this->getRequest()->getContent(), true));
+        $repo = $this->getEntityRepository();
+
+        foreach ($sampleMoveMap as $map) {
+            $sample = $repo->find($map['sampleId']);
+            $sample->setDivisionRow($map['row']);
+            $sample->setDivisionColumn($map['column']);
+        }
+
+        $this->getEntityManager()->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
+    }
 }
