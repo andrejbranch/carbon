@@ -84,11 +84,16 @@ class Division
     protected $percentFull = 0;
 
     /**
-     * @Gedmo\TreePath
      * @ORM\Column(name="path", type="string", length=3000, nullable=true)
      * @JMS\Groups({"default"})
      */
     protected $path;
+
+    /**
+     * @ORM\Column(name="id_path", type="string", length=3000, nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $idPath;
 
     /**
      * @Gedmo\TreePathSource
@@ -137,10 +142,25 @@ class Division
     protected $children;
 
     /**
+     * @ORM\Column(name="is_public", type="boolean", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $isPublic = true;
+
+    /**
      * @ORM\OneToMany(targetEntity="Sample", mappedBy="division")
      * @JMS\Groups({"samples"})
      */
     protected $samples;
+
+    /**
+     * @var User $owner
+     *
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id")
+     * @JMS\Groups({"default"})
+     */
+    private $owner;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionSampleType", mappedBy="division")
@@ -157,11 +177,18 @@ class Division
      */
     protected $divisionEditors;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionViewer", mappedBy="division")
+     */
+    protected $divisionViewers;
+
     public $sampleTypes;
 
     public $storageContainers;
 
     public $editors;
+
+    public $viewers;
 
     public function __construct()
     {
@@ -361,7 +388,7 @@ class Division
      */
     public function getStringLabel()
     {
-        return $this->getTitle();
+        return $this->getPath();
     }
 
     /**
@@ -632,6 +659,126 @@ class Division
     public function setEditors($editors)
     {
         $this->editors = $editors;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of idPath.
+     *
+     * @return mixed
+     */
+    public function getIdPath()
+    {
+        return $this->idPath;
+    }
+
+    /**
+     * Sets the value of idPath.
+     *
+     * @param mixed $idPath the id path
+     *
+     * @return self
+     */
+    public function setIdPath($idPath)
+    {
+        $this->idPath = $idPath;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of isPublic.
+     *
+     * @return mixed
+     */
+    public function getIsPublic()
+    {
+        return $this->isPublic;
+    }
+
+    /**
+     * Sets the value of isPublic.
+     *
+     * @param mixed $isPublic the is public
+     *
+     * @return self
+     */
+    public function setIsPublic($isPublic)
+    {
+        $this->isPublic = $isPublic;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of owner.
+     *
+     * @return User $owner
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Sets the value of owner.
+     *
+     * @param User $owner $owner the owner
+     *
+     * @return self
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of divisionViewers.
+     *
+     * @return mixed
+     */
+    public function getDivisionViewers()
+    {
+        return $this->divisionViewers;
+    }
+
+    /**
+     * Sets the value of divisionViewers.
+     *
+     * @param mixed $divisionViewers the division viewers
+     *
+     * @return self
+     */
+    public function setDivisionViewers($divisionViewers)
+    {
+        $this->divisionViewers = $divisionViewers;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of viewers.
+     *
+     * @return mixed
+     */
+    public function getViewers()
+    {
+        return $this->viewers;
+    }
+
+    /**
+     * Sets the value of viewers.
+     *
+     * @param mixed $viewers the viewers
+     *
+     * @return self
+     */
+    public function setViewers($viewers)
+    {
+        $this->viewers = $viewers;
 
         return $this;
     }

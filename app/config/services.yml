@@ -29,18 +29,13 @@ services:
         class: AppBundle\Listener\SampleListener
         arguments: ["@logger"]
         tags:
-            # - { name: doctrine.event_listener, event: postPersist }
-            # - { name: doctrine.event_listener, event: preUpdate }
             - { name: doctrine.event_listener, event: onFlush }
-            # - { name: doctrine.event_listener, event: postFlush }
-            # - { name: doctrine.event_listener, event: preRemove }
-            # - { name: doctrine.event_listener, event: postRemove }
 
-    # division.listener:
-    #     class: AppBundle\Listener\DivisionListener
-    #     arguments: ["@logger"]
-    #     tags:
-    #         - { name: doctrine.event_listener, event: postPersist }
+    division.serializer.listener:
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
+        class: AppBundle\Listener\DivisionSerializerListener
+        tags:
+            - { name: jms_serializer.event_subscriber }
 
     app.form.type.division:
         class: AppBundle\Form\Type\DivisionFormType
@@ -53,3 +48,9 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: project }
+
+    app.validator.storage_location_validator:
+        class: AppBundle\Validator\Constraints\StorageLocationValidator
+        arguments: [@doctrine.orm.default_entity_manager]
+        tags:
+            - { name: validator.constraint_validator, alias: storage_location_validator }

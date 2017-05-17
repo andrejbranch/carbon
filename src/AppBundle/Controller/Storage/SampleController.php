@@ -38,30 +38,6 @@ class SampleController extends CarbonApiController
     }
 
     /**
-     * Handles the HTTP get request for the division entity
-     *
-     * @Route("/storage/sample/location-match/{sampleTypeId}/{storageContainerId}", name="sample_location_match")
-     * @Method("GET")
-     *
-     * @return Response
-     */
-    public function handleLocationMatch($sampleTypeId, $storageContainerId)
-    {
-        $data = $this->getGrid()->getResult($this->getEntityRepository());
-
-        $sampleType = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType')->find($sampleTypeId);
-        $storageContainer = $this->getEntityManager()->getRepository('AppBundle:Storage\StorageContainer')->find($storageContainerId);
-
-        $locationDecider = $this->get('sample.location_decider');
-
-        $matchedDivisions = $locationDecider->decideLocation($sampleType, $storageContainer);
-
-        $serialized = $this->getSerializationHelper()->serialize($matchedDivisions);
-
-        return $this->getJsonResponse($serialized);
-    }
-
-    /**
      * Handles the HTTP get request for the card entity
      *
      * @Route("/storage/sample", name="sample_post")

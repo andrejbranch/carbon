@@ -377,6 +377,31 @@ class Sample
     public $projects;
 
     /**
+     * @JMS\Groups({"default"})
+     */
+    public $storageRecommended;
+
+    /**
+     * @JMS\Groups({"default"})
+     */
+    public $recommendedDivision;
+
+    /**
+     * @JMS\Groups({"default"})
+     */
+    public $recommendedDivisionRow;
+
+    /**
+     * @JMS\Groups({"default"})
+     */
+    public $recommendedDivisionColumn;
+
+    /**
+     * @JMS\Groups({"default"})
+     */
+    public $errors;
+
+    /**
      * Get id
      *
      * @return integer
@@ -661,10 +686,6 @@ class Sample
 
     public function setStatus($status)
     {
-        if (!in_array($status, $this->validStatuses)) {
-            throw new \InvalidArgumentException(sprintf('%s is not a valid status', $status));
-        }
-
         $this->status = $status;
     }
 
@@ -705,12 +726,6 @@ class Sample
 
     public function setConcentrationUnits($concentrationUnits)
     {
-        if (!in_array($concentrationUnits, $this->validConcentrationUnits)) {
-            throw new \InvalidArgumentException(
-                sprintf('%s is not a valid concentration unit', $concentrationUnits)
-            );
-        }
-
         $this->concentrationUnits = $concentrationUnits;
     }
 
@@ -823,5 +838,357 @@ class Sample
     public function getStringLabel()
     {
         return $this->getName();
+    }
+
+    /**
+     * Gets the Valid sample statuses.
+     *
+     * @return array
+     */
+    public function getValidStatuses()
+    {
+        return $this->validStatuses;
+    }
+
+    /**
+     * Sets the Valid sample statuses.
+     *
+     * @param array $validStatuses the valid statuses
+     *
+     * @return self
+     */
+    public function setValidStatuses(array $validStatuses)
+    {
+        $this->validStatuses = $validStatuses;
+
+        return $this;
+    }
+
+    /**
+     * Gets the Valid concentration units.
+     *
+     * @return array
+     */
+    public function getValidConcentrationUnits()
+    {
+        return $this->validConcentrationUnits;
+    }
+
+    /**
+     * Sets the Valid concentration units.
+     *
+     * @param array $validConcentrationUnits the valid concentration units
+     *
+     * @return self
+     */
+    public function setValidConcentrationUnits(array $validConcentrationUnits)
+    {
+        $this->validConcentrationUnits = $validConcentrationUnits;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of id.
+     *
+     * @param integer $id the id
+     *
+     * @return self
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of notes.
+     *
+     * @param string $notes the notes
+     *
+     * @return self
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of createdBy.
+     *
+     * @param User $createdBy $createdBy the created by
+     *
+     * @return self
+     */
+    public function setCreatedBy($createdBy)
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
+    }
+
+    /**
+     * Sets the Created by id.
+     *
+     * @param mixed $createdById the created by id
+     *
+     * @return self
+     */
+    public function setCreatedById($createdById)
+    {
+        $this->createdById = $createdById;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of updatedBy.
+     *
+     * @param User $updatedBy $updatedBy the updated by
+     *
+     * @return self
+     */
+    public function setUpdatedBy($updatedBy)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Sets the Created by id.
+     *
+     * @param mixed $updatedById the updated by id
+     *
+     * @return self
+     */
+    public function setUpdatedById($updatedById)
+    {
+        $this->updatedById = $updatedById;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of createdAt.
+     *
+     * @param \DateTime $created $createdAt the created at
+     *
+     * @return self
+     */
+    public function setCreatedAt($createdAt)
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * Sets the value of updatedAt.
+     *
+     * @param \DateTime $updated $updatedAt the updated at
+     *
+     * @return self
+     */
+    public function setUpdatedAt($updatedAt)
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of projectSamples.
+     *
+     * @return mixed
+     */
+    public function getProjectSamples()
+    {
+        return $this->projectSamples;
+    }
+
+    /**
+     * Sets the value of projectSamples.
+     *
+     * @param mixed $projectSamples the project samples
+     *
+     * @return self
+     */
+    public function setProjectSamples($projectSamples)
+    {
+        $this->projectSamples = $projectSamples;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of linkedSamples.
+     *
+     * @return mixed
+     */
+    public function getLinkedSamples()
+    {
+        return $this->linkedSamples;
+    }
+
+    /**
+     * Sets the value of linkedSamples.
+     *
+     * @param mixed $linkedSamples the linked samples
+     *
+     * @return self
+     */
+    public function setLinkedSamples($linkedSamples)
+    {
+        $this->linkedSamples = $linkedSamples;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of projects.
+     *
+     * @return mixed
+     */
+    public function getProjects()
+    {
+        return $this->projects;
+    }
+
+    /**
+     * Sets the value of projects.
+     *
+     * @param mixed $projects the projects
+     *
+     * @return self
+     */
+    public function setProjects($projects)
+    {
+        $this->projects = $projects;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of storageRecommended.
+     *
+     * @return mixed
+     */
+    public function getStorageRecommended()
+    {
+        return $this->storageRecommended;
+    }
+
+    /**
+     * Sets the value of storageRecommended.
+     *
+     * @param mixed $storageRecommended the storage recommended
+     *
+     * @return self
+     */
+    public function setStorageRecommended($storageRecommended)
+    {
+        $this->storageRecommended = $storageRecommended;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of recommendedDivision.
+     *
+     * @return mixed
+     */
+    public function getRecommendedDivision()
+    {
+        return $this->recommendedDivision;
+    }
+
+    /**
+     * Sets the value of recommendedDivision.
+     *
+     * @param mixed $recommendedDivision the recommended division
+     *
+     * @return self
+     */
+    public function setRecommendedDivision($recommendedDivision)
+    {
+        $this->recommendedDivision = $recommendedDivision;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of recommendedDivisionRow.
+     *
+     * @return mixed
+     */
+    public function getRecommendedDivisionRow()
+    {
+        return $this->recommendedDivisionRow;
+    }
+
+    /**
+     * Sets the value of recommendedDivisionRow.
+     *
+     * @param mixed $recommendedDivisionRow the recommended division row
+     *
+     * @return self
+     */
+    public function setRecommendedDivisionRow($recommendedDivisionRow)
+    {
+        $this->recommendedDivisionRow = $recommendedDivisionRow;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of recommendedDivisionColumn.
+     *
+     * @return mixed
+     */
+    public function getRecommendedDivisionColumn()
+    {
+        return $this->recommendedDivisionColumn;
+    }
+
+    /**
+     * Sets the value of recommendedDivisionColumn.
+     *
+     * @param mixed $recommendedDivisionColumn the recommended division column
+     *
+     * @return self
+     */
+    public function setRecommendedDivisionColumn($recommendedDivisionColumn)
+    {
+        $this->recommendedDivisionColumn = $recommendedDivisionColumn;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of errors.
+     *
+     * @return mixed
+     */
+    public function getErrors()
+    {
+        return $this->errors;
+    }
+
+    /**
+     * Sets the value of errors.
+     *
+     * @param mixed $errors the errors
+     *
+     * @return self
+     */
+    public function setErrors($errors)
+    {
+        $this->errors = $errors;
+
+        return $this;
     }
 }

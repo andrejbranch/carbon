@@ -2,11 +2,12 @@
 
 namespace AppBundle\Controller\Storage;
 
-use AppBundle\Entity\Sample;
+use AppBundle\Entity\Storage\Sample;
 use AppBundle\Service\Import\CryoblockDoctrineWriter;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 
 use Ddeboer\DataImport\Filter\ValidatorFilter;
+use Ddeboer\DataImport\Filter\CallbackFilter;
 use Ddeboer\DataImport\ItemConverter\MappingItemConverter;
 use Ddeboer\DataImport\ItemConverter\CallbackItemConverter;
 use Ddeboer\DataImport\ValueConverter\StringToDateTimeValueConverter;
@@ -23,6 +24,8 @@ use Symfony\Component\Routing\Exception\NotFoundHttpException;
 use Symfony\Component\Validator\Constraints as Assert;
 use Carbon\ApiBundle\Validator\Constraints as CarbonAssert;
 
+use AppBundle\Validator\Constraints as ScrippsAssert;
+
 class SampleImportController extends CarbonApiController
 {
     /**
@@ -33,7 +36,7 @@ class SampleImportController extends CarbonApiController
      */
     public function downloadTemplateAction($sampleTypeId)
     {
-        $sampleType = $this->getEntityManager()->getRepository('AppBundle:SampleType')->find($sampleTypeId);
+        $sampleType = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType')->find($sampleTypeId);
 
         $importer = $this->container->get('sample.importer');
         $fileName = 'sample_import.csv';
@@ -44,14 +47,43 @@ class SampleImportController extends CarbonApiController
         $response->headers->set('Content-Type', 'application/csv');
         $response->headers->set('Content-Disposition', 'attachment; filename="'.$fileName.'";');
         // $response->headers->set('Content-Length', filesize($filename));
-        $response->headers->set('Access-Control-Allow-Origin', '*');
-        $response->headers->set('Access-Control-Allow-Headers', '*');
-        $response->headers->set('Access-Control-Expose-Headers', 'Content-Disposition');
-
 
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @Route("/storage/sample-import/save", name="sample_import_save")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function saveAction()
+    {
+        $request = $this->getRequest();
+        $data = json_decode($request->getContent(), true);
+
+        foreach ($data as $item) {
+
+            $entity = new Sample();
+
+            $form = $this->createForm('sample', $entity);
+            $form->submit($item);
+
+            if (!$form->isValid()) {
+
+                return $this->getFormErrorResponse($form);
+
+            }
+
+            $this->getEntityManager()->persist($entity);
+
+        }
+
+        $this->getEntityManager()->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
     }
 
     /**
@@ -65,41 +97,118 @@ class SampleImportController extends CarbonApiController
         $converter = new MappingItemConverter();
 
         $mapping = array(
-            'Name' => 'name',
-            'Description' => 'description',
-            'Status' => 'status',
-            'Storage Container' => 'storageContainer',
-            'Storage Buffer' => 'storageBuffer',
-            'Linked Samples' => 'linkedSamples',
-            'Vector Name' => 'vectorName',
-            'Concentration' => 'concentration',
-            'Concentration Units' => 'concentrationUnits',
-            'DNA Sequence' => 'dnaSequence',
-            'Amino Acid Sequence' => 'aminoAcidSequence',
-            'Total Amino Acids' => 'aminoAcidCount',
-            'Molecular Weight' => 'molecularWeight',
-            'Extinction Coefficient' => 'extinctionCoefficient',
-            'Purification Tags' => 'purificationTags',
-            'Division' => 'division',
-            'Division Row' => 'divisionRow',
-            'Division Column' => 'divisionColumn',
-            'Sample Type' => 'sampleType',
+
+            'Name' => array(
+                'prop' => 'name',
+                'bindTo' => 'name',
+                'errorProp' => array('name'),
+            ),
+            'Description' => array(
+                'prop' => 'description',
+                'bindTo' => 'description',
+                'errorProp' => array('description'),
+            ),
+            'Status' => array(
+                'prop' => 'status',
+                'bindTo' => 'status',
+                'errorProp' => array('status'),
+            ),
+            'Storage Container' => array(
+                'prop' => 'storageContainer',
+                'bindTo' => 'storageContainer.name',
+                'errorProp' => array('storageContainer'),
+            ),
+            'Storage Buffer' => array(
+                'prop' => 'storageBuffer',
+                'bindTo' => 'storageBuffer',
+                'errorProp' => array('storageBuffer'),
+            ),
+            'Linked Samples' => array(
+                'prop' => 'linkedSamples',
+                'bindTo' => 'linkedSamples',
+                'errorProp' => array('linkedSamples'),
+            ),
+            'Vector Name' => array(
+                'prop' => 'vectorName',
+                'bindTo' => 'vectorName',
+                'errorProp' => array('vectorName'),
+            ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'DNA Sequence' => array(
+                'prop' => 'dnaSequence',
+                'bindTo' => 'dnaSequence',
+                'errorProp' => array('dnaSequence'),
+            ),
+            'Amino Acid Sequence' => array(
+                'prop' => 'aminoAcidSequence',
+                'bindTo' => 'aminoAcidSequence',
+                'errorProp' => array('aminoAcidSequence'),
+            ),
+            'Total Amino Acids' => array(
+                'prop' => 'aminoAcidCount',
+                'bindTo' => 'aminoAcidCount',
+                'errorProp' => array('aminoAcidCount'),
+            ),
+            'Molecular Weight' => array(
+                'prop' => 'molecularWeight',
+                'bindTo' => 'molecularWeight',
+                'errorProp' => array('molecularWeight'),
+            ),
+            'Extinction Coefficient' => array(
+                'prop' => 'extinctionCoefficient',
+                'bindTo' => 'extinctionCoefficient',
+                'errorProp' => array('extinctionCoefficient'),
+            ),
+            'Purification Tags' => array(
+                'prop' => 'purificationTags',
+                'bindTo' => 'purificationTags',
+                'errorProp' => array('purificationTags'),
+            ),
+            'Division' => array(
+                'prop' => 'division',
+                'bindTo' => 'division.stringLabel',
+                'errorProp' => array('division'),
+            ),
+            'Division Row' => array(
+                'prop' => 'divisionRow',
+                'bindTo' => 'divisionRow',
+                'errorProp' => array('divisionRow', 'storageLocation'),
+            ),
+            'Division Column' => array(
+                'prop' => 'divisionColumn',
+                'bindTo' => 'divisionColumn',
+                'errorProp' => array('divisionColumn', 'storageLocation'),
+            ),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
         );
 
-        foreach ($mapping as $columnHeader => $propertyKey) {
+        foreach ($mapping as $columnHeader => $columnMap) {
 
-            $converter->addMapping($columnHeader, $propertyKey);
+            $converter->addMapping($columnHeader, $columnMap['prop']);
 
         }
 
-        $storageContainerRepository = $this->getEntityManager()->getRepository('AppBundle:StorageContainer');
+        $storageContainerRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\StorageContainer');
         $storageContainerConverter = new StringToObjectConverter($storageContainerRepository, 'name');
 
-        $sampleTypeRepository = $this->getEntityManager()->getRepository('AppBundle:SampleType');
+        $sampleTypeRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType');
         $sampleTypeConverter = new StringToObjectConverter($sampleTypeRepository, 'name');
 
-        $divisionRepository = $this->getEntityManager()->getRepository('AppBundle:Division');
-        $divisionConverter = new StringToObjectConverter($divisionRepository, 'title');
+        $divisionRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Division');
+        $divisionConverter = new StringToObjectConverter($divisionRepository, 'id');
 
         $fileContent = $this->getRequest()->getContent();
         // $file = 'php://memory';
@@ -129,7 +238,7 @@ class SampleImportController extends CarbonApiController
         )));
         $filter->add('storageContainer', new CarbonAssert\StringToObject(array(
             'objectName' => 'storage container',
-            'entity' => "AppBundle\\Entity\\StorageContainer",
+            'entity' => "AppBundle\\Entity\\Storage\\StorageContainer",
             'property' => 'name',
         )));
         $filter->add('storageBuffer', new Assert\NotBlank());
@@ -152,42 +261,42 @@ class SampleImportController extends CarbonApiController
         $filter->add('purificationTags', new Assert\NotBlank());
         $filter->add('sampleType', new CarbonAssert\StringToObject(array(
             'objectName' => 'sampleType',
-            'entity' => "AppBundle\\Entity\\SampleType",
+            'entity' => "AppBundle\\Entity\\Storage\\SampleType",
             'property' => 'name',
         )));
+
         $filter->add('division', new Assert\Optional());
         $filter->add('divisionRow', new Assert\Optional());
         $filter->add('divisionColumn', new Assert\Optional());
 
-        // $filter->add('division', new CarbonAssert\StringToObject(array(
-        //     'objectName' => 'division',
-        //     'entity' => "AppBundle\\Entity\\Division",
-        //     'property' => 'title',
-        // )));
-        // $filter->add('divisionRow', new Assert\Regex(array(
-        //     'pattern' => "/^[A-T]$/",
-        //     'message' => 'The division row is invalid'
-        // )));
-        // $filter->add('divisionColumn', new Assert\Range(array('min' => 1, 'max' => 20)));
+        $filter->add('division', new CarbonAssert\StringToObject(array(
+            'objectName' => 'division',
+            'entity' => "AppBundle\\Entity\\Storage\\Division",
+            'property' => 'id',
+        )));
+        $filter->add('divisionRow', new Assert\Regex(array(
+            'pattern' => "/^[A-T]$/",
+            'message' => 'The division row is invalid'
+        )));
+        $filter->add('divisionColumn', new Assert\Range(array('min' => 1, 'max' => 20)));
 
-        $excelReader = new ExcelReader($o, 0);
+        try {
+            $excelReader = new ExcelReader($o, 0);
+        } catch (\Exception $e) {
+            return $this->getJsonResponse(json_encode(array('success' => false)), 400);
+        }
 
-        $workflow = new Workflow($excelReader);
+        foreach ($excelReader->getColumnHeaders() as $header) {
+            if (!array_key_exists($header, $mapping)) {
+                return $this->getJsonResponse(json_encode(array('success' => false)), 400);
+            }
+        }
 
-        $doctrineWriter = new CryoblockDoctrineWriter($this->getEntityManager(), 'AppBundle:Sample', 'name', true);
+        $doctrineWriter = new CryoblockDoctrineWriter($this->getEntityManager(), 'AppBundle:Storage\Sample', null, true);
         $doctrineWriter->disableTruncate();
         $doctrineWriter->setBatchSize(PHP_INT_MAX);
 
-        // $workflow->addWriter($doctrineWriter);
-        // $workflow->addItemConverter($converter);
-        // // $workflow->addItemConverter($callbackConverter);
-        // $workflow->addValueConverter('storageContainer', $storageContainerConverter);
-        // $workflow->addValueConverter('division', $divisionConverter);
-        // $workflow->addValueConverter('sampleType', $sampleTypeConverter);
-        // $workflow->addFilter($filter);
-
-        // $workflow->process();
-
+        $storageLocationValidator = $this->get('app.validator.storage_location_validator');
         $data = array();
         foreach ($excelReader as $item) {
 
@@ -195,16 +304,23 @@ class SampleImportController extends CarbonApiController
 
             $filter->filter($item);
 
+            // $callbackFilter->filter($item);
+
             $data[] = $item;
         }
 
         $violations = $filter->getViolations();
 
+        $hasErrors = false;
+
         if (count($violations)) {
+
+            $hasErrors = true;
 
             foreach ($violations as $k => $violation) {
                 $data[$k - 1]['errors'] = array();
                 foreach ($violation as $childViolation) {
+
                     preg_match("/\[(.*)\]/", $childViolation->getPropertyPath(), $matches);
 
                     if (isset($data[$k - 1]['errors'][$matches[1]]) === false) {
@@ -224,20 +340,34 @@ class SampleImportController extends CarbonApiController
             'division' => $divisionConverter,
         );
 
+        foreach($data as $k => $item) {
+
+            foreach ($converters as $property => $valueConverter) {
+                $item[$property] = $valueConverter->convert($item[$property]);
+            }
+
+            $errors = $storageLocationValidator->validate($item, new ScrippsAssert\StorageLocation());
+
+            if (count($errors)) {
+                $hasErrors = true;
+                if (!isset($data[$k]['errors'])) {
+                    $data[$k]['errors'] = array();
+                }
+
+                $data[$k]['errors']['storageLocation'] = $errors;
+            }
+
+            $errors = isset($data[$k]['errors']) ? $data[$k]['errors'] : [];
+
+            $data[$k] = $doctrineWriter->writeItem($item);
+
+            if (count($errors)) {
+                $data[$k]->setErrors($errors);
+            }
+        }
+
         $locationDecider = $this->container->get('sample.location_decider');
-        $locationDecider->decideLocations($data);
-
-        // foreach($data as $item) {
-
-        //     foreach ($converters as $property => $valueConverter) {
-        //         $item[$property] = $valueConverter->convert($item[$property]);
-        //     }
-
-        //     $doctrineWriter->writeItem($item);
-
-        // }
-
-        // $doctrineWriter->finish();
+        $data = $locationDecider->decideLocations($data);
 
         $columns = array();
 
@@ -245,12 +375,14 @@ class SampleImportController extends CarbonApiController
 
             $columns[] = array(
                 'header' => $columnHeader,
-                'bindTo' => $mapping[$columnHeader],
+                'bindTo' => $mapping[$columnHeader]['bindTo'],
+                'errorProp' => $mapping[$columnHeader]['errorProp']
             );
 
         }
 
         $responseData = array(
+            'hasErrors' => $hasErrors,
             'items' => $data,
             'columns' => $columns,
         );

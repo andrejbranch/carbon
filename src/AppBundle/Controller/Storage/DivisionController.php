@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Storage;
 
-use AppBundle\Entity\Division;
+use AppBundle\Entity\Storage\Division;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -30,6 +30,10 @@ class DivisionController extends CarbonApiController
      */
     public function handleGet()
     {
+        // $division = $this->getEntityRepository()->find(1);
+        // $serializer = $this->get('jms_serializer');
+        // $data = $serializer->serialize($division, 'json');
+        // return $this->getJsonResponse($data);
         return parent::handleGet();
     }
 
@@ -45,7 +49,7 @@ class DivisionController extends CarbonApiController
     {
         $data = $this->getEntityRepository()->childrenHierarchy();
 
-        $data = $this->getSerializationHelper()->serialize($data);
+        $data = $this->getSerializationHelper()->serialize($data, array('default'));
 
         return $this->getJsonResponse($data);
     }
@@ -112,6 +116,11 @@ class DivisionController extends CarbonApiController
             $repo->persistAsFirstChildOf($division, $parent);
         }
 
+        if (isset($content['lastChildOf'])) {
+            $parent = $repo->find($content['lastChildOf']);
+            $repo->persistAsLastChildOf($division, $parent);
+        }
+
         if (isset($content['nextSiblingOf'])) {
             $sibling = $repo->find($content['nextSiblingOf']);
             $repo->persistAsNextSiblingOf($division, $sibling);
@@ -126,4 +135,45 @@ class DivisionController extends CarbonApiController
 
         return $this->getJsonResponse(json_encode(array('success' => 'success')));
     }
+
+    /**
+     * Handles the HTTP POST request for moving a division
+     *
+     * @Route("/storage/division/match/{sampleTypeId}/{storageContainerId}", name="division_match")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function match($sampleTypeId, $storageContainerId)
+    {
+        $repo = $this->getEntityRepository();
+        $qb = $repo->buildMatchQuery($sampleTypeId, $storageContainerId);
+
+        $results = $this->getGrid()->handleQueryFilters($qb, 'd', static::RESOURCE_ENTITY);
+
+        $serialized = $this->getSerializationHelper()->serialize($results);
+
+        return $this->getJsonResponse($serialized);
+    }
+
+    /**
+     * Handles the HTTP POST request for moving a division
+     *
+     * @Route("/storage/division/{id}/available-cells", name="division_available_cells")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function availableCells($id)
+    {
+        $repo = $this->getEntityRepository();
+        $division = $repo->find($id);
+
+        $availableCells = $repo->getAvailableCells($division);
+
+        $serialized = $this->getSerializationHelper()->serialize($availableCells);
+
+        return $this->getJsonResponse($serialized);
+    }
+
 }

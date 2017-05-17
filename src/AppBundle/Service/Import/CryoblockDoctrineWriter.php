@@ -39,15 +39,6 @@ class CryoblockDoctrineWriter extends DoctrineWriter
 
         // If the table was not truncated to begin with, find current entities
         // first
-        if (false === $this->truncate) {
-            if ($this->index) {
-                $entity = $this->entityRepository->findOneBy(
-                    array($this->index => $item[$this->index])
-                );
-            } else {
-                $entity = $this->entityRepository->find(current($item));
-            }
-        }
 
         if (!$entity) {
             $className = $this->entityMetadata->getName();

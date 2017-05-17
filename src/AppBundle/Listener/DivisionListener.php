@@ -13,7 +13,7 @@ class DivisionListener
         $this->logger = $logger;
     }
 
-    public function postPersist(LifecycleEventArgs $args)
+    public function prePersist(LifecycleEventArgs $args)
     {
         $division = $args->getEntity();
         $em = $args->getEntityManager();
@@ -21,22 +21,14 @@ class DivisionListener
         if (($division instanceof Division) === FALSE) {
             return;
         }
+        var_dump(123);
+        die;
 
-        if (!$division->hasDimension()) {
-            return;
-        }
+        $this->setStats($division);
+
+        $this->setPaths($division);
 
         $em->persist($division);
-
-        $height = $division->getHeight();
-        $width = $division->getHeight();
-        $totalSlots = $height * $width;
-
-        $division->setTotalSlots($totalSlots);
-        $division->setUsedSlots(0);
-        $division->setPercentFull(0);
-        $division->setAvailableSlots($totalSlots);
-
         $em->flush();
     }
 
@@ -48,25 +40,62 @@ class DivisionListener
         if (($division instanceof Division) === FALSE) {
             return;
         }
+        var_dump(4356);
+        die;
 
-        if (!$division->hasDimension()) {
-            return;
-        }
+        $this->setStats($division);
+        $this->setPaths($division);
 
         $em->persist($division);
-
-        $height = $division->getHeight();
-        $width = $division->getHeight();
-
-        $totalSamples = count($division->getSamples());
-        $totalSlots = $height * $width;
-        $availableSlots = $totalSlots - $totalSamples;
-
-        $division->setTotalSlots($totalSlots);
-        $division->setUsedSlots($totalSamples);
-        $division->setAvailableSlots($totalSlots - $totalSamples);
-        $division->setPercentFull(($totalSamples / $totalSlots) * 100);
-
         $em->flush();
+    }
+
+    private function setStats(Division $division)
+    {
+        if ($division->hasDimension()) {
+
+            $height = $division->getHeight();
+            $width = $division->getHeight();
+            $totalSlots = $height * $width;
+
+            $division->setTotalSlots($totalSlots);
+            $division->setUsedSlots(0);
+            $division->setPercentFull(0);
+            $division->setAvailableSlots($totalSlots);
+
+        }
+    }
+
+    private function setPaths(Division $division)
+    {
+        $tree = array();
+        $tree[] = $currentDivision = $division;
+
+        while ($currentDivision) {
+
+            $currentDivision = $currentDivision->getParent();
+
+            if ($currentDivision) {
+                $tree[] = $currentDivision;
+            }
+
+        }
+
+        $path = array();
+        $idPath = array();
+        $tree = array_reverse($tree);
+
+        unset($tree[0]);
+
+        foreach ($tree as $node) {
+            $path[] = $node->getTitle();
+            $idPath[] = $node->getId();
+        }
+
+        $path = implode(' / ', $path);
+        $idPath = ' ' . implode(' ', $idPath) . ' ';
+
+        $division->setPath($path);
+        $division->setIdPath($idPath);
     }
 }

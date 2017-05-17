@@ -24,6 +24,7 @@ class Version20170321041506 extends AbstractMigration
         $this->addSql('CREATE INDEX IDX_74D649B541859289 ON storage.division_editor (division_id)');
         $this->addSql('ALTER TABLE storage.division_editor ADD CONSTRAINT FK_74D649B5A76ED395 FOREIGN KEY (user_id) REFERENCES cryoblock."user" (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
         $this->addSql('ALTER TABLE storage.division_editor ADD CONSTRAINT FK_74D649B541859289 FOREIGN KEY (division_id) REFERENCES storage.division (id) NOT DEFERRABLE INITIALLY IMMEDIATE');
+        $this->addSql('ALTER TABLE storage.division ADD id_path VARCHAR(3000) DEFAULT NULL');
     }
 
     /**

@@ -21,70 +21,45 @@ class SampleLocationDecider
     {
         $totalSamples = count($samples);
 
-        $selectedSampleType = $this->getSampleTypeByName($samples[0]['sampleType']);
-        $selectedStorageContainer = $this->getStorageContainerByName($samples[0]['storageContainer']);
+        $selectedSampleType = $samples[0]->getSampleType();
+        $selectedStorageContainer = $samples[0]->getStorageContainer();
 
+        if (!$selectedSampleType || !$selectedStorageContainer) {
+           return $samples;
+        }
 
-        $matchedDivisions = $this->getMatchedDivisionTest($selectedSampleType , $selectedStorageContainer, $samples);
+        $matchedDivisions = $this->getMatchedDivisions($selectedSampleType , $selectedStorageContainer, $samples);
 
-        // foreach ($samples as &$sample) {
-
-        //     $selectedSampleType = $this->getSampleTypeByName($sample['sampleType']);
-        //     $selectedStorageContainer = $this->getStorageContainerByName($sample['storageContainer']);
-
-        //     $match = $this->getMatchedDivision($selectedSampleType, $selectedStorageContainer);
-
-        //     $sample['division'] = $match['division'];
-
-        //     if (isset($match['divisionRow'])) {
-
-        //         $sample['divisionRow'] = $match['divisionRow'];
-        //     }
-
-        //     if (isset($match['divisionColumn'])) {
-
-        //         $sample['divisionColumn'] = $match['divisionColumn'];
-        //     }
-        // }
-
-        // return $samples;
+        return $samples;
 
     }
 
-    public function decideLocation(SampleType $sampleType, StorageContainer $storageContainer)
-    {
-        return $this->getMatchedDivision($sampleType, $storageContainer);
-
-    }
-
-    public function getSampleTypeByName($name)
-    {
-        return $this->em->getRepository('AppBundle:Storage\SampleType')->findOneBy(array('name' => $name));
-    }
-
-    public function getStorageContainerByName($name)
-    {
-        return $this->em->getRepository('AppBundle:Storage\StorageContainer')->findOneBy(array('name' => $name));
-    }
-
-    private function getMatchedDivisionTest(SampleType $sampleType, StorageContainer $storageContainer, &$samples)
+    private function getMatchedDivisions(SampleType $sampleType, StorageContainer $storageContainer, &$samples)
     {
         $repo = $this->em->getRepository('AppBundle:Storage\Division');
 
-        $matchedWithDimensions = $repo->findMatchedDivisionsWithDimension($sampleType, $storageContainer);
-        $matchedDimensionless = $repo->findMatchedDimensionlessDivisions($sampleType, $storageContainer);
+        $qb = $repo->buildMatchQuery($sampleType->getId(), $storageContainer->getId());
 
-        $matchedDivisions = array_merge($matchedWithDimensions, $matchedDimensionless);
+        $matchedDivisions = $qb
+            ->setMaxResults(100)
+            ->getQuery()
+            ->getResult()
+        ;
 
         // $divisionsToBeFilled = array();
-        $totalSamples = count($samples);
+        $totalSamples = $this->countSamplesWithoutDivision($samples);
         $remainingCount = $totalSamples;
 
+        if ($totalSamples == 0) {
+           return;
+        }
+
         $sampleIndex = 0;
+        $completed = 0;
 
         foreach ($matchedDivisions as $matchedDivision) {
 
-            if ($sampleIndex === ($totalSamples)) {
+            if ($completed === $totalSamples) {
 
                 break;
 
@@ -94,13 +69,11 @@ class SampleLocationDecider
 
             $remainingCount = ($availableSlots - $remainingCount) >= 0 ? 0 :  abs($availableSlots - $remainingCount);
 
-            // $divisionsToBeFilled[] = $matchedDivision;
-
-            $emptyCells = $this->getEmptyCells($matchedDivision);
+            $emptyCells = $repo->getAvailableCells($matchedDivision);
 
             foreach ($emptyCells as $rowKey => $row) {
 
-                if ($sampleIndex === ($totalSamples)) {
+                if ($completed === $totalSamples) {
 
                     break;
 
@@ -108,17 +81,30 @@ class SampleLocationDecider
 
                 foreach ($row as $columnKey => $column) {
 
-                    if ($sampleIndex === ($totalSamples)) {
+                    if ($completed === ($totalSamples)) {
 
                         break;
 
                     }
 
-                    $samples[$sampleIndex]['division'] = $matchedDivision->getTitle();
-                    $samples[$sampleIndex]['divisionRow'] = $rowKey;
-                    $samples[$sampleIndex]['divisionColumn'] = $columnKey;
+                    while ($completed < $totalSamples) {
 
-                    $sampleIndex++;
+                        if (!$this->hasValidLocation($samples[$sampleIndex])) {
+
+                            $samples[$sampleIndex]->setStorageRecommended(TRUE);
+                            $samples[$sampleIndex]->setDivision($matchedDivision);
+                            $samples[$sampleIndex]->setDivisionRow($rowKey);
+                            $samples[$sampleIndex]->setDivisionColumn($columnKey);
+
+                            $completed++;
+                            $sampleIndex++;
+                            break;
+                        }
+
+                        $sampleIndex++;
+
+                    }
+
                     $remainingCount--;
 
                 }
@@ -127,101 +113,25 @@ class SampleLocationDecider
 
         }
 
-        // if (count($matchedWithDimensions) !== 0) {
-
-        //     $emptyCells = $this->getEmptyCells($matchedWithDimensions[0]);
-
-        //     foreach ($emptyCells as $rowKey => $emptyRow) {
-
-        //         foreach ($emptyRow as $columnKey => $emptyColumn) {
-
-        //             return array(
-        //                 'division' => $matchedWithDimensions[0],
-        //                 'divisionRow' => $rowKey,
-        //                 'divisionColumn' => $columnKey,
-        //             );
-
-        //         }
-        //     }
-
-
-        // }
-
-        // if (count($matchedDimensionless) !== 0) {
-        //     return $matchedDimensionless[0];
-        // }
-
-        // // no matches
-        // return array();
     }
 
-    private function getMatchedDivision(SampleType $sampleType, StorageContainer $storageContainer)
+    private function countSamplesWithoutDivision($samples)
     {
-        $repo = $this->em->getRepository('AppBundle:Storage\Division');
-
-        $matchedWithDimensions = $repo->findMatchedDivisionsWithDimension($sampleType, $storageContainer);
-        $matchedDimensionless = $repo->findMatchedDimensionlessDivisions($sampleType, $storageContainer);
-
-        if (count($matchedWithDimensions) !== 0) {
-
-            $emptyCells = $this->getEmptyCells($matchedWithDimensions[0]);
-
-            foreach ($emptyCells as $rowKey => $emptyRow) {
-
-                foreach ($emptyRow as $columnKey => $emptyColumn) {
-
-                    return array(
-                        'division' => $matchedWithDimensions[0],
-                        'divisionRow' => $rowKey,
-                        'divisionColumn' => $columnKey,
-                    );
-
-                }
-            }
-
-
-        }
-
-        if (count($matchedDimensionless) !== 0) {
-            return $matchedDimensionless[0];
-        }
-
-        // no matches
-        return array();
-    }
-
-    private function getEmptyCells(Division $division)
-    {
-        $width = $division->getWidth();
-        $height = $division->getHeight();
-        $alphabet = range('A', 'Z');
-
-        $divisionSamples = $division->getSamples();
-
-        $currentInventoryMap = array();
-        foreach ($divisionSamples as $divisionSample) {
-            $currentInventoryMap[$divisionSample->getDivisionRow()][$divisionSample->getDivisionColumn()] = true;
-        }
-
-
-        $rows = range('A', $alphabet[$height - 1]);
-        $emptyLocations = array();
-        foreach ($rows as $row) {
-
-            foreach (range(1, $width) as $column) {
-
-                if (!isset($currentInventoryMap[$row][$column])) {
-                    if (!isset($emptyLocations[$row])) {
-                        $emptyLocations[$row] = array();
-                    }
-
-                    $emptyLocations[$row][$column] = true;
-
-                }
-
+        $count = 0;
+        foreach ($samples as $sample) {
+            if (!$this->hasValidLocation($sample)) {
+                $count++;
             }
         }
 
-        return $emptyLocations;
+        return $count;
+    }
+
+    private function hasValidLocation($sample)
+    {
+        return $sample->getDivision() &&
+            $sample->getDivisionRow() &&
+            $sample->getDivisionColumn()
+        ;
     }
 }

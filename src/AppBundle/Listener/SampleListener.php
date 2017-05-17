@@ -2,98 +2,20 @@
 
 namespace AppBundle\Listener;
 
+use AppBundle\Entity\Storage\Division;
 use AppBundle\Entity\Storage\Sample;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\UnitOfWork;
 use Symfony\Bridge\Monolog\Logger;
 
 class SampleListener
 {
-    public $divisionsToUpdate = array();
-
     public function __construct(Logger $logger)
     {
         $this->logger = $logger;
-    }
-
-    public function postPersist(LifecycleEventArgs $args)
-    {
-        $this->updateDivisionInventory($args);
-    }
-
-    // public function preUpdate(LifecycleEventArgs $args)
-    // {
-    //     $sample = $args->getEntity();
-    //     $em = $args->getEntityManager();
-
-    //     if (($sample instanceof Sample) === FALSE) {
-    //         return;
-    //     }
-
-    //     if ($args->hasChangedField('divisionId')) {
-    //        $this->previousDivisionId = $args->getOldValue('divisionId');
-    //     }
-    // }
-
-    public function preUpdate(LifecycleEventArgs $args)
-    {
-        $this->updateDivisionInventory($args);
-    }
-
-    public function postRemove(LifecycleEventArgs $args)
-    {
-        $this->updateDivisionInventory($args);
-    }
-
-    public function preRemove(LifecycleEventArgs $args)
-    {
-        $sample = $args->getEntity();
-        $em = $args->getEntityManager();
-
-        if (($sample instanceof Sample) === FALSE) {
-            return;
-        }
-
-        $this->previousDivisionId = $sample->getDivisionId();
-    }
-
-    private function updateDivisionInventory(LifecycleEventArgs $args)
-    {
-        var_dump('here');
-        die;
-        $sample = $args->getEntity();
-        $em = $args->getEntityManager();
-
-        if (($sample instanceof Sample) === FALSE) {
-            return;
-        }
-
-        $division = $sample->getDivision();
-
-        if ($args->hasChangedField('divisionId')) {
-           $previousDivisionId = $args->getOldValue('divisionId');
-        }
-
-        if (!$division) {
-
-            if (!isset($previousDivisionId)) {
-                return;
-            }
-
-            $division = $em->getRepository('AppBundle\Entity\Storage\Division')->find($previousDivisionId);
-
-        }
-
-        $this->updateDivisionId = $division->getId();
-
-        if (!$division->hasDimension()) {
-            return;
-        }
-
-        $this->divisionsToUpdate[] = $division;
-        var_dump(123);
-        die;
+        $this->count = 0;
     }
 
     public function onFlush(OnFlushEventArgs $args)
@@ -101,43 +23,42 @@ class SampleListener
         $em = $args->getEntityManager();
         $uow = $em->getUnitOfWork();
         $divisionsToUpdate = [];
+
+        foreach ($uow->getScheduledEntityInsertions() as $keyEntity => $entity) {
+
+            if ($entity instanceof Sample) {
+
+                $this->computeDivisionChangeSet($uow, $entity, $divisionsToUpdate);
+
+            }
+
+            if ($entity instanceof Division) {
+
+                $this->setDivisionStats($entity);
+                $this->setDivisionPath($entity);
+
+                $metaDivision = $em->getClassMetadata(get_class($entity));
+                $uow->recomputeSingleEntityChangeSet($metaDivision, $entity);
+
+            }
+
+        }
+
         foreach ($uow->getScheduledEntityUpdates() as $keyEntity => $entity) {
 
             if ($entity instanceof Sample) {
 
-                foreach ($uow->getEntityChangeSet($entity) as $keyField => $field) {
+                $this->computeDivisionChangeSet($uow, $entity, $divisionsToUpdate);
 
-                    if ($keyField === 'division') {
+            }
 
-                        $oldDivision = $field[0];
-                        $newDivision = $field[1];
+            if ($entity instanceof Division) {
 
-                        if ($oldDivision) {
-                            $oldDivisionId = $oldDivision->getId();
-                            if (!isset($divisionsToUpdate[$oldDivisionId])) {
-                                $divisionsToUpdate[$oldDivisionId] = array(
-                                    'division' => $oldDivision,
-                                    'removeCount' => 0,
-                                    'addCount' => 0
-                                );
-                            }
-                            $divisionsToUpdate[$oldDivisionId]['removeCount']++;
-                        }
+                $this->setDivisionStats($entity);
+                $this->setDivisionPath($entity);
 
-                        if ($newDivision) {
-                            $newDivisionId = $newDivision->getId();
-                            if (!isset($divisionsToUpdate[$newDivisionId])) {
-                                $divisionsToUpdate[$newDivisionId] = array(
-                                    'division' => $newDivision,
-                                    'removeCount' => 0,
-                                    'addCount' => 0
-                                );
-                            }
-                            $divisionsToUpdate[$newDivisionId]['addCount']++;
-                        }
-
-                    }
-                }
+                $metaDivision = $em->getClassMetadata(get_class($entity));
+                $uow->recomputeSingleEntityChangeSet($metaDivision, $entity);
 
             }
 
@@ -149,8 +70,6 @@ class SampleListener
 
             $this->updateDivision($division, $map['removeCount'], $map['addCount']);
 
-            $em->persist($division);
-
             $metaDivision = $em->getClassMetadata(get_class($division));
             $uow->computeChangeSet($metaDivision, $division);
 
@@ -158,7 +77,48 @@ class SampleListener
 
     }
 
-    private function updateDivision($division, $removeCount, $addCount) {
+    private function computeDivisionChangeSet(UnitOfWork $uow, $entity, &$divisionsToUpdate)
+    {
+        foreach ($uow->getEntityChangeSet($entity) as $keyField => $field) {
+
+            if ($keyField === 'division') {
+
+                $oldDivision = $field[0];
+                $newDivision = $field[1];
+
+                if ($oldDivision) {
+                    $oldDivisionId = $oldDivision->getId();
+                    if (!isset($divisionsToUpdate[$oldDivisionId])) {
+                        $divisionsToUpdate[$oldDivisionId] = array(
+                            'division' => $oldDivision,
+                            'removeCount' => 0,
+                            'addCount' => 0
+                        );
+                    }
+                    $divisionsToUpdate[$oldDivisionId]['removeCount']++;
+                }
+
+                if ($newDivision) {
+                    $newDivisionId = $newDivision->getId();
+                    if (!isset($divisionsToUpdate[$newDivisionId])) {
+                        $divisionsToUpdate[$newDivisionId] = array(
+                            'division' => $newDivision,
+                            'removeCount' => 0,
+                            'addCount' => 0
+                        );
+                    }
+                    $divisionsToUpdate[$newDivisionId]['addCount']++;
+                }
+
+            }
+        }
+    }
+
+    private function updateDivision(Division $division, $removeCount, $addCount)
+    {
+        if (!$division->hasDimension()) {
+            return;
+        }
 
         $height = $division->getHeight();
         $width = $division->getHeight();
@@ -173,15 +133,52 @@ class SampleListener
         $division->setPercentFull(($totalSamples / $totalSlots) * 100);
     }
 
-    public function postUpdate(LifecycleEventArgs $args)
+    private function setDivisionStats(Division $division)
     {
-        $em = $args->getEntityManager();
-        if (count($this->divisionsToUpdate)) {
-            foreach ($this->divisionsToUpdate as $division) {
-                $this->updateDivision($division);
-                $em->persist($division);
-            }
+        if ($division->hasDimension()) {
+
+            $height = $division->getHeight();
+            $width = $division->getHeight();
+            $totalSlots = $height * $width;
+
+            $division->setTotalSlots($totalSlots);
+            $division->setUsedSlots(0);
+            $division->setPercentFull(0);
+            $division->setAvailableSlots($totalSlots);
+
         }
-        $em->flush();
+    }
+
+    private function setDivisionPath(Division $division)
+    {
+        $tree = array();
+        $tree[] = $currentDivision = $division;
+
+        while ($currentDivision) {
+
+            $currentDivision = $currentDivision->getParent();
+
+            if ($currentDivision) {
+                $tree[] = $currentDivision;
+            }
+
+        }
+
+        $path = array();
+        $idPath = array();
+        $tree = array_reverse($tree);
+
+        unset($tree[0]);
+
+        foreach ($tree as $node) {
+            $path[] = $node->getTitle();
+            $idPath[] = $node->getId();
+        }
+
+        $path = implode(' / ', $path);
+        $idPath = ' ' . implode(' ', $idPath) . ' ';
+
+        $division->setPath($path);
+        $division->setIdPath($idPath);
     }
 }

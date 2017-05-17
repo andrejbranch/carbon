@@ -24,6 +24,7 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('title', 'text')
             ->add('description', 'text')
             ->add('hasDimension', 'checkbox')
+            ->add('isPublic', 'checkbox')
             ->add('height', 'integer')
             ->add('width', 'integer')
             ->add('lft', 'integer')
@@ -46,6 +47,18 @@ class DivisionFormType extends CryoblockAbstractType
                 'child_accessor' => 'storageContainer'
             ))
 
+            ->add('editors', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'divisionEditors',
+                'child_accessor' => 'user'
+            ))
+
+            ->add('viewers', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'divisionViewers',
+                'child_accessor' => 'user'
+            ))
+
             ->add('path', 'hidden', array('mapped' => false))
             ->add('level', 'hidden', array('mapped' => false))
             ->add('id', 'hidden', array('mapped' => false))
@@ -57,11 +70,26 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('totalSlots', 'hidden', array('mapped' => false))
             ->add('usedSlots', 'hidden', array('mapped' => false))
             ->add('percentFull', 'hidden', array('mapped' => false))
+            ->add('divisionEditors', 'hidden', array('mapped' => false))
+            ->add('divisionViewers', 'hidden', array('mapped' => false))
+
+            ->add('owner', 'entity', array(
+                'class' => 'CarbonApiBundle:User',
+                'property' => 'owner',
+                'multiple' => false
+            ))
+
         ;
 
         $builder->get('parent')
             ->addViewTransformer(new CryoblockOTOTransformer(
                 $this->em, 'AppBundle:Storage\Division'
+            ))
+        ;
+
+        $builder->get('owner')
+            ->addViewTransformer(new CryoblockOTOTransformer(
+                $this->em, 'CarbonApiBundle:User'
             ))
         ;
 
