@@ -8,6 +8,8 @@ use Symfony\Component\Validator\ConstraintValidator;
 
 class StorageLocationValidator extends ConstraintValidator
 {
+    const ERROR_INSUFFICIENT_SPACE = 'Insufficient storage space.';
+
     /**
      * @var Doctrine\ORM\EntityManager
      */
@@ -20,19 +22,39 @@ class StorageLocationValidator extends ConstraintValidator
 
     public function validate($value, Constraint $constraint)
     {
-        if (isset($value['division'])) {
-            $divisionId = $value['division']->getId();
+        $sample = $value;
+
+        if ($sample->getDivision()) {
+            $divisionId = $sample->getDivision()->getId();
         }
 
-        if (isset($value['divisionRow'])) {
-            $divisionRow = $value['divisionRow'];
+        if ($sample->getDivisionRow()) {
+            $divisionRow = $sample->getDivisionRow();
         }
 
-        if (isset($value['divisionColumn'])) {
-            $divisionColumn = $value['divisionColumn'];
+        if ($sample->getDivisionColumn()) {
+            $divisionColumn = $sample->getDivisionColumn();
         }
 
         $errors = array();
+
+        # Check if a division was found
+        if (!isset($divisionId) ) {
+
+            if (!isset($errors['division'])) {
+                $this->addError($sample, self::ERROR_INSUFFICIENT_SPACE);
+            }
+
+        }
+
+        // # Check if a division was found
+        // if (!isset($divisionId) ) {
+
+        //     $errors[] = self::ERROR_INSUFFICIENT_SPACE;
+
+        // })
+
+        # Check if location is taken
 
         if (isset($divisionId) && isset($divisionColumn) && ($divisionRow)) {
 
@@ -44,10 +66,23 @@ class StorageLocationValidator extends ConstraintValidator
             ));
 
             if ($exists) {
-                $errors[] = sprintf('Division %s - Row %s - Column %s is filled.', $divisionId, $divisionRow, $divisionColumn);
+                $this->addError($sample, sprintf('Division %s - Row %s - Column %s is filled.', $divisionId, $divisionRow, $divisionColumn));
             }
         }
 
-        return $errors;
+
+        // return $errors;
+    }
+
+    private function addError($sample, $error)
+    {
+        $errors = $sample->getErrors();
+
+        if (!isset($errors['storageLocation'])) {
+            $errors['storageLocation'] = array();
+        }
+
+        $errors['storageLocation'][] = $error;
+        $sample->setErrors($errors);
     }
 }

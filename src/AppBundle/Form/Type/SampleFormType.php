@@ -9,11 +9,13 @@ use Carbon\ApiBundle\Form\DataTransformer\CryoblockOTOTransformer;
 use Carbon\ApiBundle\Form\Type\CryoblockAbstractType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\HttpFoundation\File\File;
 
 class SampleFormType extends CryoblockAbstractType
 {
@@ -84,6 +86,33 @@ class SampleFormType extends CryoblockAbstractType
                 'child_accessor' => 'project'
             ))
         ;
+
+        // $preSubmit = function (FormEvent $event) use ($builder) {
+
+        //     // $parentObject = $options['parent_object'];
+
+        //     // var_dump($parentObject);
+        //     // die;
+
+        //     $parent = $builder->getForm()->getData();
+        //     foreach ($parent->attachments as $attachment) {
+        //         $data = $attachment['src'];
+        //         $content = preg_replace('/^data.*,/', '', $data);
+        //         $fileName = $attachment['name'];
+        //         file_put_contents('/Users/andre/Repos/carbon/uploads/cryoblock/' . $fileName, base64_decode($content, true));
+        //         die;
+        //     }
+        //     // var_dump($parent->attachments);
+        //     // $map = $event->getData();
+        //     // var_dump($map);
+        //     // foreach ($map as $file) {
+        //     //     var_dump($file);
+        //     // }
+        //     die;
+
+        // };
+
+        // $builder->addEventListener(FormEvents::POST_SUBMIT, $preSubmit);
 
         $builder->get('sampleType')
             ->addViewTransformer(new CryoblockOTOTransformer(

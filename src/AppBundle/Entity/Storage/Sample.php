@@ -376,6 +376,8 @@ class Sample
 
     public $projects;
 
+    public $attachments;
+
     /**
      * @JMS\Groups({"default"})
      */

@@ -346,16 +346,16 @@ class SampleImportController extends CarbonApiController
                 $item[$property] = $valueConverter->convert($item[$property]);
             }
 
-            $errors = $storageLocationValidator->validate($item, new ScrippsAssert\StorageLocation());
+            // $errors = $storageLocationValidator->validate($item, new ScrippsAssert\StorageLocation());
 
-            if (count($errors)) {
-                $hasErrors = true;
-                if (!isset($data[$k]['errors'])) {
-                    $data[$k]['errors'] = array();
-                }
+            // if (count($errors)) {
+            //     $hasErrors = true;
+            //     if (!isset($data[$k]['errors'])) {
+            //         $data[$k]['errors'] = array();
+            //     }
 
-                $data[$k]['errors']['storageLocation'] = $errors;
-            }
+            //     $data[$k]['errors']['storageLocation'] = $errors;
+            // }
 
             $errors = isset($data[$k]['errors']) ? $data[$k]['errors'] : [];
 
@@ -364,10 +364,21 @@ class SampleImportController extends CarbonApiController
             if (count($errors)) {
                 $data[$k]->setErrors($errors);
             }
+
         }
 
         $locationDecider = $this->container->get('sample.location_decider');
         $data = $locationDecider->decideLocations($data);
+
+        foreach($data as $k => $sample) {
+
+            $storageLocationValidator->validate($sample, new ScrippsAssert\StorageLocation());
+
+            if (!$hasErrors && count($sample->getErrors())) {
+                $hasErrors = true;
+            }
+
+        }
 
         $columns = array();
 

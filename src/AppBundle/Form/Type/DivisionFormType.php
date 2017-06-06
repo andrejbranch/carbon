@@ -24,7 +24,8 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('title', 'text')
             ->add('description', 'text')
             ->add('hasDimension', 'checkbox')
-            ->add('isPublic', 'checkbox')
+            ->add('isPublicEdit', 'checkbox')
+            ->add('isPublicView', 'checkbox')
             ->add('height', 'integer')
             ->add('width', 'integer')
             ->add('lft', 'integer')
@@ -53,10 +54,22 @@ class DivisionFormType extends CryoblockAbstractType
                 'child_accessor' => 'user'
             ))
 
+            ->add('groupEditors', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'divisionGroupEditors',
+                'child_accessor' => 'group'
+            ))
+
             ->add('viewers', 'cryoblock_mtm', array(
                 'parent_object' => $builder->getForm()->getData(),
                 'accessor' => 'divisionViewers',
                 'child_accessor' => 'user'
+            ))
+
+            ->add('groupViewers', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'divisionGroupViewers',
+                'child_accessor' => 'group'
             ))
 
             ->add('path', 'hidden', array('mapped' => false))
@@ -70,26 +83,16 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('totalSlots', 'hidden', array('mapped' => false))
             ->add('usedSlots', 'hidden', array('mapped' => false))
             ->add('percentFull', 'hidden', array('mapped' => false))
+
             ->add('divisionEditors', 'hidden', array('mapped' => false))
+            ->add('divisionGroupEditors', 'hidden', array('mapped' => false))
             ->add('divisionViewers', 'hidden', array('mapped' => false))
-
-            ->add('owner', 'entity', array(
-                'class' => 'CarbonApiBundle:User',
-                'property' => 'owner',
-                'multiple' => false
-            ))
-
+            ->add('divisionGroupViewers', 'hidden', array('mapped' => false))
         ;
 
         $builder->get('parent')
             ->addViewTransformer(new CryoblockOTOTransformer(
                 $this->em, 'AppBundle:Storage\Division'
-            ))
-        ;
-
-        $builder->get('owner')
-            ->addViewTransformer(new CryoblockOTOTransformer(
-                $this->em, 'CarbonApiBundle:User'
             ))
         ;
 

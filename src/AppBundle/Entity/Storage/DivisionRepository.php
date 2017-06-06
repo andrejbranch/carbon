@@ -109,15 +109,19 @@ class DivisionRepository extends NestedTreeRepository
 
     public function canUserView(Division $division, User $user)
     {
-        if ($division->getIsPublic()) {
+        if ($division->getIsPublicEdit()) {
+            return true;
+        }
+
+        if ($this->canUserEdit($division, $user)) {
+            return true;
+        }
+
+        if ($division->getIsPublicView()) {
             return true;
         }
 
         if ($user->hasRole('ROLE_ADMIN')) {
-            return true;
-        }
-
-        if ($user->getId() === $division->getOwner()->getId()) {
             return true;
         }
 
@@ -142,7 +146,7 @@ class DivisionRepository extends NestedTreeRepository
 
     public function canUserEdit(Division $division, User $user)
     {
-        if ($division->getIsPublic()) {
+        if ($division->getIsPublicEdit()) {
             return true;
         }
 

@@ -11,12 +11,12 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Division Viewer
+ * Division Editable by User
  *
  * @ORM\Entity()
- * @ORM\Table(name="storage.division_viewer", schema="storage")
+ * @ORM\Table(name="storage.division_group_editor", schema="storage")
  */
-class DivisionViewer
+class DivisionGroupEditor
 {
     /**
      * @var integer
@@ -31,17 +31,17 @@ class DivisionViewer
     /**
      * @var integer
      *
-     * @ORM\Column(name="user_id", type="integer")
+     * @ORM\Column(name="group_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $userId;
+    private $groupId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="user_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\Group")
+     * @ORM\JoinColumn(name="group_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $user;
+    private $group;
 
     /**
      * @var integer
@@ -52,7 +52,7 @@ class DivisionViewer
     private $divisionId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionEditors")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionGroupEditors")
      * @ORM\JoinColumn(name="division_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -78,54 +78,6 @@ class DivisionViewer
     public function setId($id)
     {
         $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of userId.
-     *
-     * @return integer
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * Sets the value of userId.
-     *
-     * @param integer $userId the user id
-     *
-     * @return self
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of user.
-     *
-     * @return mixed
-     */
-    public function getUser()
-    {
-        return $this->user;
-    }
-
-    /**
-     * Sets the value of user.
-     *
-     * @param mixed $user the user
-     *
-     * @return self
-     */
-    public function setUser($user)
-    {
-        $this->user = $user;
 
         return $this;
     }
@@ -174,6 +126,54 @@ class DivisionViewer
     public function setDivision($division)
     {
         $this->division = $division;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of groupId.
+     *
+     * @return integer
+     */
+    public function getGroupId()
+    {
+        return $this->groupId;
+    }
+
+    /**
+     * Sets the value of groupId.
+     *
+     * @param integer $groupId the group id
+     *
+     * @return self
+     */
+    public function setGroupId($groupId)
+    {
+        $this->groupId = $groupId;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of group.
+     *
+     * @return mixed
+     */
+    public function getGroup()
+    {
+        return $this->group;
+    }
+
+    /**
+     * Sets the value of group.
+     *
+     * @param mixed $group the group
+     *
+     * @return self
+     */
+    public function setGroup($group)
+    {
+        $this->group = $group;
 
         return $this;
     }

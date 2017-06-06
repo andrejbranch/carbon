@@ -30,10 +30,6 @@ class DivisionController extends CarbonApiController
      */
     public function handleGet()
     {
-        // $division = $this->getEntityRepository()->find(1);
-        // $serializer = $this->get('jms_serializer');
-        // $data = $serializer->serialize($division, 'json');
-        // return $this->getJsonResponse($data);
         return parent::handleGet();
     }
 
@@ -47,11 +43,14 @@ class DivisionController extends CarbonApiController
      */
     public function handleGetTree()
     {
-        $data = $this->getEntityRepository()->childrenHierarchy();
+        $nodes = $this->getEntityRepository()->getNodesHierarchyQuery()->getResult();
+        $nodes = $this->getSerializationHelper()->serialize($nodes);
+        $nodes = json_decode($nodes, true);
 
-        $data = $this->getSerializationHelper()->serialize($data, array('default'));
+        $tree = $this->getEntityRepository()->buildTree($nodes);
+        $tree = $this->getSerializationHelper()->serialize($tree);
 
-        return $this->getJsonResponse($data);
+        return $this->getJsonResponse($tree);
     }
 
     /**

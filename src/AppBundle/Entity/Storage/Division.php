@@ -136,31 +136,26 @@ class Division
 
     /**
      * @ORM\OneToMany(targetEntity="Division", mappedBy="parent")
-     * @JMS\Groups({"children"})
-     * @JMS\MaxDepth(2)
      */
     protected $children;
 
     /**
-     * @ORM\Column(name="is_public", type="boolean", nullable=true)
+     * @ORM\Column(name="is_public_edit", type="boolean", nullable=false)
      * @JMS\Groups({"default"})
      */
-    protected $isPublic = true;
+    protected $isPublicEdit = false;
+
+    /**
+     * @ORM\Column(name="is_public_view", type="boolean", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    protected $isPublicView = true;
 
     /**
      * @ORM\OneToMany(targetEntity="Sample", mappedBy="division")
      * @JMS\Groups({"samples"})
      */
     protected $samples;
-
-    /**
-     * @var User $owner
-     *
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="owner", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     */
-    private $owner;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionSampleType", mappedBy="division")
@@ -173,6 +168,11 @@ class Division
     protected $divisionStorageContainers;
 
     /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionGroupEditor", mappedBy="division")
+     */
+    protected $divisionGroupEditors;
+
+    /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionEditor", mappedBy="division")
      */
     protected $divisionEditors;
@@ -182,13 +182,22 @@ class Division
      */
     protected $divisionViewers;
 
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\DivisionGroupViewer", mappedBy="division")
+     */
+    protected $divisionGroupViewers;
+
     public $sampleTypes;
 
     public $storageContainers;
 
     public $editors;
 
+    public $groupEditors;
+
     public $viewers;
+
+    public $groupViewers;
 
     public function __construct()
     {
@@ -688,54 +697,6 @@ class Division
     }
 
     /**
-     * Gets the value of isPublic.
-     *
-     * @return mixed
-     */
-    public function getIsPublic()
-    {
-        return $this->isPublic;
-    }
-
-    /**
-     * Sets the value of isPublic.
-     *
-     * @param mixed $isPublic the is public
-     *
-     * @return self
-     */
-    public function setIsPublic($isPublic)
-    {
-        $this->isPublic = $isPublic;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of owner.
-     *
-     * @return User $owner
-     */
-    public function getOwner()
-    {
-        return $this->owner;
-    }
-
-    /**
-     * Sets the value of owner.
-     *
-     * @param User $owner $owner the owner
-     *
-     * @return self
-     */
-    public function setOwner($owner)
-    {
-        $this->owner = $owner;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of divisionViewers.
      *
      * @return mixed
@@ -779,6 +740,150 @@ class Division
     public function setViewers($viewers)
     {
         $this->viewers = $viewers;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of divisionGroupEditors.
+     *
+     * @return mixed
+     */
+    public function getDivisionGroupEditors()
+    {
+        return $this->divisionGroupEditors;
+    }
+
+    /**
+     * Sets the value of divisionGroupEditors.
+     *
+     * @param mixed $divisionGroupEditors the division group editors
+     *
+     * @return self
+     */
+    public function setDivisionGroupEditors($divisionGroupEditors)
+    {
+        $this->divisionGroupEditors = $divisionGroupEditors;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of divisionGroupViewers.
+     *
+     * @return mixed
+     */
+    public function getDivisionGroupViewers()
+    {
+        return $this->divisionGroupViewers;
+    }
+
+    /**
+     * Sets the value of divisionGroupViewers.
+     *
+     * @param mixed $divisionGroupViewers the division group viewers
+     *
+     * @return self
+     */
+    public function setDivisionGroupViewers($divisionGroupViewers)
+    {
+        $this->divisionGroupViewers = $divisionGroupViewers;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of groupEditors.
+     *
+     * @return mixed
+     */
+    public function getGroupEditors()
+    {
+        return $this->groupEditors;
+    }
+
+    /**
+     * Sets the value of groupEditors.
+     *
+     * @param mixed $groupEditors the group editors
+     *
+     * @return self
+     */
+    public function setGroupEditors($groupEditors)
+    {
+        $this->groupEditors = $groupEditors;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of groupViewers.
+     *
+     * @return mixed
+     */
+    public function getGroupViewers()
+    {
+        return $this->groupViewers;
+    }
+
+    /**
+     * Sets the value of groupViewers.
+     *
+     * @param mixed $groupViewers the group viewers
+     *
+     * @return self
+     */
+    public function setGroupViewers($groupViewers)
+    {
+        $this->groupViewers = $groupViewers;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of isPublicEdit.
+     *
+     * @return mixed
+     */
+    public function getIsPublicEdit()
+    {
+        return $this->isPublicEdit;
+    }
+
+    /**
+     * Sets the value of isPublicEdit.
+     *
+     * @param mixed $isPublicEdit the is public edit
+     *
+     * @return self
+     */
+    public function setIsPublicEdit($isPublicEdit)
+    {
+        $this->isPublicEdit = $isPublicEdit;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of isPublicView.
+     *
+     * @return mixed
+     */
+    public function getIsPublicView()
+    {
+        return $this->isPublicView;
+    }
+
+    /**
+     * Sets the value of isPublicView.
+     *
+     * @param mixed $isPublicView the is public view
+     *
+     * @return self
+     */
+    public function setIsPublicView($isPublicView)
+    {
+        $this->isPublicView = $isPublicView;
 
         return $this;
     }
