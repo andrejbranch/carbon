@@ -16,6 +16,7 @@ services:
 
     sample.importer:
         class: AppBundle\Service\SampleImporter
+        arguments: ["@validator"]
 
     sample.location_decider:
         class: AppBundle\Service\SampleLocationDecider
