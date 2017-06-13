@@ -146,7 +146,7 @@ class DivisionController extends CarbonApiController
     public function match($sampleTypeId, $storageContainerId)
     {
         $repo = $this->getEntityRepository();
-        $qb = $repo->buildMatchQuery($sampleTypeId, $storageContainerId);
+        $qb = $repo->buildMatchQuery($sampleTypeId, $storageContainerId, $this->getUser());
 
         $results = $this->getGrid()->handleQueryFilters($qb, 'd', static::RESOURCE_ENTITY);
 

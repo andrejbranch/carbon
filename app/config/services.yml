@@ -19,7 +19,7 @@ services:
 
     sample.location_decider:
         class: AppBundle\Service\SampleLocationDecider
-        arguments: ["@doctrine.orm.default_entity_manager"]
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
 
     division.manager:
         class: AppBundle\Service\Storage\DivisionManager
@@ -27,6 +27,12 @@ services:
 
     sample.listener:
         class: AppBundle\Listener\SampleListener
+        arguments: ["@logger"]
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }
+
+    division.listener:
+        class: AppBundle\Listener\DivisionListener
         arguments: ["@logger"]
         tags:
             - { name: doctrine.event_listener, event: onFlush }
@@ -51,6 +57,6 @@ services:
 
     app.validator.storage_location_validator:
         class: AppBundle\Validator\Constraints\StorageLocationValidator
-        arguments: [@doctrine.orm.default_entity_manager]
+        arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
         tags:
             - { name: validator.constraint_validator, alias: storage_location_validator }

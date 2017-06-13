@@ -136,6 +136,7 @@ class Division
 
     /**
      * @ORM\OneToMany(targetEntity="Division", mappedBy="parent")
+     * @JMS\Groups({"children"})
      */
     protected $children;
 

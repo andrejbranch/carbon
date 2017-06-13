@@ -5,6 +5,7 @@ namespace AppBundle\Validator\Constraints;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class StorageLocationValidator extends ConstraintValidator
 {
@@ -15,9 +16,10 @@ class StorageLocationValidator extends ConstraintValidator
      */
     protected $em;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function validate($value, Constraint $constraint)
@@ -47,12 +49,15 @@ class StorageLocationValidator extends ConstraintValidator
 
         }
 
-        // # Check if a division was found
-        // if (!isset($divisionId) ) {
-
-        //     $errors[] = self::ERROR_INSUFFICIENT_SPACE;
-
-        // })
+        # Check if user has permission to add samples to this division
+        if (isset($divisionId)) {
+            $user = $this->tokenStorage->getToken()->getUser();
+            $divisionRepo = $this->em->getRepository('AppBundle\\Entity\\Storage\\Division');
+            $canEdit = $divisionRepo->canUserEdit($sample->getDivision(), $user);
+            if (!$canEdit) {
+                $this->addError($sample, 'You do not have permission to edit this division.');
+            }
+        }
 
         # Check if location is taken
 
@@ -70,8 +75,6 @@ class StorageLocationValidator extends ConstraintValidator
             }
         }
 
-
-        // return $errors;
     }
 
     private function addError($sample, $error)

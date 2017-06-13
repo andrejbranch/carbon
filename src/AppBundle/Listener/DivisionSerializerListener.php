@@ -50,7 +50,7 @@ class DivisionSerializerListener implements EventSubscriberInterface
             $event->getVisitor()->setData('canView', $canView);
             $event->getVisitor()->setData('canEdit', $canEdit);
 
-            if (!$canView && !$canEdit) {
+            if (!$canView) {
                 $event->getVisitor()->setData('samples', array());
             }
 

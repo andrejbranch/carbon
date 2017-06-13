@@ -7,14 +7,16 @@ use AppBundle\Entity\Storage\SampleType;
 use AppBundle\Entity\Storage\StorageContainer;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Query\Expr\Join;
+use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class SampleLocationDecider
 {
     protected $em;
 
-    public function __construct(EntityManager $em)
+    public function __construct(EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->em = $em;
+        $this->tokenStorage = $tokenStorage;
     }
 
     public function decideLocations(&$samples)
@@ -38,7 +40,8 @@ class SampleLocationDecider
     {
         $repo = $this->em->getRepository('AppBundle:Storage\Division');
 
-        $qb = $repo->buildMatchQuery($sampleType->getId(), $storageContainer->getId());
+        $user = $this->tokenStorage->getToken()->getUser();
+        $qb = $repo->buildMatchQuery($sampleType->getId(), $storageContainer->getId(), $user);
 
         $matchedDivisions = $qb
             ->setMaxResults(100)

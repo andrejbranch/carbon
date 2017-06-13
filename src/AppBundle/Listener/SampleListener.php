@@ -54,7 +54,6 @@ class SampleListener
 
             if ($entity instanceof Division) {
 
-                $this->setDivisionStats($entity);
                 $this->setDivisionPath($entity);
 
                 $metaDivision = $em->getClassMetadata(get_class($entity));
