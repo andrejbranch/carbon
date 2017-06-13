@@ -346,17 +346,6 @@ class SampleImportController extends CarbonApiController
                 $item[$property] = $valueConverter->convert($item[$property]);
             }
 
-            // $errors = $storageLocationValidator->validate($item, new ScrippsAssert\StorageLocation());
-
-            // if (count($errors)) {
-            //     $hasErrors = true;
-            //     if (!isset($data[$k]['errors'])) {
-            //         $data[$k]['errors'] = array();
-            //     }
-
-            //     $data[$k]['errors']['storageLocation'] = $errors;
-            // }
-
             $errors = isset($data[$k]['errors']) ? $data[$k]['errors'] : [];
 
             $data[$k] = $doctrineWriter->writeItem($item);

@@ -67,13 +67,6 @@ class CryoblockDoctrineWriter extends DoctrineWriter
             }
         }
 
-        $this->entityManager->persist($entity);
-
-        if (($this->counter % $this->batchSize) == 0) {
-            $this->entityManager->flush();
-            $this->entityManager->clear();
-        }
-
         return $entity;
     }
 
