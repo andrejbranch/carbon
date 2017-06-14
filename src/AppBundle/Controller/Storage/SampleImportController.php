@@ -4,27 +4,15 @@ namespace AppBundle\Controller\Storage;
 
 use AppBundle\Entity\Storage\Sample;
 use AppBundle\Service\Import\CryoblockDoctrineWriter;
+use AppBundle\Service\Import\CryoblockMappingItemConverter;
+use AppBundle\Validator\Constraints as ScrippsAssert;
 use Carbon\ApiBundle\Controller\CarbonApiController;
-
-use Ddeboer\DataImport\Filter\ValidatorFilter;
-use Ddeboer\DataImport\Filter\CallbackFilter;
-use Ddeboer\DataImport\ItemConverter\MappingItemConverter;
-use Ddeboer\DataImport\ItemConverter\CallbackItemConverter;
 use Ddeboer\DataImport\ValueConverter\StringToDateTimeValueConverter;
 use Ddeboer\DataImport\ValueConverter\StringToObjectConverter;
 use Ddeboer\DataImport\Reader\ExcelReader;
-use Ddeboer\DataImport\Workflow;
-
-use Doctrine\ORM\Query\Expr\Join;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Exception\MethodNotAllowedException;
-use Symfony\Component\Routing\Exception\NotFoundHttpException;
-use Symfony\Component\Validator\Constraints as Assert;
-use Carbon\ApiBundle\Validator\Constraints as CarbonAssert;
-
-use AppBundle\Validator\Constraints as ScrippsAssert;
 
 class SampleImportController extends CarbonApiController
 {
@@ -97,7 +85,7 @@ class SampleImportController extends CarbonApiController
     {
         $sampleType = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType')->find($sampleTypeId);
 
-        $converter = new MappingItemConverter();
+        $converter = new CryoblockMappingItemConverter();
 
         $importer = $this->container->get('sample.importer');
 
