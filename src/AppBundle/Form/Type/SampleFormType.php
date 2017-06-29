@@ -87,33 +87,6 @@ class SampleFormType extends CryoblockAbstractType
             ))
         ;
 
-        // $preSubmit = function (FormEvent $event) use ($builder) {
-
-        //     // $parentObject = $options['parent_object'];
-
-        //     // var_dump($parentObject);
-        //     // die;
-
-        //     $parent = $builder->getForm()->getData();
-        //     foreach ($parent->attachments as $attachment) {
-        //         $data = $attachment['src'];
-        //         $content = preg_replace('/^data.*,/', '', $data);
-        //         $fileName = $attachment['name'];
-        //         file_put_contents('/Users/andre/Repos/carbon/uploads/cryoblock/' . $fileName, base64_decode($content, true));
-        //         die;
-        //     }
-        //     // var_dump($parent->attachments);
-        //     // $map = $event->getData();
-        //     // var_dump($map);
-        //     // foreach ($map as $file) {
-        //     //     var_dump($file);
-        //     // }
-        //     die;
-
-        // };
-
-        // $builder->addEventListener(FormEvents::POST_SUBMIT, $preSubmit);
-
         $builder->get('sampleType')
             ->addViewTransformer(new CryoblockOTOTransformer(
                 $this->em, 'AppBundle:Storage\SampleType'
