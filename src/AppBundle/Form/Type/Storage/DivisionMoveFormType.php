@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Type;
+namespace AppBundle\Form\Type\Storage;
 
 use Carbon\ApiBundle\Form\DataTransformer\CryoblockOTOTransformer;
 use Doctrine\ORM\EntityManager;

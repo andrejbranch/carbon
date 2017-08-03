@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Type;
+namespace AppBundle\Form\Type\Storage;
 
 use AppBundle\Form\DataTransformer\SampleTypeTransformer;
 use AppBundle\Form\DataTransformer\StorageContainerTransformer;

@@ -11,12 +11,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Carbon\ApiBundle\Entity\Storage\BaseDivision;
 
 /**
- * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\DivisionRepository")
- * @ORM\Table(name="storage.division", schema="storage")
- * @Gedmo\Tree(type="nested")
+ * @ORM\Entity()
+ * @ORM\Table(name="storage.catalog", schema="storage", indexes={@ORM\Index(name="catalog_name_idx", columns={"name"})})
  * @Gedmo\Loggable
  */
-class Division extends BaseDivision
+class Catalog
 {
     /**
      * @ORM\Id
@@ -27,26 +26,13 @@ class Division extends BaseDivision
     protected $id;
 
     /**
-     * Gets the value of id.
+     * @var string
      *
-     * @return mixed
+     * @ORM\Column(name="name", type="string", length=300)
+     * @Gedmo\Versioned
+     * @JMS\Groups({"default"})
+     * @Carbon\Searchable(name="name")
+     * @Assert\NotBlank()
      */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Sets the value of id.
-     *
-     * @param mixed $id the id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
+    protected $name;
 }

@@ -9,7 +9,7 @@ services:
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
 
     app.form.type.sample:
-        class: AppBundle\Form\Type\SampleFormType
+        class: AppBundle\Form\Type\Storage\SampleFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: sample }
@@ -27,25 +27,25 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
 
     sample.listener:
-        class: AppBundle\Listener\SampleListener
+        class: AppBundle\Listener\Storage\SampleListener
         arguments: ["@logger"]
         tags:
             - { name: doctrine.event_listener, event: onFlush }
 
     division.listener:
-        class: AppBundle\Listener\DivisionListener
+        class: AppBundle\Listener\Storage\DivisionListener
         arguments: ["@logger"]
         tags:
             - { name: doctrine.event_listener, event: onFlush }
 
     division.serializer.listener:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
-        class: AppBundle\Listener\DivisionSerializerListener
+        class: AppBundle\Listener\Storage\DivisionSerializerListener
         tags:
             - { name: jms_serializer.event_subscriber }
 
     app.form.type.division:
-        class: AppBundle\Form\Type\DivisionFormType
+        class: AppBundle\Form\Type\Storage\DivisionFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: division }
@@ -61,3 +61,15 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager", "@security.token_storage"]
         tags:
             - { name: validator.constraint_validator, alias: storage_location_validator }
+
+    app.form.type.dna_request:
+        class: AppBundle\Form\Type\Production\DNARequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: dna_request }
+
+    app.form.type.protocol:
+        class: AppBundle\Form\Type\ProtocolFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: protocol }

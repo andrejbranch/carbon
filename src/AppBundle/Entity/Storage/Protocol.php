@@ -2,13 +2,18 @@
 
 namespace AppBundle\Entity\Storage;
 
+use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+use JMS\Serializer\Annotation AS JMS;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Protocol
  *
- * @ORM\Entity(repositoryClass="AppBundle\Entity\ProtocolRepository")
+ * @ORM\Entity()
  * @ORM\Table(name="storage.protocol", schema="storage")
+ * @Gedmo\Loggable
  */
 class Protocol
 {
@@ -18,6 +23,7 @@ class Protocol
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @JMS\Groups({"default"})
      */
     private $id;
 
@@ -25,6 +31,8 @@ class Protocol
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=255)
+     * @JMS\Groups({"default"})
+     * @Carbon\Searchable("name")
      */
     private $name;
 
@@ -32,54 +40,83 @@ class Protocol
      * @var string
      *
      * @ORM\Column(name="description", type="text")
+     * @JMS\Groups({"default"})
+     * @Carbon\Searchable("description")
      */
     private $description;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="notes", type="text")
+     * @ORM\Column(name="notes", type="text", nullable=true)
+     * @JMS\Groups({"default"})
      */
     private $notes;
 
     /**
-     * @var integer
+     * @var User $createdBy
      *
-     * @ORM\Column(name="createdBy", type="integer")
+     * @Gedmo\Blameable(on="create")
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
+     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
+     * @JMS\Groups({"default"})
      */
     private $createdBy;
 
     /**
-     * @var \DateTime
+     * Created by id
+     * @ORM\Column(name="created_by_id", type="integer", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    private $createdById;
+
+    /**
+     * @var User $updatedBy
      *
-     * @ORM\Column(name="createdAt", type="datetime")
+     * @Gedmo\Blameable(on="update")
+     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
+     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
+     * @JMS\Groups({"default"})
+     * @JMS\MaxDepth(1)
+     */
+    private $updatedBy;
+
+    /**
+     * Created by id
+     * @ORM\Column(name="updated_by_id", type="integer", nullable=false)
+     * @JMS\Groups({"default"})
+     */
+    private $updatedById;
+
+    /**
+     * @var \DateTime $created
+     *
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     * @JMS\Groups({"default"})
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTime $updated
      *
-     * @ORM\Column(name="updatedAt", type="datetime")
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     * @JMS\Groups({"default"})
      */
     private $updatedAt;
 
     /**
-     * @var \DateTime
+     * @var \DateTime $deletedAt
      *
-     * @ORM\Column(name="deletedAt", type="datetime")
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @Gedmo\Versioned
+     * @JMS\Groups({"default"})
      */
     private $deletedAt;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="archivedAt", type="datetime")
-     */
-    private $archivedAt;
-
-
-    /**
-     * Get id
+     * Gets the value of id.
      *
      * @return integer
      */
@@ -89,20 +126,21 @@ class Protocol
     }
 
     /**
-     * Set name
+     * Sets the value of id.
      *
-     * @param string $name
-     * @return Protocol
+     * @param integer $id the id
+     *
+     * @return self
      */
-    public function setName($name)
+    public function setId($id)
     {
-        $this->name = $name;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Gets the value of name.
      *
      * @return string
      */
@@ -112,20 +150,21 @@ class Protocol
     }
 
     /**
-     * Set description
+     * Sets the value of name.
      *
-     * @param string $description
-     * @return Protocol
+     * @param string $name the name
+     *
+     * @return self
      */
-    public function setDescription($description)
+    public function setName($name)
     {
-        $this->description = $description;
+        $this->name = $name;
 
         return $this;
     }
 
     /**
-     * Get description
+     * Gets the value of description.
      *
      * @return string
      */
@@ -135,20 +174,21 @@ class Protocol
     }
 
     /**
-     * Set notes
+     * Sets the value of description.
      *
-     * @param string $notes
-     * @return Protocol
+     * @param string $description the description
+     *
+     * @return self
      */
-    public function setNotes($notes)
+    public function setDescription($description)
     {
-        $this->notes = $notes;
+        $this->description = $description;
 
         return $this;
     }
 
     /**
-     * Get notes
+     * Gets the value of notes.
      *
      * @return string
      */
@@ -158,10 +198,35 @@ class Protocol
     }
 
     /**
-     * Set createdBy
+     * Sets the value of notes.
      *
-     * @param integer $createdBy
-     * @return Protocol
+     * @param string $notes the notes
+     *
+     * @return self
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of createdBy.
+     *
+     * @return User $createdBy
+     */
+    public function getCreatedBy()
+    {
+        return $this->createdBy;
+    }
+
+    /**
+     * Sets the value of createdBy.
+     *
+     * @param User $createdBy $createdBy the created by
+     *
+     * @return self
      */
     public function setCreatedBy($createdBy)
     {
@@ -171,20 +236,93 @@ class Protocol
     }
 
     /**
-     * Get createdBy
+     * Gets the Created by id.
      *
-     * @return integer
+     * @return mixed
      */
-    public function getCreatedBy()
+    public function getCreatedById()
     {
-        return $this->createdBy;
+        return $this->createdById;
     }
 
     /**
-     * Set createdAt
+     * Sets the Created by id.
      *
-     * @param \DateTime $createdAt
-     * @return Protocol
+     * @param mixed $createdById the created by id
+     *
+     * @return self
+     */
+    public function setCreatedById($createdById)
+    {
+        $this->createdById = $createdById;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of updatedBy.
+     *
+     * @return User $updatedBy
+     */
+    public function getUpdatedBy()
+    {
+        return $this->updatedBy;
+    }
+
+    /**
+     * Sets the value of updatedBy.
+     *
+     * @param User $updatedBy $updatedBy the updated by
+     *
+     * @return self
+     */
+    public function setUpdatedBy($updatedBy)
+    {
+        $this->updatedBy = $updatedBy;
+
+        return $this;
+    }
+
+    /**
+     * Gets the Created by id.
+     *
+     * @return mixed
+     */
+    public function getUpdatedById()
+    {
+        return $this->updatedById;
+    }
+
+    /**
+     * Sets the Created by id.
+     *
+     * @param mixed $updatedById the updated by id
+     *
+     * @return self
+     */
+    public function setUpdatedById($updatedById)
+    {
+        $this->updatedById = $updatedById;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of createdAt.
+     *
+     * @return \DateTime $created
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * Sets the value of createdAt.
+     *
+     * @param \DateTime $created $createdAt the created at
+     *
+     * @return self
      */
     public function setCreatedAt($createdAt)
     {
@@ -194,20 +332,21 @@ class Protocol
     }
 
     /**
-     * Get createdAt
+     * Gets the value of updatedAt.
      *
-     * @return \DateTime
+     * @return \DateTime $updated
      */
-    public function getCreatedAt()
+    public function getUpdatedAt()
     {
-        return $this->createdAt;
+        return $this->updatedAt;
     }
 
     /**
-     * Set updatedAt
+     * Sets the value of updatedAt.
      *
-     * @param \DateTime $updatedAt
-     * @return Protocol
+     * @param \DateTime $updated $updatedAt the updated at
+     *
+     * @return self
      */
     public function setUpdatedAt($updatedAt)
     {
@@ -217,20 +356,21 @@ class Protocol
     }
 
     /**
-     * Get updatedAt
+     * Gets the value of deletedAt.
      *
-     * @return \DateTime
+     * @return \DateTime $deletedAt
      */
-    public function getUpdatedAt()
+    public function getDeletedAt()
     {
-        return $this->updatedAt;
+        return $this->deletedAt;
     }
 
     /**
-     * Set deletedAt
+     * Sets the value of deletedAt.
      *
-     * @param \DateTime $deletedAt
-     * @return Protocol
+     * @param \DateTime $deletedAt $deletedAt the deleted at
+     *
+     * @return self
      */
     public function setDeletedAt($deletedAt)
     {
@@ -240,35 +380,11 @@ class Protocol
     }
 
     /**
-     * Get deletedAt
-     *
-     * @return \DateTime
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
      */
-    public function getDeletedAt()
+    public function getStringLabel()
     {
-        return $this->deletedAt;
-    }
-
-    /**
-     * Set archivedAt
-     *
-     * @param \DateTime $archivedAt
-     * @return Protocol
-     */
-    public function setArchivedAt($archivedAt)
-    {
-        $this->archivedAt = $archivedAt;
-
-        return $this;
-    }
-
-    /**
-     * Get archivedAt
-     *
-     * @return \DateTime
-     */
-    public function getArchivedAt()
-    {
-        return $this->archivedAt;
+        return $this->getName();
     }
 }

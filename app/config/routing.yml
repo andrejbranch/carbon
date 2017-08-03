@@ -8,3 +8,7 @@ fos_user:
 storage:
     resource: "@AppBundle/Controller/Storage"
     type:     annotation
+
+production:
+    resource: "@AppBundle/Controller/Production"
+    type:     annotation

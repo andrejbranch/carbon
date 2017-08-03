@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Carbon\ApiBundle\Entity\Storage\BaseDivisionSampleType;
 
 /**
  * Division Sample Type
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\Table(name="storage.division_sample_type", schema="storage")
  */
-class DivisionSampleType
+class DivisionSampleType extends BaseDivisionSampleType
 {
     /**
      * @var integer
@@ -29,42 +30,26 @@ class DivisionSampleType
     private $id;
 
     /**
-     * @var integer
+     * Gets the value of id.
      *
-     * @ORM\Column(name="sample_type_id", type="integer")
-     * @JMS\Groups({"default"})
+     * @return integer
      */
-    private $sampleTypeId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\SampleType")
-     * @ORM\JoinColumn(name="sample_type_id", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $sampleType;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="division_id", type="integer")
-     * @JMS\Groups({"default"})
-     */
-    private $divisionId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionSampleTypes")
-     * @ORM\JoinColumn(name="division_id", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $division;
-
-    public function setSampleType(SampleType $sampleType)
+    public function getId()
     {
-        $this->sampleType = $sampleType;
+        return $this->id;
     }
 
-    public function setDivision(Division $division)
+    /**
+     * Sets the value of id.
+     *
+     * @param integer $id the id
+     *
+     * @return self
+     */
+    public function setId($id)
     {
-        $this->division = $division;
+        $this->id = $id;
+
+        return $this;
     }
 }

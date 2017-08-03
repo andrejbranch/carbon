@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
+use Carbon\ApiBundle\Entity\Storage\BaseDivisionStorageContainer;
 
 /**
  * Division Storage Container
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\Table(name="storage.division_storage_container", schema="storage")
  */
-class DivisionStorageContainer
+class DivisionStorageContainer extends BaseDivisionStorageContainer
 {
     /**
      * @var integer
@@ -29,42 +30,26 @@ class DivisionStorageContainer
     private $id;
 
     /**
-     * @var integer
+     * Gets the value of id.
      *
-     * @ORM\Column(name="storage_container_id", type="integer")
-     * @JMS\Groups({"default"})
+     * @return integer
      */
-    private $storageContainerId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\StorageContainer")
-     * @ORM\JoinColumn(name="storage_container_id", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $storageContainer;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="division_id", type="integer")
-     * @JMS\Groups({"default"})
-     */
-    private $divisionId;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Division", inversedBy="divisionStorageContainers")
-     * @ORM\JoinColumn(name="division_id", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $division;
-
-    public function setStorageContainer(StorageContainer $storageContainer)
+    public function getId()
     {
-        $this->storageContainer = $storageContainer;
+        return $this->id;
     }
 
-    public function setDivision(Division $division)
+    /**
+     * Sets the value of id.
+     *
+     * @param integer $id the id
+     *
+     * @return self
+     */
+    public function setId($id)
     {
-        $this->division = $division;
+        $this->id = $id;
+
+        return $this;
     }
 }

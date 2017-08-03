@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Form\Type;
+namespace AppBundle\Form\Type\Storage;
 
 use Carbon\ApiBundle\Form\DataTransformer\CryoblockOTOTransformer;
 use Doctrine\ORM\EntityManager;
@@ -24,6 +24,8 @@ class DivisionFormType extends CryoblockAbstractType
             ->add('title', 'text')
             ->add('description', 'text')
             ->add('hasDimension', 'checkbox')
+            ->add('allowAllSampleTypes', 'checkbox')
+            ->add('allowAllStorageContainers', 'checkbox')
             ->add('isPublicEdit', 'checkbox')
             ->add('isPublicView', 'checkbox')
             ->add('height', 'integer')
