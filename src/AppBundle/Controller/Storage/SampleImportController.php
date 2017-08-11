@@ -53,6 +53,7 @@ class SampleImportController extends CarbonApiController
         $request = $this->getRequest();
         $data = json_decode($request->getContent(), true);
 
+        $sampleIds = array();
         foreach ($data as $item) {
 
             $entity = new Sample();
@@ -68,11 +69,12 @@ class SampleImportController extends CarbonApiController
 
             $this->getEntityManager()->persist($entity);
 
+            $sampleIds[] = $entity->getId();
         }
 
         $this->getEntityManager()->flush();
 
-        return $this->getJsonResponse(json_encode(array('success' => 'success')));
+        return $this->getJsonResponse(json_encode($sampleIds));
     }
 
     /**

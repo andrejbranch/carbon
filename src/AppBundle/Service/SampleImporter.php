@@ -10,174 +10,6 @@ use Symfony\Component\Validator\Validator\RecursiveValidator;
 
 class SampleImporter
 {
-    protected $sampleTypeTemplateColumnMap = array(
-        'DNA' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to DNA
-            'vectorName' => 'Vector Name',
-            'concentration' => 'Concentration',
-            'concentrationUnits' => 'Concentration Units',
-            'dnaSequence' => 'DNA Sequence',
-            'aminoAcidSequence' => 'Amino Acid Sequence',
-            'totalAminoAcids' => 'Total Amino Acids',
-            'molecularWeight' => 'Molecular Weight',
-            'extinctionCoefficient' => 'Extinction Coefficient',
-            'purificationTags' => 'Purification Tags',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-        'Protein' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-
-        ),
-        'Sera' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to Sera
-            'species' => 'Species',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-        'Bacterial Cells' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to Bacterial Cells
-            'cellLine' => 'Cell Line',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-        'Mammalian Cells' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to Mammalian Cells
-            'cellLine' => 'Cell Line',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-
-        ),
-        'Yeast Cells' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to Yeast Cells
-            'cellLine' => 'Cell Line',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-        'Chemical Compound' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // specific to Chemical Compound
-            'mass' => 'Mass (g)',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-        'Solution' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-
-        'Other' => array(
-            'name' => 'Name',
-            'sampleType' => 'Sample Type',
-            'description' => 'Description',
-            'status' => 'Status',
-            'storageContainer' => 'Storage Container',
-            'storageBuffer' => 'Storage Buffer',
-            'projects' => 'Projects',
-            'linkedSamples' => 'Linked Samples',
-
-            // storage
-            'division' => 'Division',
-            'divisionRow' => 'Division Row',
-            'divisionColumn' => 'Division Column',
-        ),
-
-    );
-
     protected  $sampleTypeMapping = array(
         'DNA' => array(
             'Name' => array(
@@ -189,6 +21,11 @@ class SampleImporter
                 'prop' => 'description',
                 'bindTo' => 'description',
                 'errorProp' => array('description'),
+            ),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
             ),
             'Status' => array(
                 'prop' => 'status',
@@ -204,6 +41,11 @@ class SampleImporter
                 'prop' => 'storageBuffer',
                 'bindTo' => 'storageBuffer',
                 'errorProp' => array('storageBuffer'),
+            ),
+            'Projects' => array(
+                'prop' => 'projects',
+                'bindTo' => 'projects',
+                'errorProp' => array('projects'),
             ),
             'Linked Samples' => array(
                 'prop' => 'linkedSamples',
@@ -269,11 +111,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
         ),
         'Protein' => array(
@@ -766,7 +603,7 @@ class SampleImporter
 
     public function getTemplateContent(SampleType $sampleType)
     {
-        return implode(',', $this->sampleTypeTemplateColumnMap[$sampleType->getName()]);
+        return implode(array_keys($this->sampleTypeMapping[$sampleType->getName()]), ',');
     }
 
     public function getMapping(SampleType $sampleType)

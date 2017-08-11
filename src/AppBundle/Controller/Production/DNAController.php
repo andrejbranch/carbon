@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Carbon\ApiBundle\Serializer\Dot;
 
 class DNAController extends CarbonApiController
 {
@@ -56,5 +57,54 @@ class DNAController extends CarbonApiController
     public function handlePut()
     {
         return parent::handlePut();
+    }
+
+    /**
+     * @Route("/production/dna/{dnaRequestId}/download", name="production_dna_template_download")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function downloadTemplateAction($dnaRequestId)
+    {
+        $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
+        $inputSamples = $dnaRequest->getDnaRequestSamples();
+        $inputSample = $inputSamples[0]->getSample();
+
+        $importer = $this->container->get('sample.importer');
+
+        $fileName = 'DNA Request ' . $dnaRequestId . ' Template.csv';
+
+        $content = $importer->getTemplateContent($inputSample->getSampleType());
+
+        $total = 5;
+        $count = 0;
+
+        $sampleTypeMapping = $importer->getMapping($inputSample->getSampleType());
+
+        $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
+
+        $data = new Dot($serializedInputSample);
+
+        while ($count < 5) {
+
+            $content .= "\n";
+
+            foreach ($sampleTypeMapping as $label => $column) {
+
+                $content .= $data->get($column['bindTo']) . ',';
+            }
+
+            $count++;
+
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'. $fileName .'";');
+
+        $response->setContent($content);
+
+        return $response;
     }
 }
