@@ -68,8 +68,26 @@ services:
         tags:
             - { name: form.type, alias: dna_request }
 
+    app.form.type.protein_request:
+        class: AppBundle\Form\Type\Production\ProteinRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: protein_request }
+
+    app.form.type.purification_request:
+        class: AppBundle\Form\Type\Production\PurificationRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: purification_request }
+
     app.form.type.protocol:
         class: AppBundle\Form\Type\ProtocolFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: protocol }
+
+    dna.listener:
+        class: AppBundle\Listener\Production\DnaRequestListener
+        arguments: ["@logger"]
+        tags:
+            - { name: doctrine.event_listener, event: onFlush }

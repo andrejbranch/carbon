@@ -32,6 +32,7 @@ class SampleFormType extends CryoblockAbstractType
             ->add('name', 'text')
             ->add('description', 'text')
             ->add('status', 'text')
+            ->add('lot', 'text')
             ->add('storageBuffer', 'text')
             ->add('vectorName', 'text')
             ->add('divisionRow', 'text')

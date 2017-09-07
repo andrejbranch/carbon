@@ -13,11 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Sample
  *
  * @ORM\Entity()
- * @ORM\Table(name="production.dna", schema="production", indexes={@ORM\Index(name="dna_alias_idx", columns={"alias"})})
+ * @ORM\Table(name="production.protein_request", schema="production")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class DNA
+class ProteinRequest
 {
     /**
      * Valid statuses
@@ -63,16 +63,6 @@ class DNA
     private $id;
 
     /**
-     * @var integer $alias
-     *
-     * @ORM\Column(name="alias", type="string", length=300, nullable=true)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="alias")
-     */
-    protected $alias;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=300)
@@ -103,11 +93,6 @@ class DNA
      * @JMS\Groups({"default"})
      */
     private $protocol;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestProject", mappedBy="dnaRequest")
-     */
-    protected $dnaRequestProjects;
 
     /**
      * @var float $volume
@@ -228,14 +213,19 @@ class DNA
     private $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\ProteinRequestSample", mappedBy="proteinRequest")
      */
-    protected $dnaRequestSamples;
+    protected $proteinRequestSamples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNAOutputSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\ProteinRequestOutputSample", mappedBy="proteinRequest")
      */
-    protected $dnaOutputSamples;
+    protected $proteinRequestOutputSamples;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\ProteinRequestProject", mappedBy="proteinRequest")
+     */
+    protected $proteinRequestProjects;
 
     /** transient */
 
@@ -667,30 +657,6 @@ class DNA
     }
 
     /**
-     * Gets the value of dnaRequestProjects.
-     *
-     * @return mixed
-     */
-    public function getDnaRequestProjects()
-    {
-        return $this->dnaRequestProjects;
-    }
-
-    /**
-     * Sets the value of dnaRequestProjects.
-     *
-     * @param mixed $dnaRequestProjects the dna request projects
-     *
-     * @return self
-     */
-    public function setDnaRequestProjects($dnaRequestProjects)
-    {
-        $this->dnaRequestProjects = $dnaRequestProjects;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of volumeUnits.
      *
      * @return string $concentrationUnits
@@ -701,73 +667,73 @@ class DNA
     }
 
     /**
-     * Gets the value of dnaRequestSamples.
+     * Gets the value of proteinRequestSamples.
      *
      * @return mixed
      */
-    public function getDnaRequestSamples()
+    public function getProteinRequestSamples()
     {
-        return $this->dnaRequestSamples;
+        return $this->proteinRequestSamples;
     }
 
     /**
-     * Sets the value of dnaRequestSamples.
+     * Sets the value of proteinRequestSamples.
      *
-     * @param mixed $dnaRequestSamples the dna request samples
+     * @param mixed $proteinRequestSamples the protein request samples
      *
      * @return self
      */
-    public function setDnaRequestSamples($dnaRequestSamples)
+    public function setProteinRequestSamples($proteinRequestSamples)
     {
-        $this->dnaRequestSamples = $dnaRequestSamples;
+        $this->proteinRequestSamples = $proteinRequestSamples;
 
         return $this;
     }
 
     /**
-     * Gets the value of dnaOutputSamples.
+     * Gets the value of proteinRequestOutputSamples.
      *
      * @return mixed
      */
-    public function getDnaOutputSamples()
+    public function getProteinRequestOutputSamples()
     {
-        return $this->dnaOutputSamples;
+        return $this->proteinRequestOutputSamples;
     }
 
     /**
-     * Sets the value of dnaOutputSamples.
+     * Sets the value of proteinRequestOutputSamples.
      *
-     * @param mixed $dnaOutputSamples the dna request samples
+     * @param mixed $proteinRequestOutputSamples the protein request output samples
      *
      * @return self
      */
-    public function setDnaOutputSamples($dnaOutputSamples)
+    public function setProteinRequestOutputSamples($proteinRequestOutputSamples)
     {
-        $this->dnaOutputSamples = $dnaOutputSamples;
+        $this->proteinRequestOutputSamples = $proteinRequestOutputSamples;
 
         return $this;
     }
 
     /**
-     * Gets the value of alias.
+     * Gets the value of proteinRequestProjects.
      *
-     * @return integer $alias
+     * @return mixed
      */
-    public function getAlias()
+    public function getProteinRequestProjects()
     {
-        return $this->alias;
+        return $this->proteinRequestProjects;
     }
 
     /**
-     * Sets the value of alias.
+     * Sets the value of proteinRequestProjects.
      *
-     * @param integer $alias $alias the alias
+     * @param mixed $proteinRequestProjects the protein request projects
      *
      * @return self
      */
-    public function setAlias($alias)
+    public function setProteinRequestProjects($proteinRequestProjects)
     {
-        $this->alias = $alias;
+        $this->proteinRequestProjects = $proteinRequestProjects;
 
         return $this;
     }

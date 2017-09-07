@@ -13,11 +13,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Sample
  *
  * @ORM\Entity()
- * @ORM\Table(name="production.dna", schema="production", indexes={@ORM\Index(name="dna_alias_idx", columns={"alias"})})
+ * @ORM\Table(name="production.purification_request", schema="production")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class DNA
+class PurificationRequest
 {
     /**
      * Valid statuses
@@ -63,16 +63,6 @@ class DNA
     private $id;
 
     /**
-     * @var integer $alias
-     *
-     * @ORM\Column(name="alias", type="string", length=300, nullable=true)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="alias")
-     */
-    protected $alias;
-
-    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=300)
@@ -103,11 +93,6 @@ class DNA
      * @JMS\Groups({"default"})
      */
     private $protocol;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestProject", mappedBy="dnaRequest")
-     */
-    protected $dnaRequestProjects;
 
     /**
      * @var float $volume
@@ -228,14 +213,19 @@ class DNA
     private $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestSample", mappedBy="purificationRequest")
      */
-    protected $dnaRequestSamples;
+    protected $purificationRequestSamples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNAOutputSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestOutputSample", mappedBy="purificationRequest")
      */
-    protected $dnaOutputSamples;
+    protected $purificationRequestOutputSamples;
+
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestProject", mappedBy="purificationRequest")
+     */
+    protected $purificationRequestProjects;
 
     /** transient */
 
@@ -667,30 +657,6 @@ class DNA
     }
 
     /**
-     * Gets the value of dnaRequestProjects.
-     *
-     * @return mixed
-     */
-    public function getDnaRequestProjects()
-    {
-        return $this->dnaRequestProjects;
-    }
-
-    /**
-     * Sets the value of dnaRequestProjects.
-     *
-     * @param mixed $dnaRequestProjects the dna request projects
-     *
-     * @return self
-     */
-    public function setDnaRequestProjects($dnaRequestProjects)
-    {
-        $this->dnaRequestProjects = $dnaRequestProjects;
-
-        return $this;
-    }
-
-    /**
      * Gets the value of volumeUnits.
      *
      * @return string $concentrationUnits
@@ -701,73 +667,73 @@ class DNA
     }
 
     /**
-     * Gets the value of dnaRequestSamples.
+     * Gets the value of purificationRequestSamples.
      *
      * @return mixed
      */
-    public function getDnaRequestSamples()
+    public function getPurificationRequestSamples()
     {
-        return $this->dnaRequestSamples;
+        return $this->purificationRequestSamples;
     }
 
     /**
-     * Sets the value of dnaRequestSamples.
+     * Sets the value of purificationRequestSamples.
      *
-     * @param mixed $dnaRequestSamples the dna request samples
+     * @param mixed $purificationRequestSamples the purification request samples
      *
      * @return self
      */
-    public function setDnaRequestSamples($dnaRequestSamples)
+    public function setPurificationRequestSamples($purificationRequestSamples)
     {
-        $this->dnaRequestSamples = $dnaRequestSamples;
+        $this->purificationRequestSamples = $purificationRequestSamples;
 
         return $this;
     }
 
     /**
-     * Gets the value of dnaOutputSamples.
+     * Gets the value of purificationRequestOutputSamples.
      *
      * @return mixed
      */
-    public function getDnaOutputSamples()
+    public function getPurificationRequestOutputSamples()
     {
-        return $this->dnaOutputSamples;
+        return $this->purificationRequestOutputSamples;
     }
 
     /**
-     * Sets the value of dnaOutputSamples.
+     * Sets the value of purificationRequestOutputSamples.
      *
-     * @param mixed $dnaOutputSamples the dna request samples
+     * @param mixed $purificationRequestOutputSamples the purification request output samples
      *
      * @return self
      */
-    public function setDnaOutputSamples($dnaOutputSamples)
+    public function setPurificationRequestOutputSamples($purificationRequestOutputSamples)
     {
-        $this->dnaOutputSamples = $dnaOutputSamples;
+        $this->purificationRequestOutputSamples = $purificationRequestOutputSamples;
 
         return $this;
     }
 
     /**
-     * Gets the value of alias.
+     * Gets the value of purificationRequestProjects.
      *
-     * @return integer $alias
+     * @return mixed
      */
-    public function getAlias()
+    public function getPurificationRequestProjects()
     {
-        return $this->alias;
+        return $this->purificationRequestProjects;
     }
 
     /**
-     * Sets the value of alias.
+     * Sets the value of purificationRequestProjects.
      *
-     * @param integer $alias $alias the alias
+     * @param mixed $purificationRequestProjects the purification request projects
      *
      * @return self
      */
-    public function setAlias($alias)
+    public function setPurificationRequestProjects($purificationRequestProjects)
     {
-        $this->alias = $alias;
+        $this->purificationRequestProjects = $purificationRequestProjects;
 
         return $this;
     }

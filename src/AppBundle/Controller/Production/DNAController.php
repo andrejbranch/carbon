@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Production;
 
+use AppBundle\Entity\Production\DnaOutputSample;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -60,12 +61,66 @@ class DNAController extends CarbonApiController
     }
 
     /**
-     * @Route("/production/dna/{dnaRequestId}/download", name="production_dna_template_download")
+     * @Route("/production/dna/{dnaRequestId}/download-input-template", name="production_dna_input_template_download")
      * @Method("GET")
      *
      * @return Response
      */
-    public function downloadTemplateAction($dnaRequestId)
+    public function downloadInputTemplateAction($dnaRequestId)
+    {
+        $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
+        $dnaRequestInputSamples = $dnaRequest->getDnaRequestSamples();
+        $dnaRequestInputSample = $dnaRequestInputSamples[0]->getSample();
+
+        $importer = $this->container->get('sample.importer');
+
+        $fileName = 'DNA Request ' . $dnaRequestId . ' Input Samples Template.csv';
+
+        $content = $importer->getTemplateContent($dnaRequestInputSample->getSampleType());
+        $content = 'ID,' . $content;
+
+        $sampleTypeMapping = $importer->getMapping($dnaRequestInputSample->getSampleType());
+
+        $sampleTypeMapping = array_merge(array(
+            'ID' => array(
+                'prop' => 'id',
+                'bindTo' => 'id',
+                'errorProp' => array('id'),
+            )
+        ), $sampleTypeMapping);
+
+        foreach ($dnaRequestInputSamples as $dnaRequestInputSample) {
+
+            $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($dnaRequestInputSample->getSample()), true);
+
+            $data = new Dot($serializedInputSample);
+
+            $content .= "\n";
+
+            foreach ($sampleTypeMapping as $label => $column) {
+
+                $content .= $data->get($column['bindTo']) . ',';
+
+            }
+
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'. $fileName .'";');
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/production/dna/{dnaRequestId}/download-output-template/{sampleCount}", name="production_dna_output_template_download")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function downloadOutputTemplateAction($dnaRequestId, $sampleCount)
     {
         $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
         $inputSamples = $dnaRequest->getDnaRequestSamples();
@@ -77,7 +132,6 @@ class DNAController extends CarbonApiController
 
         $content = $importer->getTemplateContent($inputSample->getSampleType());
 
-        $total = 5;
         $count = 0;
 
         $sampleTypeMapping = $importer->getMapping($inputSample->getSampleType());
@@ -85,14 +139,19 @@ class DNAController extends CarbonApiController
         $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
 
         $data = new Dot($serializedInputSample);
+        $nullColumns = array('division', 'divisionRow', 'divisionColumn', 'storageContainer');
 
-        while ($count < 5) {
+        while ($count < $sampleCount) {
 
             $content .= "\n";
 
             foreach ($sampleTypeMapping as $label => $column) {
 
-                $content .= $data->get($column['bindTo']) . ',';
+                if (in_array($column['prop'], $nullColumns)) {
+                    $content .= ',';
+                } else {
+                    $content .= $data->get($column['bindTo']) . ',';
+                }
             }
 
             $count++;
@@ -106,5 +165,35 @@ class DNAController extends CarbonApiController
         $response->setContent($content);
 
         return $response;
+    }
+
+    /**
+     * @Route("/production/dna/{dnaRequestId}/complete", name="production_dna_complete")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function completeAction($dnaRequestId)
+    {
+        $dnaRequest = $this->getEntityRepository()->find($dnaRequestId);
+
+        $request = $this->getRequest();
+        $outputSampleIds = json_decode($request->getContent(), true);
+        $em = $this->getEntityManager();
+
+        $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
+
+        foreach ($samples as $sample) {
+            $dnaOutputSample = new DnaOutputSample();
+            $dnaOutputSample->setDnaRequest($dnaRequest);
+            $dnaOutputSample->setSample($sample);
+            $em->persist($dnaOutputSample);
+        }
+
+        $dnaRequest->setStatus('Completed');
+
+        $em->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
     }
 }

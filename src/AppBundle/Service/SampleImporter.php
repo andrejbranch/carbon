@@ -615,6 +615,7 @@ class SampleImporter
     {
         $filter = new ValidatorFilter($this->validator);
 
+        // $filter->add('id', new Assert\NotBlank());
         $filter->add('name', new Assert\NotBlank());
         $filter->add('description', new Assert\NotBlank(array(
             'message' => 'description can not be blank',
