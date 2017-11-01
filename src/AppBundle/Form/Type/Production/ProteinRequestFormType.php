@@ -47,7 +47,7 @@ class ProteinRequestFormType extends CryoblockAbstractType
 
             ->add('samples', 'cryoblock_mtm', array(
                 'parent_object' => $builder->getForm()->getData(),
-                'accessor' => 'proteinRequestSamples',
+                'accessor' => 'inputSamples',
                 'child_accessor' => 'sample'
             ))
         ;
@@ -76,6 +76,6 @@ class ProteinRequestFormType extends CryoblockAbstractType
 
     public function getName()
     {
-        return 'protein_request';
+        return 'Protein';
     }
 }

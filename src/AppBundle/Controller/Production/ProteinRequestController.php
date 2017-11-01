@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Production;
 
-use AppBundle\Entity\Production\DnaOutputSample;
+use AppBundle\Entity\Production\ProteinRequestOutputSample;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,7 +20,7 @@ class ProteinRequestController extends CarbonApiController
     /**
      * @var string The form type for this resource
      */
-    const FORM_TYPE = "protein_request";
+    const FORM_TYPE = "Protein";
 
     /**
      * @Route("/production/protein-request", name="production_protein_request_get")
@@ -61,42 +61,47 @@ class ProteinRequestController extends CarbonApiController
     }
 
     // /**
-    //  * @Route("/production/dna/{dnaRequestId}/download", name="production_dna_template_download")
+    //  * @Route("/production/protein-request/{requestId}/download-input-template", name="production_protein_request_input_template_download")
     //  * @Method("GET")
     //  *
     //  * @return Response
     //  */
-    // public function downloadTemplateAction($dnaRequestId)
+    // public function downloadInputTemplateAction($requestId)
     // {
-    //     $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
-    //     $inputSamples = $dnaRequest->getDnaRequestSamples();
-    //     $inputSample = $inputSamples[0]->getSample();
+    //     $proteinRequest = $this->getEntityManager()->getRepository('AppBundle:Production\ProteinRequest')->find($requestId);
+    //     $proteinRequestInputSamples = $proteinRequest->getDnaRequestSamples();
+    //     $proteinRequestInputSample = $proteinRequestInputSamples[0]->getSample();
 
     //     $importer = $this->container->get('sample.importer');
 
-    //     $fileName = 'DNA Request ' . $dnaRequestId . ' Template.csv';
+    //     $fileName = 'Protein Request ' . $requestId . ' Input Samples Template.csv';
 
-    //     $content = $importer->getTemplateContent($inputSample->getSampleType());
+    //     $content = $importer->getTemplateContent('Protein');
+    //     $content = 'ID,' . $content;
 
-    //     $total = 5;
-    //     $count = 0;
+    //     $sampleTypeMapping = $importer->getMapping('Protein');
 
-    //     $sampleTypeMapping = $importer->getMapping($inputSample->getSampleType());
+    //     $sampleTypeMapping = array_merge(array(
+    //         'ID' => array(
+    //             'prop' => 'id',
+    //             'bindTo' => 'id',
+    //             'errorProp' => array('id'),
+    //         )
+    //     ), $sampleTypeMapping);
 
-    //     $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
+    //     foreach ($dnaRequestInputSamples as $dnaRequestInputSample) {
 
-    //     $data = new Dot($serializedInputSample);
+    //         $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($dnaRequestInputSample->getSample()), true);
 
-    //     while ($count < 5) {
+    //         $data = new Dot($serializedInputSample);
 
     //         $content .= "\n";
 
     //         foreach ($sampleTypeMapping as $label => $column) {
 
     //             $content .= $data->get($column['bindTo']) . ',';
-    //         }
 
-    //         $count++;
+    //         }
 
     //     }
 
@@ -109,33 +114,93 @@ class ProteinRequestController extends CarbonApiController
     //     return $response;
     // }
 
-    // /**
-    //  * @Route("/production/dna/{dnaRequestId}/complete", name="production_dna_complete")
-    //  * @Method("POST")
-    //  *
-    //  * @return Response
-    //  */
-    // public function completeAction($dnaRequestId)
-    // {
-    //     $dnaRequest = $this->getEntityRepository()->find($dnaRequestId);
+    /**
+     * @Route("/production/protein-request/{requestId}/download-output-template/{sampleCount}", name="production_protein_request_output_template_download")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function downloadOutputTemplateAction($requestId, $sampleCount)
+    {
+        $proteinRequest = $this->getEntityManager()->getRepository('AppBundle:Production\ProteinRequest')->find($requestId);
+        $inputSamples = $proteinRequest->getInputSamples();
+        $inputSample = $inputSamples[0]->getSample();
 
-    //     $request = $this->getRequest();
-    //     $outputSampleIds = json_decode($request->getContent(), true);
-    //     $em = $this->getEntityManager();
+        $importer = $this->container->get('sample.importer');
 
-    //     $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
+        $fileName = 'Protein Request ' . $requestId . ' Template.csv';
 
-    //     foreach ($samples as $sample) {
-    //         $dnaOutputSample = new DnaOutputSample();
-    //         $dnaOutputSample->setDnaRequest($dnaRequest);
-    //         $dnaOutputSample->setSample($sample);
-    //         $em->persist($dnaOutputSample);
-    //     }
+        $sampleType = $this->getEntityManager()->getRepository('AppBundle:Storage\SampleType')->findOneByName('Protein');
 
-    //     $dnaRequest->setStatus('Completed');
+        $content = $importer->getTemplateContent($sampleType);
 
-    //     $em->flush();
+        $count = 0;
 
-    //     return $this->getJsonResponse(json_encode(array('success' => 'success')));
-    // }
+        $sampleTypeMapping = $importer->getMapping($sampleType);
+
+        $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
+
+        $data = new Dot($serializedInputSample);
+        $nullColumns = array('division', 'divisionRow', 'divisionColumn', 'storageContainer');
+
+        while ($count < $sampleCount) {
+
+            $content .= "\n";
+
+            foreach ($sampleTypeMapping as $label => $column) {
+
+                if (in_array($column['prop'], $nullColumns)) {
+                    $content .= ',';
+                } else if ($label === 'Sample Type') {
+                    $content .= $sampleType->getName();
+                } else {
+                    $content .= $data->get($column['bindTo']) . ',';
+                }
+            }
+
+            $count++;
+
+        }
+
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'. $fileName .'";');
+
+        $response->setContent($content);
+
+        return $response;
+    }
+
+    /**
+     * @Route("/production/protein-request/{proteinRequest}/complete", name="production_protein_request_complete")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function completeAction($proteinRequest)
+    {
+        $proteinRequest = $this->getEntityRepository()->find($proteinRequest);
+
+        $request = $this->getRequest();
+        $outputSampleIds = json_decode($request->getContent(), true);
+        $em = $this->getEntityManager();
+
+        $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
+
+        $proteinRequestOutputSamples = array();
+        foreach ($samples as $sample) {
+            $proteinRequestOutputSample = new ProteinRequestOutputSample();
+            $proteinRequestOutputSample->setRequest($proteinRequest);
+            $proteinRequestOutputSample->setSample($sample);
+            $em->persist($proteinRequestOutputSample);
+            $proteinRequestOutputSamples[] = $proteinRequestOutputSample;
+        }
+
+        $proteinRequest->setOutputSamples($proteinRequestOutputSamples);
+        $proteinRequest->setStatus('Completed');
+
+        $em->flush();
+
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
+    }
 }

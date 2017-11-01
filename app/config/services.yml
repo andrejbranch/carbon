@@ -66,19 +66,25 @@ services:
         class: AppBundle\Form\Type\Production\DNARequestFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
-            - { name: form.type, alias: dna_request }
+            - { name: form.type, alias: DNA }
 
     app.form.type.protein_request:
         class: AppBundle\Form\Type\Production\ProteinRequestFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
-            - { name: form.type, alias: protein_request }
+            - { name: form.type, alias: Protein }
 
     app.form.type.purification_request:
         class: AppBundle\Form\Type\Production\PurificationRequestFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
-            - { name: form.type, alias: purification_request }
+            - { name: form.type, alias: Purification }
+
+    app.form.type.analysis_request:
+        class: AppBundle\Form\Type\Production\AnalysisRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: Analysis }
 
     app.form.type.protocol:
         class: AppBundle\Form\Type\ProtocolFormType
@@ -86,8 +92,19 @@ services:
         tags:
             - { name: form.type, alias: protocol }
 
-    dna.listener:
-        class: AppBundle\Listener\Production\DnaRequestListener
-        arguments: ["@logger"]
+    production.request.listener:
+        class: AppBundle\Listener\Production\ProductionRequestListener
         tags:
             - { name: doctrine.event_listener, event: onFlush }
+
+    app.form.type.pipeline:
+        class: AppBundle\Form\Type\Production\PipelineFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: pipeline }
+
+    app.form.type.pipeline_steps:
+        class: AppBundle\Form\Type\Production\PipelineStepsFormType
+        arguments: ["@doctrine.orm.default_entity_manager", "@form.factory"]
+        tags:
+            - { name: form.type, alias: pipeline_steps }

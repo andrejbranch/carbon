@@ -17,20 +17,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class DNA
+class DNA extends BaseRequest
 {
-    /**
-     * Valid statuses
-     *
-     * @var array
-     */
-    private $validStatuses = array(
-        'Pending',
-        'Processing',
-        'Aborted',
-        'Completed'
-    );
-
     /**
      * Valid concentration units
      *
@@ -63,38 +51,6 @@ class DNA
     private $id;
 
     /**
-     * @var integer $alias
-     *
-     * @ORM\Column(name="alias", type="string", length=300, nullable=true)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="alias")
-     */
-    protected $alias;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=300)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="name")
-     * @Assert\NotBlank()
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text")
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="description")
-     * @Assert\NotBlank()
-     */
-    private $description;
-
-    /**
      * @var Protocol $protocol
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Protocol")
@@ -116,7 +72,7 @@ class DNA
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $volume;
+    protected $volume;
 
     /**
      * @var string
@@ -125,69 +81,8 @@ class DNA
      * @JMS\Groups({"default"})
      * @Carbon\Searchable(name="name")
      */
-    private $notes;
+    protected $notes;
 
-    /**
-     * @var User $createdBy
-     *
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     */
-    private $createdBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="created_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $createdById;
-
-    /**
-     * @var User $updatedBy
-     *
-     * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     * @JMS\MaxDepth(1)
-     */
-    private $updatedBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="updated_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $updatedById;
-
-    /**
-     * @var \DateTime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $updatedAt;
-
-    /**
-     * @var \DateTime $deletedAt
-     *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     */
-    private $deletedAt;
 
     /**
      * @var string $concentrationUnits
@@ -196,16 +91,7 @@ class DNA
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $volumeUnits;
-
-    /**
-     * @var string $status
-     *
-     * @ORM\Column(name="status", type="string", nullable=false)
-     * @JMS\Groups({"default"})
-     * @Gedmo\Versioned
-     */
-    private $status;
+    protected $volumeUnits;
 
     /**
      * @var float $concentration
@@ -216,7 +102,7 @@ class DNA
      * @JMS\Type("double")
      * @Gedmo\Versioned
      */
-    private $concentration;
+    protected $concentration;
 
     /**
      * @var string $concentrationUnits
@@ -225,224 +111,23 @@ class DNA
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $concentrationUnits;
+    protected $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestInputSample", mappedBy="request")
      */
-    protected $dnaRequestSamples;
+    protected $inputSamples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNAOutputSample", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestOutputSample", mappedBy="request")
      */
-    protected $dnaOutputSamples;
+    protected $outputSamples;
 
     /** transient */
 
-    public $projects;
-
     public $samples;
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Sample
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Get created by id
-     *
-     * @return integer
-     */
-    public function getCreatedById()
-    {
-        return $this->createdById;
-    }
-
-    /**
-     * Get created by user
-     *
-     * @return Carbon\ApiBundle\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Get updated by user
-     *
-     * @return Carbon\ApiBundle\User
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updateBy;
-    }
-
-    /**
-     * Get updated by id
-     *
-     * @return integer
-     */
-    public function getUpdatedById()
-    {
-        return $this->updatedById;
-    }
-
-    /**
-     * Get notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt($deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function getArchivedAt()
-    {
-        return $this->archivedAt;
-    }
-
-    public function setArchivedAt($archivedAt)
-    {
-        $this->archivedAt = $archivedAt;
-    }
-
-    public function getVolume()
-    {
-        return $this->volume;
-    }
-
-    public function setVolumeUnits($volumeUnits)
-    {
-        $this->volumeUnits = $volumeUnits;
-    }
-
-    public function setVolume($volume)
-    {
-        $this->volume = (string) $volume;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function getConcentration()
-    {
-        return $this->concentration;
-    }
-
-    public function setConcentration($concentration)
-    {
-        $this->concentration = (string) $concentration;
-    }
-
-    public function getConcentrationUnits()
-    {
-        return $this->concentrationUnits;
-    }
-
-    public function setConcentrationUnits($concentrationUnits)
-    {
-        $this->concentrationUnits = $concentrationUnits;
-    }
-
-    /**
-     * @JMS\VirtualProperty()
-     * @JMS\Groups({"default"})
-     */
-    public function getConcentrationString()
-    {
-        return $this->concentration
-            ? $this->concentration . ' ' . $this->concentrationUnits
-            : ''
-        ;
-    }
-
-    /**
-     * @JMS\VirtualProperty()
-     * @JMS\Groups({"default"})
-     */
-    public function getVolumeString()
-    {
-        return $this->volume
-            ? $this->volume . ' ' . $this->volumeUnits
-            : ''
-        ;
-    }
-
-    /**
-     * @JMS\VirtualProperty()
-     * @JMS\Groups({"default"})
-     */
-    public function getStringLabel()
-    {
-        return $this->getDescription();
-    }
-
-    /**
-     * Gets the Valid sample statuses.
-     *
-     * @return array
-     */
-    public function getValidStatuses()
-    {
-        return $this->validStatuses;
-    }
+    public $projects;
 
     /**
      * Gets the Valid concentration units.
@@ -452,132 +137,6 @@ class DNA
     public function getValidConcentrationUnits()
     {
         return $this->validConcentrationUnits;
-    }
-
-    /**
-     * Sets the value of id.
-     *
-     * @param integer $id the id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of notes.
-     *
-     * @param string $notes the notes
-     *
-     * @return self
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of createdBy.
-     *
-     * @param User $createdBy $createdBy the created by
-     *
-     * @return self
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $createdById the created by id
-     *
-     * @return self
-     */
-    public function setCreatedById($createdById)
-    {
-        $this->createdById = $createdById;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of updatedBy.
-     *
-     * @param User $updatedBy $updatedBy the updated by
-     *
-     * @return self
-     */
-    public function setUpdatedBy($updatedBy)
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $updatedById the updated by id
-     *
-     * @return self
-     */
-    public function setUpdatedById($updatedById)
-    {
-        $this->updatedById = $updatedById;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of createdAt.
-     *
-     * @param \DateTime $created $createdAt the created at
-     *
-     * @return self
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of updatedAt.
-     *
-     * @param \DateTime $updated $updatedAt the updated at
-     *
-     * @return self
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Valid statuses.
-     *
-     * @param array $validStatuses the valid statuses
-     *
-     * @return self
-     */
-    public function setValidStatuses(array $validStatuses)
-    {
-        $this->validStatuses = $validStatuses;
-
-        return $this;
     }
 
     /**
@@ -619,25 +178,25 @@ class DNA
     }
 
     /**
-     * Gets the value of name.
+     * Gets the value of id.
      *
-     * @return string
+     * @return integer
      */
-    public function getName()
+    public function getId()
     {
-        return $this->name;
+        return $this->id;
     }
 
     /**
-     * Sets the value of name.
+     * Sets the value of id.
      *
-     * @param string $name the name
+     * @param integer $id the id
      *
      * @return self
      */
-    public function setName($name)
+    public function setId($id)
     {
-        $this->name = $name;
+        $this->id = $id;
 
         return $this;
     }
@@ -691,6 +250,54 @@ class DNA
     }
 
     /**
+     * Gets the value of volume.
+     *
+     * @return float $volume
+     */
+    public function getVolume()
+    {
+        return $this->volume;
+    }
+
+    /**
+     * Sets the value of volume.
+     *
+     * @param float $volume $volume the volume
+     *
+     * @return self
+     */
+    public function setVolume($volume)
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of notes.
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Sets the value of notes.
+     *
+     * @param string $notes the notes
+     *
+     * @return self
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of volumeUnits.
      *
      * @return string $concentrationUnits
@@ -701,73 +308,63 @@ class DNA
     }
 
     /**
-     * Gets the value of dnaRequestSamples.
+     * Sets the value of volumeUnits.
      *
-     * @return mixed
-     */
-    public function getDnaRequestSamples()
-    {
-        return $this->dnaRequestSamples;
-    }
-
-    /**
-     * Sets the value of dnaRequestSamples.
-     *
-     * @param mixed $dnaRequestSamples the dna request samples
+     * @param string $concentrationUnits $volumeUnits the volume units
      *
      * @return self
      */
-    public function setDnaRequestSamples($dnaRequestSamples)
+    public function setVolumeUnits($volumeUnits)
     {
-        $this->dnaRequestSamples = $dnaRequestSamples;
+        $this->volumeUnits = $volumeUnits;
 
         return $this;
     }
 
     /**
-     * Gets the value of dnaOutputSamples.
+     * Gets the value of concentration.
      *
-     * @return mixed
+     * @return float $concentration
      */
-    public function getDnaOutputSamples()
+    public function getConcentration()
     {
-        return $this->dnaOutputSamples;
+        return $this->concentration;
     }
 
     /**
-     * Sets the value of dnaOutputSamples.
+     * Sets the value of concentration.
      *
-     * @param mixed $dnaOutputSamples the dna request samples
+     * @param float $concentration $concentration the concentration
      *
      * @return self
      */
-    public function setDnaOutputSamples($dnaOutputSamples)
+    public function setConcentration($concentration)
     {
-        $this->dnaOutputSamples = $dnaOutputSamples;
+        $this->concentration = $concentration;
 
         return $this;
     }
 
     /**
-     * Gets the value of alias.
+     * Gets the value of concentrationUnits.
      *
-     * @return integer $alias
+     * @return string $concentrationUnits
      */
-    public function getAlias()
+    public function getConcentrationUnits()
     {
-        return $this->alias;
+        return $this->concentrationUnits;
     }
 
     /**
-     * Sets the value of alias.
+     * Sets the value of concentrationUnits.
      *
-     * @param integer $alias $alias the alias
+     * @param string $concentrationUnits $concentrationUnits the concentration units
      *
      * @return self
      */
-    public function setAlias($alias)
+    public function setConcentrationUnits($concentrationUnits)
     {
-        $this->alias = $alias;
+        $this->concentrationUnits = $concentrationUnits;
 
         return $this;
     }
@@ -792,6 +389,54 @@ class DNA
     public function setProjects($projects)
     {
         $this->projects = $projects;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of inputSamples.
+     *
+     * @return mixed
+     */
+    public function getInputSamples()
+    {
+        return $this->inputSamples;
+    }
+
+    /**
+     * Sets the value of inputSamples.
+     *
+     * @param mixed $inputSamples the input samples
+     *
+     * @return self
+     */
+    public function setInputSamples($inputSamples)
+    {
+        $this->inputSamples = $inputSamples;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of outputSamples.
+     *
+     * @return mixed
+     */
+    public function getOutputSamples()
+    {
+        return $this->outputSamples;
+    }
+
+    /**
+     * Sets the value of outputSamples.
+     *
+     * @param mixed $outputSamples the output samples
+     *
+     * @return self
+     */
+    public function setOutputSamples($outputSamples)
+    {
+        $this->outputSamples = $outputSamples;
 
         return $this;
     }

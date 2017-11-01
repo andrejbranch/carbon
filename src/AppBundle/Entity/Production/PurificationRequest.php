@@ -10,33 +10,19 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Sample
- *
  * @ORM\Entity()
  * @ORM\Table(name="production.purification_request", schema="production")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class PurificationRequest
+class PurificationRequest extends BaseRequest
 {
-    /**
-     * Valid statuses
-     *
-     * @var array
-     */
-    private $validStatuses = array(
-        'Pending',
-        'Processing',
-        'Aborted',
-        'Completed'
-    );
-
     /**
      * Valid concentration units
      *
      * @var array
      */
-    private $validConcentrationUnits = array(
+    protected $validConcentrationUnits = array(
         'mg/mL',
         'ng/uL',
         'Molar',
@@ -47,7 +33,7 @@ class PurificationRequest
      *
      * @var array
      */
-    private $validVolumeUnits = array(
+    protected $validVolumeUnits = array(
         'uL',
         'mL'
     );
@@ -60,29 +46,7 @@ class PurificationRequest
      * @ORM\GeneratedValue(strategy="AUTO")
      * @JMS\Groups({"default"})
      */
-    private $id;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=300)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="name")
-     * @Assert\NotBlank()
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="text")
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     * @Carbon\Searchable(name="description")
-     * @Assert\NotBlank()
-     */
-    private $description;
+    protected $id;
 
     /**
      * @var Protocol $protocol
@@ -92,7 +56,7 @@ class PurificationRequest
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $protocol;
+    protected $protocol;
 
     /**
      * @var float $volume
@@ -101,7 +65,7 @@ class PurificationRequest
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $volume;
+    protected $volume;
 
     /**
      * @var string
@@ -110,69 +74,7 @@ class PurificationRequest
      * @JMS\Groups({"default"})
      * @Carbon\Searchable(name="name")
      */
-    private $notes;
-
-    /**
-     * @var User $createdBy
-     *
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     */
-    private $createdBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="created_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $createdById;
-
-    /**
-     * @var User $updatedBy
-     *
-     * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     * @JMS\MaxDepth(1)
-     */
-    private $updatedBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="updated_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $updatedById;
-
-    /**
-     * @var \DateTime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $updatedAt;
-
-    /**
-     * @var \DateTime $deletedAt
-     *
-     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
-     * @Gedmo\Versioned
-     * @JMS\Groups({"default"})
-     */
-    private $deletedAt;
+    protected $notes;
 
     /**
      * @var string $concentrationUnits
@@ -181,16 +83,7 @@ class PurificationRequest
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $volumeUnits;
-
-    /**
-     * @var string $status
-     *
-     * @ORM\Column(name="status", type="string", nullable=false)
-     * @JMS\Groups({"default"})
-     * @Gedmo\Versioned
-     */
-    private $status;
+    protected $volumeUnits;
 
     /**
      * @var float $concentration
@@ -201,7 +94,7 @@ class PurificationRequest
      * @JMS\Type("double")
      * @Gedmo\Versioned
      */
-    private $concentration;
+    protected $concentration;
 
     /**
      * @var string $concentrationUnits
@@ -210,17 +103,17 @@ class PurificationRequest
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $concentrationUnits;
+    protected $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestSample", mappedBy="purificationRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestInputSample", mappedBy="request")
      */
-    protected $purificationRequestSamples;
+    protected $inputSamples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestOutputSample", mappedBy="purificationRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestOutputSample", mappedBy="request")
      */
-    protected $purificationRequestOutputSamples;
+    protected $outputSamples;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\PurificationRequestProject", mappedBy="purificationRequest")
@@ -233,162 +126,9 @@ class PurificationRequest
 
     public $samples;
 
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * Set description
-     *
-     * @param string $description
-     * @return Sample
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * Get description
-     *
-     * @return string
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * Get created by id
-     *
-     * @return integer
-     */
-    public function getCreatedById()
-    {
-        return $this->createdById;
-    }
-
-    /**
-     * Get created by user
-     *
-     * @return Carbon\ApiBundle\User
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Get updated by user
-     *
-     * @return Carbon\ApiBundle\User
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updateBy;
-    }
-
-    /**
-     * Get updated by id
-     *
-     * @return integer
-     */
-    public function getUpdatedById()
-    {
-        return $this->updatedById;
-    }
-
-    /**
-     * Get notes
-     *
-     * @return string
-     */
-    public function getNotes()
-    {
-        return $this->notes;
-    }
-
-    public function getDeletedAt()
-    {
-        return $this->deletedAt;
-    }
-
-    public function setDeletedAt($deletedAt)
-    {
-        $this->deletedAt = $deletedAt;
-    }
-
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    public function getArchivedAt()
-    {
-        return $this->archivedAt;
-    }
-
-    public function setArchivedAt($archivedAt)
-    {
-        $this->archivedAt = $archivedAt;
-    }
-
     public function getVolume()
     {
         return $this->volume;
-    }
-
-    public function setVolumeUnits($volumeUnits)
-    {
-        $this->volumeUnits = $volumeUnits;
-    }
-
-    public function setVolume($volume)
-    {
-        $this->volume = (string) $volume;
-    }
-
-    public function getStatus()
-    {
-        return $this->status;
-    }
-
-    public function setStatus($status)
-    {
-        $this->status = $status;
-    }
-
-    public function getConcentration()
-    {
-        return $this->concentration;
-    }
-
-    public function setConcentration($concentration)
-    {
-        $this->concentration = (string) $concentration;
-    }
-
-    public function getConcentrationUnits()
-    {
-        return $this->concentrationUnits;
-    }
-
-    public function setConcentrationUnits($concentrationUnits)
-    {
-        $this->concentrationUnits = $concentrationUnits;
     }
 
     /**
@@ -425,16 +165,6 @@ class PurificationRequest
     }
 
     /**
-     * Gets the Valid sample statuses.
-     *
-     * @return array
-     */
-    public function getValidStatuses()
-    {
-        return $this->validStatuses;
-    }
-
-    /**
      * Gets the Valid concentration units.
      *
      * @return array
@@ -442,132 +172,6 @@ class PurificationRequest
     public function getValidConcentrationUnits()
     {
         return $this->validConcentrationUnits;
-    }
-
-    /**
-     * Sets the value of id.
-     *
-     * @param integer $id the id
-     *
-     * @return self
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of notes.
-     *
-     * @param string $notes the notes
-     *
-     * @return self
-     */
-    public function setNotes($notes)
-    {
-        $this->notes = $notes;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of createdBy.
-     *
-     * @param User $createdBy $createdBy the created by
-     *
-     * @return self
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $createdById the created by id
-     *
-     * @return self
-     */
-    public function setCreatedById($createdById)
-    {
-        $this->createdById = $createdById;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of updatedBy.
-     *
-     * @param User $updatedBy $updatedBy the updated by
-     *
-     * @return self
-     */
-    public function setUpdatedBy($updatedBy)
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $updatedById the updated by id
-     *
-     * @return self
-     */
-    public function setUpdatedById($updatedById)
-    {
-        $this->updatedById = $updatedById;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of createdAt.
-     *
-     * @param \DateTime $created $createdAt the created at
-     *
-     * @return self
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Sets the value of updatedAt.
-     *
-     * @param \DateTime $updated $updatedAt the updated at
-     *
-     * @return self
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    /**
-     * Sets the Valid statuses.
-     *
-     * @param array $validStatuses the valid statuses
-     *
-     * @return self
-     */
-    public function setValidStatuses(array $validStatuses)
-    {
-        $this->validStatuses = $validStatuses;
-
-        return $this;
     }
 
     /**
@@ -609,25 +213,25 @@ class PurificationRequest
     }
 
     /**
-     * Gets the value of name.
+     * Gets the value of id.
      *
-     * @return string
+     * @return integer
      */
-    public function getName()
+    public function getId()
     {
-        return $this->name;
+        return $this->id;
     }
 
     /**
-     * Sets the value of name.
+     * Sets the value of id.
      *
-     * @param string $name the name
+     * @param integer $id the id
      *
      * @return self
      */
-    public function setName($name)
+    public function setId($id)
     {
-        $this->name = $name;
+        $this->id = $id;
 
         return $this;
     }
@@ -657,6 +261,44 @@ class PurificationRequest
     }
 
     /**
+     * Sets the value of volume.
+     *
+     * @param float $volume $volume the volume
+     *
+     * @return self
+     */
+    public function setVolume($volume)
+    {
+        $this->volume = $volume;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of notes.
+     *
+     * @return string
+     */
+    public function getNotes()
+    {
+        return $this->notes;
+    }
+
+    /**
+     * Sets the value of notes.
+     *
+     * @param string $notes the notes
+     *
+     * @return self
+     */
+    public function setNotes($notes)
+    {
+        $this->notes = $notes;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of volumeUnits.
      *
      * @return string $concentrationUnits
@@ -667,49 +309,53 @@ class PurificationRequest
     }
 
     /**
-     * Gets the value of purificationRequestSamples.
+     * Sets the value of volumeUnits.
      *
-     * @return mixed
-     */
-    public function getPurificationRequestSamples()
-    {
-        return $this->purificationRequestSamples;
-    }
-
-    /**
-     * Sets the value of purificationRequestSamples.
-     *
-     * @param mixed $purificationRequestSamples the purification request samples
+     * @param string $concentrationUnits $volumeUnits the volume units
      *
      * @return self
      */
-    public function setPurificationRequestSamples($purificationRequestSamples)
+    public function setVolumeUnits($volumeUnits)
     {
-        $this->purificationRequestSamples = $purificationRequestSamples;
+        $this->volumeUnits = $volumeUnits;
 
         return $this;
     }
 
     /**
-     * Gets the value of purificationRequestOutputSamples.
+     * Sets the value of concentration.
      *
-     * @return mixed
-     */
-    public function getPurificationRequestOutputSamples()
-    {
-        return $this->purificationRequestOutputSamples;
-    }
-
-    /**
-     * Sets the value of purificationRequestOutputSamples.
-     *
-     * @param mixed $purificationRequestOutputSamples the purification request output samples
+     * @param float $concentration $concentration the concentration
      *
      * @return self
      */
-    public function setPurificationRequestOutputSamples($purificationRequestOutputSamples)
+    public function setConcentration($concentration)
     {
-        $this->purificationRequestOutputSamples = $purificationRequestOutputSamples;
+        $this->concentration = $concentration;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of concentrationUnits.
+     *
+     * @return string $concentrationUnits
+     */
+    public function getConcentrationUnits()
+    {
+        return $this->concentrationUnits;
+    }
+
+    /**
+     * Sets the value of concentrationUnits.
+     *
+     * @param string $concentrationUnits $concentrationUnits the concentration units
+     *
+     * @return self
+     */
+    public function setConcentrationUnits($concentrationUnits)
+    {
+        $this->concentrationUnits = $concentrationUnits;
 
         return $this;
     }
@@ -763,6 +409,54 @@ class PurificationRequest
     }
 
     /**
+     * Gets the value of inputSamples.
+     *
+     * @return mixed
+     */
+    public function getInputSamples()
+    {
+        return $this->inputSamples;
+    }
+
+    /**
+     * Sets the value of inputSamples.
+     *
+     * @param mixed $inputSamples the input samples
+     *
+     * @return self
+     */
+    public function setInputSamples($inputSamples)
+    {
+        $this->inputSamples = $inputSamples;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of outputSamples.
+     *
+     * @return mixed
+     */
+    public function getOutputSamples()
+    {
+        return $this->outputSamples;
+    }
+
+    /**
+     * Sets the value of outputSamples.
+     *
+     * @param mixed $outputSamples the output samples
+     *
+     * @return self
+     */
+    public function setOutputSamples($outputSamples)
+    {
+        $this->outputSamples = $outputSamples;
+
+        return $this;
+    }
+
+    /**
      * Gets the value of samples.
      *
      * @return mixed
@@ -784,5 +478,15 @@ class PurificationRequest
         $this->samples = $samples;
 
         return $this;
+    }
+
+    /**
+     * Gets the value of concentration.
+     *
+     * @return float $concentration
+     */
+    public function getConcentration()
+    {
+        return $this->concentration;
     }
 }

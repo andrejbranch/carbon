@@ -11,12 +11,10 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Division Sample Type
- *
  * @ORM\Entity()
- * @ORM\Table(name="production.protein_request_sample", schema="production")
+ * @ORM\Table(name="production.analysis_request_output_sample", schema="production")
  */
-class ProteinRequestSample
+class AnalysisRequestOutputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer
@@ -31,17 +29,17 @@ class ProteinRequestSample
     /**
      * @var integer
      *
-     * @ORM\Column(name="protein_request_id", type="integer")
+     * @ORM\Column(name="request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $proteinRequestId;
+    private $requestId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\ProteinRequest")
-     * @ORM\JoinColumn(name="protein_request_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\AnalysisRequest")
+     * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $proteinRequest;
+    private $request;
 
     /**
      * @var integer
@@ -52,7 +50,7 @@ class ProteinRequestSample
     private $sampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample", inversedBy="proteinRequestSamples")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -78,6 +76,54 @@ class ProteinRequestSample
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of requestId.
+     *
+     * @return integer
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * Sets the value of requestId.
+     *
+     * @param integer $requestId the request id
+     *
+     * @return self
+     */
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of request.
+     *
+     * @return mixed
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Sets the value of request.
+     *
+     * @param mixed $request the request
+     *
+     * @return self
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
 
         return $this;
     }
@@ -126,54 +172,6 @@ class ProteinRequestSample
     public function setSample($sample)
     {
         $this->sample = $sample;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of proteinRequestId.
-     *
-     * @return integer
-     */
-    public function getProteinRequestId()
-    {
-        return $this->proteinRequestId;
-    }
-
-    /**
-     * Sets the value of proteinRequestId.
-     *
-     * @param integer $proteinRequestId the protein request id
-     *
-     * @return self
-     */
-    public function setProteinRequestId($proteinRequestId)
-    {
-        $this->proteinRequestId = $proteinRequestId;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of proteinRequest.
-     *
-     * @return mixed
-     */
-    public function getProteinRequest()
-    {
-        return $this->proteinRequest;
-    }
-
-    /**
-     * Sets the value of proteinRequest.
-     *
-     * @param mixed $proteinRequest the protein request
-     *
-     * @return self
-     */
-    public function setProteinRequest($proteinRequest)
-    {
-        $this->proteinRequest = $proteinRequest;
 
         return $this;
     }

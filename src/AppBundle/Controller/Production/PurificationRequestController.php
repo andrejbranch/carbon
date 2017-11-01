@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Production;
 
-use AppBundle\Entity\Production\DnaOutputSample;
+use AppBundle\Entity\Production\PurificationRequestOutputSample;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,7 +20,7 @@ class PurificationRequestController extends CarbonApiController
     /**
      * @var string The form type for this resource
      */
-    const FORM_TYPE = "purification_request";
+    const FORM_TYPE = "Purification";
 
     /**
      * @Route("/production/purification-request", name="production_purification_request_get")
@@ -60,82 +60,89 @@ class PurificationRequestController extends CarbonApiController
         return parent::handlePut();
     }
 
-    // /**
-    //  * @Route("/production/dna/{dnaRequestId}/download", name="production_dna_template_download")
-    //  * @Method("GET")
-    //  *
-    //  * @return Response
-    //  */
-    // public function downloadTemplateAction($dnaRequestId)
-    // {
-    //     $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
-    //     $inputSamples = $dnaRequest->getDnaRequestSamples();
-    //     $inputSample = $inputSamples[0]->getSample();
+    /**
+     * @Route("/production/purification-request/{requestId}/download-output-template/{sampleCount}", name="production_purification_request_output_template_download")
+     * @Method("GET")
+     *
+     * @return Response
+     */
+    public function downloadOutputTemplateAction($requestId, $sampleCount)
+    {
+        $purificationRequest = $this->getEntityManager()->getRepository('AppBundle:Production\PurificationRequest')->find($requestId);
+        $inputSamples = $purificationRequest->getInputSamples();
+        $inputSample = $inputSamples[0]->getSample();
 
-    //     $importer = $this->container->get('sample.importer');
+        $importer = $this->container->get('sample.importer');
 
-    //     $fileName = 'DNA Request ' . $dnaRequestId . ' Template.csv';
+        $fileName = 'Purification Request ' . $requestId . ' Template.csv';
 
-    //     $content = $importer->getTemplateContent($inputSample->getSampleType());
+        $content = $importer->getTemplateContent($inputSample->getSampleType());
 
-    //     $total = 5;
-    //     $count = 0;
+        $count = 0;
 
-    //     $sampleTypeMapping = $importer->getMapping($inputSample->getSampleType());
+        $sampleTypeMapping = $importer->getMapping($inputSample->getSampleType());
 
-    //     $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
+        $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
 
-    //     $data = new Dot($serializedInputSample);
+        $data = new Dot($serializedInputSample);
+        $nullColumns = array('division', 'divisionRow', 'divisionColumn', 'storageContainer');
 
-    //     while ($count < 5) {
+        while ($count < $sampleCount) {
 
-    //         $content .= "\n";
+            $content .= "\n";
 
-    //         foreach ($sampleTypeMapping as $label => $column) {
+            foreach ($sampleTypeMapping as $label => $column) {
 
-    //             $content .= $data->get($column['bindTo']) . ',';
-    //         }
+                if (in_array($column['prop'], $nullColumns)) {
+                    $content .= ',';
+                } else {
+                    $content .= $data->get($column['bindTo']) . ',';
+                }
+            }
 
-    //         $count++;
+            $count++;
 
-    //     }
+        }
 
-    //     $response = new Response();
-    //     $response->headers->set('Content-Type', 'application/csv');
-    //     $response->headers->set('Content-Disposition', 'attachment; filename="'. $fileName .'";');
+        $response = new Response();
+        $response->headers->set('Content-Type', 'application/csv');
+        $response->headers->set('Content-Disposition', 'attachment; filename="'. $fileName .'";');
 
-    //     $response->setContent($content);
+        $response->setContent($content);
 
-    //     return $response;
-    // }
+        return $response;
+    }
 
-    // /**
-    //  * @Route("/production/dna/{dnaRequestId}/complete", name="production_dna_complete")
-    //  * @Method("POST")
-    //  *
-    //  * @return Response
-    //  */
-    // public function completeAction($dnaRequestId)
-    // {
-    //     $dnaRequest = $this->getEntityRepository()->find($dnaRequestId);
+    /**
+     * @Route("/production/purification-request/{purificationRequestId}/complete", name="production_purification_request_complete")
+     * @Method("POST")
+     *
+     * @return Response
+     */
+    public function completeAction($purificationRequestId)
+    {
+        $purificationRequest = $this->getEntityRepository()->find($purificationRequestId);
 
-    //     $request = $this->getRequest();
-    //     $outputSampleIds = json_decode($request->getContent(), true);
-    //     $em = $this->getEntityManager();
+        $request = $this->getRequest();
+        $outputSampleIds = json_decode($request->getContent(), true);
+        $em = $this->getEntityManager();
 
-    //     $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
+        $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
 
-    //     foreach ($samples as $sample) {
-    //         $dnaOutputSample = new DnaOutputSample();
-    //         $dnaOutputSample->setDnaRequest($dnaRequest);
-    //         $dnaOutputSample->setSample($sample);
-    //         $em->persist($dnaOutputSample);
-    //     }
+        $purificationRequestOutputSamples = array();
+        foreach ($samples as $sample) {
+            $purificationRequestOutputSample = new PurificationRequestOutputSample();
+            $purificationRequestOutputSample->setRequest($purificationRequest);
+            $purificationRequestOutputSample->setSample($sample);
+            $em->persist($purificationRequestOutputSample);
+            $purificationRequestOutputSamples[] = $purificationRequestOutputSample;
+        }
 
-    //     $dnaRequest->setStatus('Completed');
+        $purificationRequest->setOutputSamples($purificationRequestOutputSamples);
+        $purificationRequest->setStatus('Completed');
 
-    //     $em->flush();
+        $em->flush();
 
-    //     return $this->getJsonResponse(json_encode(array('success' => 'success')));
-    // }
+        return $this->getJsonResponse(json_encode(array('success' => 'success')));
+    }
 }

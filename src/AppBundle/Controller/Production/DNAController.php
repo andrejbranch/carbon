@@ -2,7 +2,7 @@
 
 namespace AppBundle\Controller\Production;
 
-use AppBundle\Entity\Production\DnaOutputSample;
+use AppBundle\Entity\Production\DnaRequestOutputSample;
 use Carbon\ApiBundle\Controller\CarbonApiController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -20,7 +20,7 @@ class DNAController extends CarbonApiController
     /**
      * @var string The form type for this resource
      */
-    const FORM_TYPE = "dna_request";
+    const FORM_TYPE = "DNA";
 
     /**
      * @Route("/production/dna", name="production_dna_get")
@@ -183,13 +183,16 @@ class DNAController extends CarbonApiController
 
         $samples = $em->getRepository('AppBundle\Entity\Storage\Sample')->findBy(array('id' => $outputSampleIds));
 
+        $dnaOutputSamples = array();
         foreach ($samples as $sample) {
-            $dnaOutputSample = new DnaOutputSample();
-            $dnaOutputSample->setDnaRequest($dnaRequest);
+            $dnaOutputSample = new DnaRequestOutputSample();
+            $dnaOutputSample->setRequest($dnaRequest);
             $dnaOutputSample->setSample($sample);
             $em->persist($dnaOutputSample);
+            $dnaOutputSamples[] = $dnaOutputSample;
         }
 
+        $dnaRequest->setOutputSamples($dnaOutputSamples);
         $dnaRequest->setStatus('Completed');
 
         $em->flush();

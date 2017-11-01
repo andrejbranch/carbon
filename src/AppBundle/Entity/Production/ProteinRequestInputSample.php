@@ -14,9 +14,9 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Division Sample Type
  *
  * @ORM\Entity()
- * @ORM\Table(name="production.purification_request_sample", schema="production")
+ * @ORM\Table(name="production.protein_request_input_sample", schema="production")
  */
-class PurificationRequestSample
+class ProteinRequestInputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer
@@ -31,17 +31,17 @@ class PurificationRequestSample
     /**
      * @var integer
      *
-     * @ORM\Column(name="purification_request_id", type="integer")
+     * @ORM\Column(name="request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $purificationRequestId;
+    private $requestId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\PurificationRequest")
-     * @ORM\JoinColumn(name="purification_request_id", nullable=false)
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\ProteinRequest")
+     * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $purificationRequest;
+    private $request;
 
     /**
      * @var integer
@@ -52,7 +52,7 @@ class PurificationRequestSample
     private $sampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample", inversedBy="purificationRequestSamples")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -78,6 +78,54 @@ class PurificationRequestSample
     public function setId($id)
     {
         $this->id = $id;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of requestId.
+     *
+     * @return integer
+     */
+    public function getRequestId()
+    {
+        return $this->requestId;
+    }
+
+    /**
+     * Sets the value of requestId.
+     *
+     * @param integer $requestId the request id
+     *
+     * @return self
+     */
+    public function setRequestId($requestId)
+    {
+        $this->requestId = $requestId;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of request.
+     *
+     * @return mixed
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * Sets the value of request.
+     *
+     * @param mixed $request the request
+     *
+     * @return self
+     */
+    public function setRequest($request)
+    {
+        $this->request = $request;
 
         return $this;
     }
@@ -126,54 +174,6 @@ class PurificationRequestSample
     public function setSample($sample)
     {
         $this->sample = $sample;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of purificationRequestId.
-     *
-     * @return integer
-     */
-    public function getPurificationRequestId()
-    {
-        return $this->purificationRequestId;
-    }
-
-    /**
-     * Sets the value of purificationRequestId.
-     *
-     * @param integer $purificationRequestId the purification request id
-     *
-     * @return self
-     */
-    public function setPurificationRequestId($purificationRequestId)
-    {
-        $this->purificationRequestId = $purificationRequestId;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of purificationRequest.
-     *
-     * @return mixed
-     */
-    public function getPurificationRequest()
-    {
-        return $this->purificationRequest;
-    }
-
-    /**
-     * Sets the value of purificationRequest.
-     *
-     * @param mixed $purificationRequest the purification request
-     *
-     * @return self
-     */
-    public function setPurificationRequest($purificationRequest)
-    {
-        $this->purificationRequest = $purificationRequest;
 
         return $this;
     }

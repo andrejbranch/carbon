@@ -11,10 +11,12 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * Division Sample Type
+ *
  * @ORM\Entity()
- * @ORM\Table(name="production.purification_request_output_sample", schema="production")
+ * @ORM\Table(name="production.dna_request_input_sample", schema="production")
  */
-class PurificationRequestOutputSample implements BaseRequestSampleInterface
+class DNARequestInputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer
@@ -24,7 +26,7 @@ class PurificationRequestOutputSample implements BaseRequestSampleInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
@@ -32,14 +34,14 @@ class PurificationRequestOutputSample implements BaseRequestSampleInterface
      * @ORM\Column(name="request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $requestId;
+    protected $requestId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\PurificationRequest")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\DNA")
      * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $request;
+    protected $request;
 
     /**
      * @var integer
@@ -47,14 +49,14 @@ class PurificationRequestOutputSample implements BaseRequestSampleInterface
      * @ORM\Column(name="sample_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $sampleId;
+    protected $sampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample", inversedBy="purificationRequestSamples")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $sample;
+    protected $sample;
 
     /**
      * Gets the value of id.

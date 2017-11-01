@@ -47,7 +47,7 @@ class DNARequestFormType extends CryoblockAbstractType
 
             ->add('samples', 'cryoblock_mtm', array(
                 'parent_object' => $builder->getForm()->getData(),
-                'accessor' => 'dnaRequestSamples',
+                'accessor' => 'inputSamples',
                 'child_accessor' => 'sample'
             ))
         ;
@@ -76,6 +76,6 @@ class DNARequestFormType extends CryoblockAbstractType
 
     public function getName()
     {
-        return 'dna_request';
+        return 'DNA';
     }
 }

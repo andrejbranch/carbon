@@ -7,28 +7,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 
-class DNARequestSampleController extends CarbonApiController
+class AnalysisRequestInputSampleController extends CarbonApiController
 {
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\Production\DNARequestSample";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Production\AnalysisRequestInputSample";
 
     protected $resourceLinkMap = array(
-        'dna-request' => array(
+        'analysis-request' => array(
             'returnedEntity' => 'AppBundle\Entity\Storage\Sample',
             'joinColumn' => 'sampleId',
-            'whereColumn' => 'dnaRequestId',
+            'whereColumn' => 'requestId',
         ),
         'sample' => array(
-            'returnedEntity' => 'AppBundle\Entity\Production\DNA',
-            'joinColumn' => 'dnaRequestId',
+            'returnedEntity' => 'AppBundle\Entity\Production\AnalysisRequest',
+            'joinColumn' => 'requestId',
             'whereColumn' => 'sampleId',
         )
     );
 
     /**
-     * @Route("/production/dna-request-sample/{type}/{id}", name="dna_request_sample_get")
+     * @Route("/production/analysis-request-input-sample/{type}/{id}", name="analysis_request_input_sample_get")
      * @Method("GET")
      *
      * @return Response

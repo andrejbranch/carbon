@@ -9,7 +9,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class PurificationRequestFormType extends CryoblockAbstractType
+class AnalysisRequestFormType extends CryoblockAbstractType
 {
     private $class;
 
@@ -24,15 +24,6 @@ class PurificationRequestFormType extends CryoblockAbstractType
             ->add('name', 'text')
             ->add('description', 'text')
             ->add('status', 'text')
-            ->add('volume', 'number', array(
-                'precision' => 3,
-            ))
-            ->add('volumeUnits', 'text')
-            ->add('concentration', 'number', array(
-                'precision' => 3,
-            ))
-            ->add('concentrationUnits', 'text')
-
             ->add('protocol', 'entity', array(
                 'class' => 'AppBundle:Storage\Protocol',
                 'property' => 'protocol_id',
@@ -41,7 +32,7 @@ class PurificationRequestFormType extends CryoblockAbstractType
 
             ->add('projects', 'cryoblock_mtm', array(
                 'parent_object' => $builder->getForm()->getData(),
-                'accessor' => 'purificationRequestProjects',
+                'accessor' => 'analysisRequestProjects',
                 'child_accessor' => 'project'
             ))
 
@@ -64,7 +55,7 @@ class PurificationRequestFormType extends CryoblockAbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\Production\PurificationRequest',
+            'data_class' => 'AppBundle\Entity\Production\AnalysisRequest',
             'csrf_protection' => false,
         ));
     }
@@ -76,6 +67,6 @@ class PurificationRequestFormType extends CryoblockAbstractType
 
     public function getName()
     {
-        return 'Purification';
+        return 'Analysis';
     }
 }

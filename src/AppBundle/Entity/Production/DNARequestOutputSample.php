@@ -11,12 +11,12 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * DNAOutputSample
+ * DNARequestOutputSample
  *
  * @ORM\Entity()
- * @ORM\Table(name="production.dna_output_sample", schema="production")
+ * @ORM\Table(name="production.dna_request_output_sample", schema="production")
  */
-class DNAOutputSample
+class DNARequestOutputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer
@@ -26,22 +26,22 @@ class DNAOutputSample
      * @ORM\GeneratedValue(strategy="AUTO")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
      *
-     * @ORM\Column(name="dna_request_id", type="integer")
+     * @ORM\Column(name="request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $dnaRequestId;
+    protected $requestId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\DNA")
-     * @ORM\JoinColumn(name="dna_request_id", nullable=false)
+     * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $dnaRequest;
+    protected $request;
 
     /**
      * @var integer
@@ -49,14 +49,14 @@ class DNAOutputSample
      * @ORM\Column(name="sample_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $sampleId;
+    protected $sampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample", inversedBy="dnaRequestSamples")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $sample;
+    protected $sample;
 
     /**
      * Gets the value of id.
@@ -83,49 +83,49 @@ class DNAOutputSample
     }
 
     /**
-     * Gets the value of dnaRequestId.
+     * Gets the value of requestId.
      *
      * @return integer
      */
-    public function getDnaRequestId()
+    public function getRequestId()
     {
-        return $this->dnaRequestId;
+        return $this->requestId;
     }
 
     /**
-     * Sets the value of dnaRequestId.
+     * Sets the value of requestId.
      *
-     * @param integer $dnaRequestId the dna request id
+     * @param integer $requestId the request id
      *
      * @return self
      */
-    public function setDnaRequestId($dnaRequestId)
+    public function setRequestId($requestId)
     {
-        $this->dnaRequestId = $dnaRequestId;
+        $this->requestId = $requestId;
 
         return $this;
     }
 
     /**
-     * Gets the value of dnaRequest.
+     * Gets the value of request.
      *
      * @return mixed
      */
-    public function getDnaRequest()
+    public function getRequest()
     {
-        return $this->dnaRequest;
+        return $this->request;
     }
 
     /**
-     * Sets the value of dnaRequest.
+     * Sets the value of request.
      *
-     * @param mixed $dnaRequest the dna request
+     * @param mixed $request the request
      *
      * @return self
      */
-    public function setDnaRequest($dnaRequest)
+    public function setRequest($request)
     {
-        $this->dnaRequest = $dnaRequest;
+        $this->request = $request;
 
         return $this;
     }

@@ -11,10 +11,12 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * Division Sample Type
+ *
  * @ORM\Entity()
- * @ORM\Table(name="production.purification_request_output_sample", schema="production")
+ * @ORM\Table(name="production.analysis_request_input_sample", schema="production")
  */
-class PurificationRequestOutputSample implements BaseRequestSampleInterface
+class AnalysisRequestInputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer
@@ -35,7 +37,7 @@ class PurificationRequestOutputSample implements BaseRequestSampleInterface
     private $requestId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\PurificationRequest")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\AnalysisRequest")
      * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
@@ -50,7 +52,7 @@ class PurificationRequestOutputSample implements BaseRequestSampleInterface
     private $sampleId;
 
     /**
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample", inversedBy="purificationRequestSamples")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */

@@ -11,8 +11,6 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class DivisionFormType extends CryoblockAbstractType
 {
-    private $class;
-
     public function __construct(EntityManager $em)
     {
         $this->em = $em;

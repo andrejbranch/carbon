@@ -18,11 +18,11 @@ class PurificationRequestOutputSampleController extends CarbonApiController
         'purification-request' => array(
             'returnedEntity' => 'AppBundle\Entity\Storage\Sample',
             'joinColumn' => 'sampleId',
-            'whereColumn' => 'purificationRequestId',
+            'whereColumn' => 'requestId',
         ),
         'sample' => array(
             'returnedEntity' => 'AppBundle\Entity\Production\PurificationRequest',
-            'joinColumn' => 'purificationRequestId',
+            'joinColumn' => 'requestId',
             'whereColumn' => 'sampleId',
         )
     );

@@ -7,28 +7,28 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProteinRequestOutputSampleController extends CarbonApiController
+class AnalysisRequestOutputSampleController extends CarbonApiController
 {
     /**
      * @var string The namespace of the resource entity
      */
-    const RESOURCE_ENTITY = "AppBundle\Entity\Production\ProteinRequestOutputSample";
+    const RESOURCE_ENTITY = "AppBundle\Entity\Production\AnalysisRequestOutputSample";
 
     protected $resourceLinkMap = array(
-        'protein-request' => array(
+        'analysis-request' => array(
             'returnedEntity' => 'AppBundle\Entity\Storage\Sample',
             'joinColumn' => 'sampleId',
             'whereColumn' => 'requestId',
         ),
         'sample' => array(
-            'returnedEntity' => 'AppBundle\Entity\Production\ProteinRequest',
+            'returnedEntity' => 'AppBundle\Entity\Production\AnalysisRequest',
             'joinColumn' => 'requestId',
             'whereColumn' => 'sampleId',
         )
     );
 
     /**
-     * @Route("/production/protein-request-output-sample/{type}/{id}", name="protein_request_output_sample_get")
+     * @Route("/production/analysis-request-output-sample/{type}/{id}", name="analysis_request_output_sample_get")
      * @Method("GET")
      *
      * @return Response
