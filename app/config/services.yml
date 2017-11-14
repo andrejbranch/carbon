@@ -92,11 +92,6 @@ services:
         tags:
             - { name: form.type, alias: protocol }
 
-    production.request.listener:
-        class: AppBundle\Listener\Production\ProductionRequestListener
-        tags:
-            - { name: doctrine.event_listener, event: onFlush }
-
     app.form.type.pipeline:
         class: AppBundle\Form\Type\Production\PipelineFormType
         arguments: ["@doctrine.orm.default_entity_manager"]

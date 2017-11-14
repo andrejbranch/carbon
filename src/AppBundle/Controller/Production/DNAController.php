@@ -69,7 +69,7 @@ class DNAController extends CarbonApiController
     public function downloadInputTemplateAction($dnaRequestId)
     {
         $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
-        $dnaRequestInputSamples = $dnaRequest->getDnaRequestSamples();
+        $dnaRequestInputSamples = $dnaRequest->getInputSamples();
         $dnaRequestInputSample = $dnaRequestInputSamples[0]->getSample();
 
         $importer = $this->container->get('sample.importer');
@@ -123,7 +123,7 @@ class DNAController extends CarbonApiController
     public function downloadOutputTemplateAction($dnaRequestId, $sampleCount)
     {
         $dnaRequest = $this->getEntityManager()->getRepository('AppBundle:Production\DNA')->find($dnaRequestId);
-        $inputSamples = $dnaRequest->getDnaRequestSamples();
+        $inputSamples = $dnaRequest->getInputSamples();
         $inputSample = $inputSamples[0]->getSample();
 
         $importer = $this->container->get('sample.importer');

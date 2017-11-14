@@ -4,6 +4,7 @@ namespace AppBundle\Entity\Production;
 
 use AppBundle\Entity\Storage\Sample;
 use Carbon\ApiBundle\Annotation AS Carbon;
+use Carbon\ApiBundle\Entity\Production\BaseRequestSampleInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -16,7 +17,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity()
  * @ORM\Table(name="production.purification_request_input_sample", schema="production")
  */
-class PurificationRequestInputSample
+class PurificationRequestInputSample implements BaseRequestSampleInterface
 {
     /**
      * @var integer

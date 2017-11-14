@@ -2,9 +2,9 @@
 
 namespace AppBundle\Form\Type\Production;
 
-use AppBundle\Entity\Production\BaseRequest;
 use AppBundle\Entity\Production\Pipeline;
 use AppBundle\Entity\Production\PipelineInputRequest;
+use Carbon\ApiBundle\Entity\Production\BaseRequest;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

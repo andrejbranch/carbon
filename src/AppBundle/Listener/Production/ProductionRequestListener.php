@@ -2,9 +2,9 @@
 
 namespace AppBundle\Listener\Production;
 
-use AppBundle\Entity\Production\BaseRequest;
 use AppBundle\Entity\Production\DNARequestSample;
 use AppBundle\Entity\Production\ProteinRequestSample;
+use Carbon\ApiBundle\Entity\Production\BaseRequest;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
