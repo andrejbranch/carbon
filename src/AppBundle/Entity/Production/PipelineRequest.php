@@ -24,7 +24,7 @@ class PipelineRequest
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -35,7 +35,7 @@ class PipelineRequest
      * @Carbon\Searchable(name="name")
      * @Assert\NotBlank()
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
@@ -46,7 +46,18 @@ class PipelineRequest
      * @Carbon\Searchable(name="name")
      * @Assert\NotBlank()
      */
-    private $entity;
+    protected $entity;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="form_type", type="string", length=300)
+     * @Gedmo\Versioned
+     * @JMS\Groups({"default"})
+     * @Carbon\Searchable(name="formType")
+     * @Assert\NotBlank()
+     */
+    protected $formType;
 
     /**
      * Gets the value of id.
@@ -118,5 +129,29 @@ class PipelineRequest
         $this->entity = $entity;
 
         return $this;
+    }
+
+    /**
+     * Sets the value of formType.
+     *
+     * @param string $formType the form type
+     *
+     * @return self
+     */
+    public function setFormType($formType)
+    {
+        $this->formType = $formType;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of formType.
+     *
+     * @return string
+     */
+    public function getFormType()
+    {
+        return $this->formType;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace AppBundle\Entity\Production;
+namespace AppBundle\Entity\Production\Purification;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Carbon\ApiBundle\Entity\Production\BaseRequest;
@@ -11,21 +11,19 @@ use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Sample
- *
  * @ORM\Entity()
- * @ORM\Table(name="production.dna", schema="production", indexes={@ORM\Index(name="dna_alias_idx", columns={"alias"})})
+ * @ORM\Table(name="production.affinity_purification_request", schema="production")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class DNA extends BaseRequest
+class AffinityPurificationRequest extends BaseRequest
 {
     /**
      * Valid concentration units
      *
      * @var array
      */
-    private $validConcentrationUnits = array(
+    protected $validConcentrationUnits = array(
         'mg/mL',
         'ng/uL',
         'Molar',
@@ -36,7 +34,7 @@ class DNA extends BaseRequest
      *
      * @var array
      */
-    private $validVolumeUnits = array(
+    protected $validVolumeUnits = array(
         'uL',
         'mL'
     );
@@ -49,7 +47,7 @@ class DNA extends BaseRequest
      * @ORM\GeneratedValue(strategy="AUTO")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var Protocol $protocol
@@ -59,12 +57,7 @@ class DNA extends BaseRequest
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $protocol;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestProject", mappedBy="dnaRequest")
-     */
-    protected $dnaRequestProjects;
+    protected $protocol;
 
     /**
      * @var float $volume
@@ -83,7 +76,6 @@ class DNA extends BaseRequest
      * @Carbon\Searchable(name="name")
      */
     protected $notes;
-
 
     /**
      * @var string $concentrationUnits
@@ -115,24 +107,67 @@ class DNA extends BaseRequest
     protected $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestInputSample", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Purification\AffinityPurificationRequestInputSample", mappedBy="request")
      */
     protected $inputSamples;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestOutputSample", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Purification\AffinityPurificationRequestOutputSample", mappedBy="request")
      */
     protected $outputSamples;
 
-    /** transient */
+    /**
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Purification\AffinityPurificationRequestProject", mappedBy="purificationRequest")
+     */
+    protected $purificationRequestProjects;
 
-    public $samples;
+    /** transient */
 
     public $projects;
 
+    public $samples;
+
     public function getAliasPrefix()
     {
-        return 'D';
+        return 'AF';
+    }
+
+    public function getVolume()
+    {
+        return $this->volume;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getConcentrationString()
+    {
+        return $this->concentration
+            ? $this->concentration . ' ' . $this->concentrationUnits
+            : ''
+        ;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getVolumeString()
+    {
+        return $this->volume
+            ? $this->volume . ' ' . $this->volumeUnits
+            : ''
+        ;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getStringLabel()
+    {
+        return $this->getDescription();
     }
 
     /**
@@ -232,40 +267,6 @@ class DNA extends BaseRequest
     }
 
     /**
-     * Gets the value of dnaRequestProjects.
-     *
-     * @return mixed
-     */
-    public function getDnaRequestProjects()
-    {
-        return $this->dnaRequestProjects;
-    }
-
-    /**
-     * Sets the value of dnaRequestProjects.
-     *
-     * @param mixed $dnaRequestProjects the dna request projects
-     *
-     * @return self
-     */
-    public function setDnaRequestProjects($dnaRequestProjects)
-    {
-        $this->dnaRequestProjects = $dnaRequestProjects;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of volume.
-     *
-     * @return float $volume
-     */
-    public function getVolume()
-    {
-        return $this->volume;
-    }
-
-    /**
      * Sets the value of volume.
      *
      * @param float $volume $volume the volume
@@ -328,16 +329,6 @@ class DNA extends BaseRequest
     }
 
     /**
-     * Gets the value of concentration.
-     *
-     * @return float $concentration
-     */
-    public function getConcentration()
-    {
-        return $this->concentration;
-    }
-
-    /**
      * Sets the value of concentration.
      *
      * @param float $concentration $concentration the concentration
@@ -371,6 +362,30 @@ class DNA extends BaseRequest
     public function setConcentrationUnits($concentrationUnits)
     {
         $this->concentrationUnits = $concentrationUnits;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of purificationRequestProjects.
+     *
+     * @return mixed
+     */
+    public function getPurificationRequestProjects()
+    {
+        return $this->purificationRequestProjects;
+    }
+
+    /**
+     * Sets the value of purificationRequestProjects.
+     *
+     * @param mixed $purificationRequestProjects the purification request projects
+     *
+     * @return self
+     */
+    public function setPurificationRequestProjects($purificationRequestProjects)
+    {
+        $this->purificationRequestProjects = $purificationRequestProjects;
 
         return $this;
     }
@@ -469,5 +484,15 @@ class DNA extends BaseRequest
         $this->samples = $samples;
 
         return $this;
+    }
+
+    /**
+     * Gets the value of concentration.
+     *
+     * @return float $concentration
+     */
+    public function getConcentration()
+    {
+        return $this->concentration;
     }
 }

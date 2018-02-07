@@ -80,11 +80,47 @@ services:
         tags:
             - { name: form.type, alias: Purification }
 
-    app.form.type.analysis_request:
-        class: AppBundle\Form\Type\Production\AnalysisRequestFormType
+    app.form.type.affinity_purification_request:
+        class: AppBundle\Form\Type\Production\AffinityPurificationRequestFormType
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
-            - { name: form.type, alias: Analysis }
+            - { name: form.type, alias: 'AffinityPurification' }
+
+    app.form.type.size_exclusion_purification_request:
+        class: AppBundle\Form\Type\Production\SizeExclusionPurificationRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: 'SizeExclusionPurification' }
+
+    app.form.type.native_gel_request:
+        class: AppBundle\Form\Type\Production\NativeGelRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: NativeGel }
+
+    app.form.type.western_gel_request:
+        class: AppBundle\Form\Type\Production\WesternGelRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: WesternGel }
+
+    app.form.type.sds_page_request:
+        class: AppBundle\Form\Type\Production\SdsPageRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: SdsPage }
+
+    app.form.type.sec_mals_request:
+        class: AppBundle\Form\Type\Production\SecMalsRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: SecMals }
+
+    app.form.type.spr_request:
+        class: AppBundle\Form\Type\Production\SprRequestFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: Spr }
 
     app.form.type.protocol:
         class: AppBundle\Form\Type\ProtocolFormType

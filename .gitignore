@@ -14,3 +14,4 @@
 /web/bundles/
 /uploads/
 *.DS_Store
+.phpintel

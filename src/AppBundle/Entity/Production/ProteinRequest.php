@@ -129,6 +129,11 @@ class ProteinRequest extends BaseRequest
 
     public $samples;
 
+    public function getAliasPrefix()
+    {
+        return 'P';
+    }
+
     /**
      * Gets the Valid concentration units.
      *

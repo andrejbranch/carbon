@@ -12,3 +12,7 @@ storage:
 production:
     resource: "@AppBundle/Controller/Production"
     type:     annotation
+
+purifcation:
+    resource: "@AppBundle/Controller/Production/Purification"
+    type:     annotation

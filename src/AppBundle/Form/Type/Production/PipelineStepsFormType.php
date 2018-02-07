@@ -49,7 +49,7 @@ class PipelineStepsFormType extends AbstractType
 
                     $entity = new $entityClass();
 
-                    $form = $this->formFactory->create($stepRequest['name'], $entity);
+                    $form = $this->formFactory->create($pipelineRequest->getFormType(), $entity);
                     $form->submit($stepRequest['request'], true);
 
                     if (!$form->isValid()) {

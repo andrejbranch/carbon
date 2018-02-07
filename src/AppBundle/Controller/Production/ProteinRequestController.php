@@ -115,14 +115,21 @@ class ProteinRequestController extends CarbonApiController
     // }
 
     /**
-     * @Route("/production/protein-request/{requestId}/download-output-template/{sampleCount}", name="production_protein_request_output_template_download")
-     * @Method("GET")
+     * @Route("/production/protein-request/{requestId}/download-output-template", name="production_protein_request_output_template_download")
+     * @Method("POST")
      *
      * @return Response
      */
-    public function downloadOutputTemplateAction($requestId, $sampleCount)
+    public function downloadOutputTemplateAction($requestId)
     {
         $proteinRequest = $this->getEntityManager()->getRepository('AppBundle:Production\ProteinRequest')->find($requestId);
+
+        $request = $this->getRequest();
+        $data = json_decode($request->getContent(), true);
+
+        $sampleCount = $data['sampleCount'];
+        $catalogName = $data['catalogName'];
+
         $inputSamples = $proteinRequest->getInputSamples();
         $inputSample = $inputSamples[0]->getSample();
 
@@ -141,7 +148,7 @@ class ProteinRequestController extends CarbonApiController
         $serializedInputSample = json_decode($this->getSerializationHelper()->serialize($inputSample), true);
 
         $data = new Dot($serializedInputSample);
-        $nullColumns = array('division', 'divisionRow', 'divisionColumn', 'storageContainer');
+        $nullColumns = array('division', 'divisionRow', 'divisionColumn', 'storageContainer', 'description');
 
         while ($count < $sampleCount) {
 
@@ -151,6 +158,8 @@ class ProteinRequestController extends CarbonApiController
 
                 if (in_array($column['prop'], $nullColumns)) {
                     $content .= ',';
+                } else if ($label === 'Name') {
+                    $content .= $catalogName . ',';
                 } else if ($label === 'Sample Type') {
                     $content .= $sampleType->getName();
                 } else {
