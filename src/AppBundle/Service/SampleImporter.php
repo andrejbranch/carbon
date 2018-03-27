@@ -12,25 +12,30 @@ class SampleImporter
 {
     protected  $sampleTypeMapping = array(
         'DNA' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog.name',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
                 'bindTo' => 'description',
                 'errorProp' => array('description'),
             ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
-            ),
             'Status' => array(
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -46,11 +51,6 @@ class SampleImporter
                 'prop' => 'projects',
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
-            ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
             ),
             'Vector Name' => array(
                 'prop' => 'vectorName',
@@ -99,7 +99,7 @@ class SampleImporter
             ),
             'Division' => array(
                 'prop' => 'division',
-                'bindTo' => 'division.stringLabel',
+                'bindTo' => 'division.id',
                 'errorProp' => array('division'),
             ),
             'Division Row' => array(
@@ -114,10 +114,15 @@ class SampleImporter
             ),
         ),
         'Protein' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog.name',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -128,6 +133,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -144,11 +154,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -164,17 +169,17 @@ class SampleImporter
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
             ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
-            )
         ),
         'Sera' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -185,6 +190,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -201,11 +211,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -220,11 +225,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
             'Species' => array(
                 'prop' => 'species',
@@ -233,10 +233,15 @@ class SampleImporter
             )
         ),
         'Bacterial Cells' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -247,6 +252,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -263,11 +273,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -282,11 +287,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
             'Cell Line' => array(
                 'prop' => 'cellLine',
@@ -295,10 +295,15 @@ class SampleImporter
             )
         ),
         'Mammalian Cells' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -309,6 +314,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -325,11 +335,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -344,11 +349,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
             'Cell Line' => array(
                 'prop' => 'cellLine',
@@ -357,10 +357,15 @@ class SampleImporter
             )
         ),
         'Yeast Cells' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -371,6 +376,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -387,11 +397,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -406,11 +411,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
             'Cell Line' => array(
                 'prop' => 'cellLine',
@@ -419,10 +419,15 @@ class SampleImporter
             )
         ),
         'Chemical Compound' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -433,6 +438,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -449,11 +459,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -468,11 +473,6 @@ class SampleImporter
                 'prop' => 'divisionColumn',
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
-            ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
             ),
             'Mass (g)' => array(
                 'prop' => 'mass',
@@ -481,10 +481,15 @@ class SampleImporter
             )
         ),
         'Solution' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -495,6 +500,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -511,11 +521,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -531,17 +536,17 @@ class SampleImporter
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
             ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
-            )
         ),
         'Other' => array(
-            'Name' => array(
-                'prop' => 'name',
-                'bindTo' => 'name',
-                'errorProp' => array('name'),
+            'Sample Type' => array(
+                'prop' => 'sampleType',
+                'bindTo' => 'sampleType.name',
+                'errorProp' => array('sampleType'),
+            ),
+            'Catalog' => array(
+                'prop' => 'catalog',
+                'bindTo' => 'catalog',
+                'errorProp' => array('catalog'),
             ),
             'Description' => array(
                 'prop' => 'description',
@@ -552,6 +557,11 @@ class SampleImporter
                 'prop' => 'status',
                 'bindTo' => 'status',
                 'errorProp' => array('status'),
+            ),
+            'Lot' => array(
+                'prop' => 'lot',
+                'bindTo' => 'lot',
+                'errorProp' => array('lot'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -568,11 +578,6 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
-            'Linked Samples' => array(
-                'prop' => 'linkedSamples',
-                'bindTo' => 'linkedSamples',
-                'errorProp' => array('linkedSamples'),
-            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -588,11 +593,6 @@ class SampleImporter
                 'bindTo' => 'divisionColumn',
                 'errorProp' => array('divisionColumn', 'storageLocation'),
             ),
-            'Sample Type' => array(
-                'prop' => 'sampleType',
-                'bindTo' => 'sampleType.name',
-                'errorProp' => array('sampleType'),
-            )
         ),
     );
 
@@ -611,12 +611,19 @@ class SampleImporter
         return $this->sampleTypeMapping[$sampleType->getName()];
     }
 
-    public function getFilter(SampleType $sampleType)
+    public function getFilter(SampleType $sampleType, $isUpdate = false)
     {
         $filter = new ValidatorFilter($this->validator);
 
-        // $filter->add('id', new Assert\NotBlank());
-        $filter->add('name', new Assert\NotBlank());
+        if ($isUpdate) {
+            $filter->add('id', new Assert\NotBlank());
+        }
+        $filter->add('catalog', new Assert\NotBlank());
+        // $filter->add('catalog', new CarbonAssert\StringToObject(array(
+        //     'objectName' => 'catalog',
+        //     'entity' => "AppBundle\\Entity\\Storage\\Catalog",
+        //     'property' => 'name',
+        // )));
         $filter->add('description', new Assert\NotBlank(array(
             'message' => 'description can not be blank',
         )));
@@ -625,7 +632,6 @@ class SampleImporter
             'entity' => "AppBundle\\Entity\\Storage\\SampleType",
             'property' => 'name',
         )));
-        $filter->add('linkedSamples', new Assert\Optional());
         $filter->add('projects', new Assert\Optional());
         $filter->add('status', new Assert\Choice(array(
             'choices' => array(
@@ -636,6 +642,8 @@ class SampleImporter
             ),
             'message' => 'Invalid status {{ value }}'
         )));
+        $filter->add('lot', new Assert\Optional());
+        $filter->add('storageContainer', new Assert\NotBlank());
         $filter->add('storageContainer', new CarbonAssert\StringToObject(array(
             'objectName' => 'storage container',
             'entity' => "AppBundle\\Entity\\Storage\\StorageContainer",

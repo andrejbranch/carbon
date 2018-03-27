@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Sample
  *
  * @ORM\Entity(repositoryClass="AppBundle\Entity\Storage\SampleRepository")
- * @ORM\Table(name="storage.sample", schema="storage", indexes={@ORM\Index(name="sample_name_idx", columns={"name"})})
+ * @ORM\Table(name="storage.sample", schema="storage")
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
@@ -28,7 +28,7 @@ class Sample extends BaseSample
      * @ORM\GeneratedValue(strategy="AUTO")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var \DateTime $archivedAt
@@ -37,7 +37,7 @@ class Sample extends BaseSample
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $archivedAt;
+    protected $archivedAt;
 
     /**
      * @var string $storageBuffer
@@ -46,7 +46,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $storageBuffer;
+    protected $storageBuffer;
 
     /**
      * @var Protocol $protocol
@@ -56,7 +56,7 @@ class Sample extends BaseSample
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $protocol;
+    protected $protocol;
 
     /**
      * @var string $vectorName
@@ -65,7 +65,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $vectorName;
+    protected $vectorName;
 
     /**
      * @var string $dnaSequence
@@ -74,7 +74,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $dnaSequence;
+    protected $dnaSequence;
 
     /**
      * @var string $aminoAcidSequence
@@ -83,7 +83,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $aminoAcidSequence;
+    protected $aminoAcidSequence;
 
     /**
      * @var string $aminoAcidCount
@@ -92,7 +92,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $aminoAcidCount;
+    protected $aminoAcidCount;
 
     /**
      * @var string $molecularWeight
@@ -102,7 +102,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @JMS\Type("double")
      */
-    private $molecularWeight;
+    protected $molecularWeight;
 
     /**
      * @var string $extinctionCoefficient
@@ -111,7 +111,7 @@ class Sample extends BaseSample
      * @Gedmo\Versioned
      * @JMS\Groups({"default"})
      */
-    private $extinctionCoefficient;
+    protected $extinctionCoefficient;
 
     /**
      * @var string $purificationTags
@@ -120,7 +120,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $purificationTags;
+    protected $purificationTags;
 
     /**
      * @var string $species
@@ -129,7 +129,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $species;
+    protected $species;
 
     /**
      * @var string $cellLine
@@ -138,7 +138,7 @@ class Sample extends BaseSample
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $cellLine;
+    protected $cellLine;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\ProjectSample", mappedBy="sample")
@@ -286,7 +286,13 @@ class Sample extends BaseSample
      */
     public function getStringLabel()
     {
-        return $this->getName();
+        $catalog = $this->getCatalog();
+
+        if (is_object($catalog)) {
+            return $this->getCatalog()->getName();
+        }
+
+        return $this->getCatalog();
     }
 
     /**

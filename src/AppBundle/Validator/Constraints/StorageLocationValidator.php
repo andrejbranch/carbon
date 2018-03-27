@@ -70,7 +70,7 @@ class StorageLocationValidator extends ConstraintValidator
                 'divisionColumn' => $divisionColumn,
             ));
 
-            if ($exists) {
+            if ($exists && $exists->getId() != $sample->getId()) {
                 $this->addError($sample, sprintf('Division %s - Row %s - Column %s is filled.', $divisionId, $divisionRow, $divisionColumn));
             }
         }

@@ -6,6 +6,7 @@ use AppBundle\Form\DataTransformer\SampleTypeTransformer;
 use AppBundle\Form\DataTransformer\StorageContainerTransformer;
 use AppBundle\Form\DataTransformer\LinkedSamplesTransformer;
 use Carbon\ApiBundle\Form\DataTransformer\CryoblockOTOTransformer;
+use Carbon\ApiBundle\Form\DataTransformer\CryoblockSampleCatalogTransformer;
 use Carbon\ApiBundle\Form\Type\CryoblockAbstractType;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Form\AbstractType;
@@ -29,7 +30,11 @@ class SampleFormType extends CryoblockAbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', 'text')
+            ->add('catalog', 'entity', array(
+                'class' => 'AppBundle:Storage\Catalog',
+                'property' => 'catalog_id',
+                'multiple' => false
+            ))
             ->add('description', 'text')
             ->add('status', 'text')
             ->add('lot', 'text')
@@ -85,6 +90,12 @@ class SampleFormType extends CryoblockAbstractType
                 'parent_object' => $builder->getForm()->getData(),
                 'accessor' => 'projectSamples',
                 'child_accessor' => 'project'
+            ))
+        ;
+
+        $builder->get('catalog')
+            ->addViewTransformer(new CryoblockSampleCatalogTransformer(
+                $this->em, 'AppBundle:Storage\Catalog'
             ))
         ;
 
