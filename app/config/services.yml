@@ -139,3 +139,9 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager", "@form.factory"]
         tags:
             - { name: form.type, alias: pipeline_steps }
+
+    app.form.type.tag:
+        class: AppBundle\Form\Type\Storage\TagFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: tag }

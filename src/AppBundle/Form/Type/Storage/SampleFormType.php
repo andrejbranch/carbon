@@ -76,6 +76,11 @@ class SampleFormType extends CryoblockAbstractType
                 'class' => 'AppBundle:Storage\SampleType',
                 'multiple' => false
             ))
+            ->add('tags', 'cryoblock_mtm', array(
+                'parent_object' => $builder->getForm()->getData(),
+                'accessor' => 'sampleTags',
+                'child_accessor' => 'tag'
+            ))
 
             // sera
             ->add('species', 'text')
