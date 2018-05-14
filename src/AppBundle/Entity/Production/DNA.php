@@ -3,6 +3,7 @@
 namespace AppBundle\Entity\Production;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
+use Carbon\ApiBundle\Entity\BaseCryoblockEntity;
 use Carbon\ApiBundle\Entity\Production\BaseRequest;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,7 +47,7 @@ class DNA extends BaseRequest
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
     private $id;
@@ -469,5 +470,29 @@ class DNA extends BaseRequest
         $this->samples = $samples;
 
         return $this;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getConcentrationString()
+    {
+        return $this->concentration
+            ? $this->concentration . ' ' . $this->concentrationUnits
+            : ''
+        ;
+    }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getVolumeString()
+    {
+        return $this->volume
+            ? $this->volume . ' ' . $this->volumeUnits
+            : ''
+        ;
     }
 }

@@ -25,7 +25,7 @@ security:
             stateless: true
             provider: db # Required if you have multiple providers and firewalls
             api_key: true
-            methods: [GET, POST, PUT, DELETE]
+            methods: [GET, POST, PUT, DELETE, PATCH, PURGE]
 
         dev:
             pattern: ^/(_(profiler|wdt|error)|css|images|js)/

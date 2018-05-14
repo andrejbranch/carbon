@@ -2,21 +2,22 @@
 
 namespace AppBundle\Entity\Storage;
 
+use AppBundle\Entity\Storage\Sample;
 use Carbon\ApiBundle\Annotation AS Carbon;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation AS JMS;
 use Symfony\Component\Validator\Constraints as Assert;
-use Carbon\ApiBundle\Entity\Storage\BaseDivisionGroupViewer;
+use Carbon\ApiBundle\Entity\Storage\BaseSampleTag;
 
 /**
- * Division Group Viewer
+ * Sample Tag
  *
  * @ORM\Entity()
- * @ORM\Table(name="storage.division_group_viewer", schema="storage")
+ * @ORM\Table(name="storage.sample_tag", schema="storage")
  */
-class DivisionGroupViewer extends BaseDivisionGroupViewer
+class SampleTag extends BaseSampleTag
 {
     /**
      * @var integer
@@ -26,7 +27,7 @@ class DivisionGroupViewer extends BaseDivisionGroupViewer
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * Gets the value of id.

@@ -34,8 +34,6 @@ class DNAController extends CarbonApiController
     }
 
     /**
-     * Handles the HTTP get request for the card entity
-     *
      * @Route("/production/dna", name="production_dna_post")
      * @Method("POST")
      *
@@ -47,9 +45,6 @@ class DNAController extends CarbonApiController
     }
 
     /**
-     * Handles the HTTP PUT request for the card entity
-     *
-     * @todo  figure out why PUT method has no request params
      * @Route("/production/dna", name="production_dna_put")
      * @Method("PUT")
      *
@@ -58,5 +53,38 @@ class DNAController extends CarbonApiController
     public function handlePut()
     {
         return parent::handlePut();
+    }
+
+    /**
+     * @Route("/production/dna", name="production_dna_patch")
+     * @Method("PATCH")
+     *
+     * @return Response
+     */
+    public function handlePatch()
+    {
+        return parent::handlePatch();
+    }
+
+    /**
+     * @Route("/production/dna", name="production_dna_delete")
+     * @Method("DELETE")
+     *
+     * @return Response
+     */
+    public function handleDelete()
+    {
+        return parent::handleDelete();
+    }
+
+    /**
+     * @Route("/production/dna", name="production_dna_purge")
+     * @Method("PURGE")
+     *
+     * @return Response
+     */
+    public function handleRestore()
+    {
+        return parent::handleRestore();
     }
 }

@@ -22,7 +22,7 @@ class SprRequestInputSample implements BaseRequestSampleInterface
      *
      * @ORM\Id
      * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
     private $id;

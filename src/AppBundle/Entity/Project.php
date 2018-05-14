@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Carbon\ApiBundle\Annotation AS Carbon;
+use Carbon\ApiBundle\Entity\BaseCryoblockEntity;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation AS JMS;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -11,17 +12,18 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * Project
  *
  * @ORM\Entity()
- * @ORM\Table(name="public.project", schema="storage")
+ * @ORM\Table(name="project")
  * @Gedmo\Loggable
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
-class Project
+class Project extends BaseCryoblockEntity
 {
     /**
      * Valid project statuses
      *
      * @var array
      */
-    private $validStatuses = array(
+    protected $validStatuses = array(
         'Ongoing',
         'Completed',
     );
@@ -31,10 +33,10 @@ class Project
      *
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
@@ -44,7 +46,7 @@ class Project
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $name;
+    protected $name;
 
     /**
      * @var string
@@ -54,7 +56,7 @@ class Project
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $description;
+    protected $description;
 
     /**
      * @var string
@@ -64,60 +66,7 @@ class Project
      * @JMS\Groups({"default"})
      * @Gedmo\Versioned
      */
-    private $status;
-
-    /**
-     * @var User $createdBy
-     *
-     * @Gedmo\Blameable(on="create")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="created_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     */
-    private $createdBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="created_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $createdById;
-
-    /**
-     * @var User $updatedBy
-     *
-     * @Gedmo\Blameable(on="update")
-     * @ORM\ManyToOne(targetEntity="Carbon\ApiBundle\Entity\User")
-     * @ORM\JoinColumn(name="updated_by_id", referencedColumnName="id")
-     * @JMS\Groups({"default"})
-     * @JMS\MaxDepth(1)
-     */
-    private $updatedBy;
-
-    /**
-     * Created by id
-     * @ORM\Column(name="updated_by_id", type="integer", nullable=false)
-     * @JMS\Groups({"default"})
-     */
-    private $updatedById;
-
-    /**
-     * @var \DateTime $created
-     *
-     * @Gedmo\Timestampable(on="create")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $createdAt;
-
-    /**
-     * @var \DateTime $updated
-     *
-     * @Gedmo\Timestampable(on="update")
-     * @ORM\Column(type="datetime")
-     * @JMS\Groups({"default"})
-     */
-    private $updatedAt;
+    protected $status;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\ProjectSample", mappedBy="project")
@@ -206,219 +155,6 @@ class Project
     public function getStatus()
     {
         return $this->status;
-    }
-
-    /**
-     * Set idCreatedBy
-     *
-     * @param integer $idCreatedBy
-     * @return Project
-     */
-    public function setIdCreatedBy($idCreatedBy)
-    {
-        $this->idCreatedBy = $idCreatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Get idCreatedBy
-     *
-     * @return integer
-     */
-    public function getIdCreatedBy()
-    {
-        return $this->idCreatedBy;
-    }
-
-    /**
-     * Set dateCreated
-     *
-     * @param \DateTime $dateCreated
-     * @return Project
-     */
-    public function setDateCreated($dateCreated)
-    {
-        $this->dateCreated = $dateCreated;
-
-        return $this;
-    }
-
-    /**
-     * Get dateCreated
-     *
-     * @return \DateTime
-     */
-    public function getDateCreated()
-    {
-        return $this->dateCreated;
-    }
-
-    /**
-     * Set dateUpdated
-     *
-     * @param \DateTime $dateUpdated
-     * @return Project
-     */
-    public function setDateUpdated($dateUpdated)
-    {
-        $this->dateUpdated = $dateUpdated;
-
-        return $this;
-    }
-
-    /**
-     * Get dateUpdated
-     *
-     * @return \DateTime
-     */
-    public function getDateUpdated()
-    {
-        return $this->dateUpdated;
-    }
-
-    /**
-     * Gets the value of createdBy.
-     *
-     * @return User $createdBy
-     */
-    public function getCreatedBy()
-    {
-        return $this->createdBy;
-    }
-
-    /**
-     * Sets the value of createdBy.
-     *
-     * @param User $createdBy $createdBy the created by
-     *
-     * @return self
-     */
-    public function setCreatedBy($createdBy)
-    {
-        $this->createdBy = $createdBy;
-
-        return $this;
-    }
-
-    /**
-     * Gets the Created by id.
-     *
-     * @return mixed
-     */
-    public function getCreatedById()
-    {
-        return $this->createdById;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $createdById the created by id
-     *
-     * @return self
-     */
-    public function setCreatedById($createdById)
-    {
-        $this->createdById = $createdById;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of updatedBy.
-     *
-     * @return User $updatedBy
-     */
-    public function getUpdatedBy()
-    {
-        return $this->updatedBy;
-    }
-
-    /**
-     * Sets the value of updatedBy.
-     *
-     * @param User $updatedBy $updatedBy the updated by
-     *
-     * @return self
-     */
-    public function setUpdatedBy($updatedBy)
-    {
-        $this->updatedBy = $updatedBy;
-
-        return $this;
-    }
-
-    /**
-     * Gets the Created by id.
-     *
-     * @return mixed
-     */
-    public function getUpdatedById()
-    {
-        return $this->updatedById;
-    }
-
-    /**
-     * Sets the Created by id.
-     *
-     * @param mixed $updatedById the updated by id
-     *
-     * @return self
-     */
-    public function setUpdatedById($updatedById)
-    {
-        $this->updatedById = $updatedById;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of createdAt.
-     *
-     * @return \DateTime $created
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * Sets the value of createdAt.
-     *
-     * @param \DateTime $created $createdAt the created at
-     *
-     * @return self
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
-
-    /**
-     * Gets the value of updatedAt.
-     *
-     * @return \DateTime $updated
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
-     * Sets the value of updatedAt.
-     *
-     * @param \DateTime $updated $updatedAt the updated at
-     *
-     * @return self
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
     }
 
     /**

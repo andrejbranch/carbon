@@ -48,6 +48,10 @@ class SampleFormType extends CryoblockAbstractType
                 'precision' => 3,
             ))
             ->add('concentrationUnits', 'text')
+            ->add('volume', 'number', array(
+                'precision' => 3,
+            ))
+            ->add('volumeUnits', 'text')
             ->add('dnaSequence', 'text')
             ->add('aminoAcidSequence', 'text')
             ->add('aminoAcidCount', 'integer')

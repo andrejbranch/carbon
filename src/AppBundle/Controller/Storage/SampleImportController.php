@@ -60,6 +60,7 @@ class SampleImportController extends CarbonApiController
         $samples = $data['samples'];
 
         $sampleIds = array();
+        $createdSamples = array();
         foreach ($samples as $sample) {
 
             if (array_key_exists('id', $sample)) {
@@ -81,6 +82,7 @@ class SampleImportController extends CarbonApiController
 
             if (!array_key_exists('id', $sample)) {
                 $sampleIds[] = $entity->getId();
+                $createdSamples[] = $entity;
             }
 
         }
@@ -112,7 +114,12 @@ class SampleImportController extends CarbonApiController
 
         $em->flush();
 
-        return $this->getJsonResponse(json_encode($sampleIds));
+        $responseData = $this->getSerializationHelper()->serialize(array(
+            'sampleIds' => $sampleIds,
+            'samples' => $createdSamples,
+        ));
+
+        return $this->getJsonResponse($responseData);
     }
 
     /**

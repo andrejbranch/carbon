@@ -67,6 +67,16 @@ class SampleImporter
                 'bindTo' => 'concentrationUnits',
                 'errorProp' => array('concentrationUnits'),
             ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
+            ),
             'DNA Sequence' => array(
                 'prop' => 'dnaSequence',
                 'bindTo' => 'dnaSequence',
@@ -154,6 +164,26 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
+            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -210,6 +240,26 @@ class SampleImporter
                 'prop' => 'projects',
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
+            ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
             ),
             'Division' => array(
                 'prop' => 'division',
@@ -273,6 +323,26 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
+            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -334,6 +404,26 @@ class SampleImporter
                 'prop' => 'projects',
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
+            ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
             ),
             'Division' => array(
                 'prop' => 'division',
@@ -397,6 +487,26 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
+            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -459,6 +569,26 @@ class SampleImporter
                 'bindTo' => 'projects',
                 'errorProp' => array('projects'),
             ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
+            ),
             'Division' => array(
                 'prop' => 'division',
                 'bindTo' => 'division.stringLabel',
@@ -505,6 +635,26 @@ class SampleImporter
                 'prop' => 'lot',
                 'bindTo' => 'lot',
                 'errorProp' => array('lot'),
+            ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
             ),
             'Storage Container' => array(
                 'prop' => 'storageContainer',
@@ -572,6 +722,26 @@ class SampleImporter
                 'prop' => 'storageBuffer',
                 'bindTo' => 'storageBuffer',
                 'errorProp' => array('storageBuffer'),
+            ),
+            'Concentration' => array(
+                'prop' => 'concentration',
+                'bindTo' => 'concentration',
+                'errorProp' => array('concentration'),
+            ),
+            'Concentration Units' => array(
+                'prop' => 'concentrationUnits',
+                'bindTo' => 'concentrationUnits',
+                'errorProp' => array('concentrationUnits'),
+            ),
+            'Volume' => array(
+                'prop' => 'volume',
+                'bindTo' => 'volume',
+                'errorProp' => array('volume'),
+            ),
+            'Volume Units' => array(
+                'prop' => 'volumeUnits',
+                'bindTo' => 'volumeUnits',
+                'errorProp' => array('volumeUnits'),
             ),
             'Projects' => array(
                 'prop' => 'projects',
@@ -668,17 +838,26 @@ class SampleImporter
 
         $filter->add('divisionColumn', new Assert\Range(array('min' => 1, 'max' => 20)));
 
+        $filter->add('concentration', new Assert\Optional());
+        $filter->add('concentrationUnits', new Assert\Choice(array(
+            'choices' => array(
+                'mg/mL',
+                'ng/uL',
+                'Molar',
+            )
+        )));
+
+        $filter->add('volume', new Assert\Optional());
+        $filter->add('volumeUnits', new Assert\Choice(array(
+            'choices' => array(
+                'mL',
+                'uL'
+            )
+        )));
+
         if ($sampleType->getName() == 'DNA') {
 
             $filter->add('vectorName', new Assert\NotBlank());
-            $filter->add('concentration', new Assert\NotBlank());
-            $filter->add('concentrationUnits', new Assert\Choice(array(
-                'choices' => array(
-                    'mg/mL',
-                    'ng/uL',
-                    'Molar',
-                )
-            )));
             $filter->add('dnaSequence', new Assert\NotBlank(array(
                 'message' => 'dnaSequence can not be blank',
             )));
