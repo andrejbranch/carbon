@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="production.native_gel_request_project", schema="production")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class NativeGelRequestProject
 {
@@ -55,6 +56,14 @@ class NativeGelRequestProject
      * @JMS\Groups({"default"})
      */
     protected $project;
+
+    /**
+     * @var \DateTime $deletedAt
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $deletedAt;
 
     /**
      * Gets the value of id.
@@ -172,6 +181,30 @@ class NativeGelRequestProject
     public function setProject($project)
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of deletedAt.
+     *
+     * @return \DateTime $deletedAt
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Sets the value of deletedAt.
+     *
+     * @param \DateTime $deletedAt $deletedAt the deleted at
+     *
+     * @return self
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

@@ -23,6 +23,25 @@ class SecMalsRequestController extends CarbonApiController
     const FORM_TYPE = "SecMals";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_SEC_MALS_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_SEC_MALS_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/analysis/sec-mals-request", name="production_sec_mals_request_get")
      * @Method("GET")
      *

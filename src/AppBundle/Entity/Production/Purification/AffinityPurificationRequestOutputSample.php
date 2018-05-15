@@ -14,6 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="production.affinity_purification_request_output_sample", schema="production")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class AffinityPurificationRequestOutputSample implements BaseRequestSampleInterface
 {
@@ -25,7 +26,7 @@ class AffinityPurificationRequestOutputSample implements BaseRequestSampleInterf
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
@@ -33,14 +34,14 @@ class AffinityPurificationRequestOutputSample implements BaseRequestSampleInterf
      * @ORM\Column(name="request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $requestId;
+    protected $requestId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\Purification\AffinityPurificationRequest")
      * @ORM\JoinColumn(name="request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $request;
+    protected $request;
 
     /**
      * @var integer
@@ -48,14 +49,22 @@ class AffinityPurificationRequestOutputSample implements BaseRequestSampleInterf
      * @ORM\Column(name="sample_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $sampleId;
+    protected $sampleId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Storage\Sample")
      * @ORM\JoinColumn(name="sample_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $sample;
+    protected $sample;
+
+    /**
+     * @var \DateTime $deletedAt
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $deletedAt;
 
     /**
      * Gets the value of id.
@@ -173,6 +182,30 @@ class AffinityPurificationRequestOutputSample implements BaseRequestSampleInterf
     public function setSample($sample)
     {
         $this->sample = $sample;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of deletedAt.
+     *
+     * @return \DateTime $deletedAt
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Sets the value of deletedAt.
+     *
+     * @param \DateTime $deletedAt $deletedAt the deleted at
+     *
+     * @return self
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

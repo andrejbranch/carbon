@@ -23,6 +23,25 @@ class NativeGelRequestController extends CarbonApiController
     const FORM_TYPE = "NativeGel";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_NATIVE_GEL_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_NATIVE_GEL_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/analysis/native-gel-request", name="production_native_gel_request_get")
      * @Method("GET")
      *

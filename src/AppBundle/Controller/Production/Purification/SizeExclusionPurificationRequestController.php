@@ -23,6 +23,25 @@ class SizeExclusionPurificationRequestController extends CarbonApiController
     const FORM_TYPE = "SizeExclusionPurification";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_SEC_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_SEC_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/purification/size-exclusion-purification-request", name="production_size_exclusion_purification_request_get")
      * @Method("GET")
      *

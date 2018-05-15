@@ -23,6 +23,25 @@ class WesternGelRequestController extends CarbonApiController
     const FORM_TYPE = "WesternGel";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_WESTERN_GEL_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_WESTERN_GEL_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/analysis/western-gel-request", name="production_western_gel_request_get")
      * @Method("GET")
      *

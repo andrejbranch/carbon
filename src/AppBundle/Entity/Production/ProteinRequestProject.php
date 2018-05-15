@@ -13,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * @ORM\Entity()
  * @ORM\Table(name="production.protein_request_project", schema="production")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=false)
  */
 class ProteinRequestProject
 {
@@ -24,7 +25,7 @@ class ProteinRequestProject
      * @ORM\GeneratedValue(strategy="IDENTITY")
      * @JMS\Groups({"default"})
      */
-    private $id;
+    protected $id;
 
     /**
      * @var integer
@@ -32,14 +33,14 @@ class ProteinRequestProject
      * @ORM\Column(name="protein_request_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $proteinRequestId;
+    protected $proteinRequestId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Production\ProteinRequest")
      * @ORM\JoinColumn(name="protein_request_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $proteinRequest;
+    protected $proteinRequest;
 
     /**
      * @var integer
@@ -47,14 +48,22 @@ class ProteinRequestProject
      * @ORM\Column(name="project_id", type="integer")
      * @JMS\Groups({"default"})
      */
-    private $projectId;
+    protected $projectId;
 
     /**
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Project", inversedBy="proteinRequestProjects")
      * @ORM\JoinColumn(name="project_id", nullable=false)
      * @JMS\Groups({"default"})
      */
-    private $project;
+    protected $project;
+
+    /**
+     * @var \DateTime $deletedAt
+     *
+     * @ORM\Column(name="deleted_at", type="datetime", nullable=true)
+     * @JMS\Groups({"default"})
+     */
+    protected $deletedAt;
 
     /**
      * Gets the value of id.
@@ -172,6 +181,30 @@ class ProteinRequestProject
     public function setProject($project)
     {
         $this->project = $project;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of deletedAt.
+     *
+     * @return \DateTime $deletedAt
+     */
+    public function getDeletedAt()
+    {
+        return $this->deletedAt;
+    }
+
+    /**
+     * Sets the value of deletedAt.
+     *
+     * @param \DateTime $deletedAt $deletedAt the deleted at
+     *
+     * @return self
+     */
+    public function setDeletedAt($deletedAt)
+    {
+        $this->deletedAt = $deletedAt;
 
         return $this;
     }

@@ -23,6 +23,25 @@ class DNAController extends CarbonApiController
     const FORM_TYPE = "DNA";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_DNA_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_DNA_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/dna", name="production_dna_get")
      * @Method("GET")
      *
@@ -83,8 +102,8 @@ class DNAController extends CarbonApiController
      *
      * @return Response
      */
-    public function handleRestore()
+    public function handlePurge()
     {
-        return parent::handleRestore();
+        return parent::handlePurge();
     }
 }

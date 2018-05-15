@@ -8,6 +8,7 @@ use AppBundle\Service\Import\CryoblockDoctrineWriter;
 use AppBundle\Service\Import\CryoblockMappingItemConverter;
 use AppBundle\Validator\Constraints as ScrippsAssert;
 use Carbon\ApiBundle\Controller\CarbonApiController;
+use Carbon\ApiBundle\DataImport\ItemConverter\CryoblockMtmItemConverter;
 use Ddeboer\DataImport\ValueConverter\StringToDateTimeValueConverter;
 use Ddeboer\DataImport\ValueConverter\StringToObjectConverter;
 use Ddeboer\DataImport\Reader\ExcelReader;
@@ -153,8 +154,28 @@ class SampleImportController extends CarbonApiController
         $divisionRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Division');
         $divisionConverter = new StringToObjectConverter($divisionRepository, 'id');
 
-        $catalogRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Catalog');
-        $catalogConverter = new StringToObjectConverter($catalogRepository, 'name');
+        $tagRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Tag');
+        $tagConverter = new CryoblockMtmItemConverter(
+            $this->getEntityManager(),
+            'AppBundle\\Entity\\Storage\\Sample',
+            'sampleTags',
+            'tag',
+            'tags'
+        );
+
+        $projectRepository = $this->getEntityManager()->getRepository('AppBundle:Project');
+        $projectConverter = new CryoblockMtmItemConverter(
+            $this->getEntityManager(),
+            'AppBundle\\Entity\\Project',
+            'projectSamples',
+            'project',
+            'projects'
+        );
+
+        $itemConverters = array(
+            $tagConverter,
+            $projectConverter,
+        );
 
         $fileContent = $this->getRequest()->getContent();
 
@@ -189,6 +210,16 @@ class SampleImportController extends CarbonApiController
 
             $filter->filter($item);
 
+            if (!count($filter->getViolations())) {
+
+                foreach ($itemConverters as $itemConverter) {
+
+                    $item = $itemConverter->convert($item);
+
+                }
+
+            }
+
             $data[] = $item;
         }
 
@@ -221,7 +252,6 @@ class SampleImportController extends CarbonApiController
             'sampleType' => $sampleTypeConverter,
             'storageContainer' => $storageContainerConverter,
             'division' => $divisionConverter,
-            // 'catalog' => $catalogConverter,
         );
 
         foreach($data as $k => $item) {
@@ -260,6 +290,7 @@ class SampleImportController extends CarbonApiController
             $columns[] = array(
                 'header' => $columnHeader,
                 'bindTo' => $mapping[$columnHeader]['bindTo'],
+                'frontendBindTo' => $mapping[$columnHeader]['frontendBindTo'],
                 'errorProp' => $mapping[$columnHeader]['errorProp']
             );
 
@@ -295,6 +326,7 @@ class SampleImportController extends CarbonApiController
             'Id' => array(
                 'prop' => 'id',
                 'bindTo' => 'id',
+                'frontendBindTo' => 'id',
                 'errorProp' => array('id'),
             )
         ), $mapping);
@@ -314,8 +346,28 @@ class SampleImportController extends CarbonApiController
         $divisionRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Division');
         $divisionConverter = new StringToObjectConverter($divisionRepository, 'id');
 
-        // $catalogRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Catalog');
-        // $catalogConverter = new StringToObjectConverter($catalogRepository, 'name');
+        $tagRepository = $this->getEntityManager()->getRepository('AppBundle:Storage\Tag');
+        $tagConverter = new CryoblockMtmItemConverter(
+            $this->getEntityManager(),
+            'AppBundle\\Entity\\Storage\\Sample',
+            'sampleTags',
+            'tag',
+            'tags'
+        );
+
+        $projectRepository = $this->getEntityManager()->getRepository('AppBundle:Project');
+        $projectConverter = new CryoblockMtmItemConverter(
+            $this->getEntityManager(),
+            'AppBundle\\Entity\\Project',
+            'projectSamples',
+            'project',
+            'projects'
+        );
+
+        $itemConverters = array(
+            $tagConverter,
+            $projectConverter,
+        );
 
         $fileContent = $this->getRequest()->getContent();
 
@@ -349,6 +401,16 @@ class SampleImportController extends CarbonApiController
             $item = $converter->convert($item);
 
             $filter->filter($item);
+
+            if (!count($filter->getViolations())) {
+
+                foreach ($itemConverters as $itemConverter) {
+
+                    $item = $itemConverter->convert($item);
+
+                }
+
+            }
 
             $data[] = $item;
         }
@@ -421,6 +483,7 @@ class SampleImportController extends CarbonApiController
             $columns[] = array(
                 'header' => $columnHeader,
                 'bindTo' => $mapping[$columnHeader]['bindTo'],
+                'frontendBindTo' => $mapping[$columnHeader]['frontendBindTo'],
                 'errorProp' => $mapping[$columnHeader]['errorProp']
             );
 

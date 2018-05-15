@@ -380,4 +380,24 @@ class Sample extends BaseSample
 
         return $this;
     }
+
+    /**
+     * @JMS\VirtualProperty()
+     * @JMS\Groups({"default"})
+     */
+    public function getProjectString()
+    {
+        $tagNames = [];
+
+        if ($this->projectSamples && (is_array($this->projectSamples) || is_object($this->projectSamples))) {
+
+            foreach ($this->projectSamples as $projectSample) {
+
+                $tagNames[] = $projectSample->getProject()->getName();
+
+            }
+
+            return implode(", ", $tagNames);
+        }
+    }
 }

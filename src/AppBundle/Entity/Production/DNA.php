@@ -63,7 +63,7 @@ class DNA extends BaseRequest
     private $protocol;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestProject", mappedBy="dnaRequest")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestProject", mappedBy="dnaRequest", cascade={"remove"})
      */
     protected $dnaRequestProjects;
 
@@ -116,7 +116,7 @@ class DNA extends BaseRequest
     protected $concentrationUnits;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestInputSample", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\DNARequestInputSample", mappedBy="request", cascade={"remove"})
      */
     protected $inputSamples;
 

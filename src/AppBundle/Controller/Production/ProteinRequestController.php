@@ -23,6 +23,25 @@ class ProteinRequestController extends CarbonApiController
     const FORM_TYPE = "Protein";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_PROTEIN_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_PROTEIN_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/protein-request", name="production_protein_request_get")
      * @Method("GET")
      *

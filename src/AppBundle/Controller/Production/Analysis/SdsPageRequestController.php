@@ -23,6 +23,25 @@ class SdsPageRequestController extends CarbonApiController
     const FORM_TYPE = "SdsPage";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_SDS_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_SDS_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/analysis/sds-page-request", name="production_sds_page_request_get")
      * @Method("GET")
      *

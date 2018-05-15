@@ -23,6 +23,25 @@ class SprRequestController extends CarbonApiController
     const FORM_TYPE = "Spr";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_SPR_ADMIN'),
+            'allow_creator' => true,
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_SPR_ADMIN'),
+        )
+    );
+
+    /**
      * @Route("/production/analysis/spr-request", name="production_spr_request_get")
      * @Method("GET")
      *
