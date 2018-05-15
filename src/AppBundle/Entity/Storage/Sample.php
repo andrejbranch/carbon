@@ -142,11 +142,15 @@ class Sample extends BaseSample
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Storage\ProjectSample", mappedBy="sample")
+     * @JMS\Groups({"default"})
      */
     protected $projectSamples;
 
     public $linkedSamples;
 
+    /**
+     * @JMS\Groups({"default"})
+     */
     public $projects;
 
     /**

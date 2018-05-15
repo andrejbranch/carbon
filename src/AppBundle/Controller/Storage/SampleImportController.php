@@ -261,11 +261,19 @@ class SampleImportController extends CarbonApiController
             }
 
             $errors = isset($data[$k]['errors']) ? $data[$k]['errors'] : [];
+            $tags = isset($data[$k]['tags']) ? $data[$k]['tags'] : [];
+            $projects = isset($data[$k]['projects']) ? $data[$k]['projects'] : [];
 
             $data[$k] = $doctrineWriter->writeItem($item);
 
             if (count($errors)) {
                 $data[$k]->setErrors($errors);
+            }
+            if (count($tags)) {
+                $data[$k]->setTags($tags);
+            }
+            if (count($projects)) {
+                $data[$k]->setProjects($projects);
             }
 
         }
@@ -454,11 +462,19 @@ class SampleImportController extends CarbonApiController
             }
 
             $errors = isset($data[$k]['errors']) ? $data[$k]['errors'] : [];
+            $tags = isset($data[$k]['tags']) ? $data[$k]['tags'] : [];
+            $projects = isset($data[$k]['projects']) ? $data[$k]['projects'] : [];
 
             $data[$k] = $doctrineWriter->writeItem($item);
 
             if (count($errors)) {
                 $data[$k]->setErrors($errors);
+            }
+            if (count($tags)) {
+                $data[$k]->setTags($tags);
+            }
+            if (count($projects)) {
+                $data[$k]->setProjects($projects);
             }
 
         }
