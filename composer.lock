@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0705492a84f7893df2d8d1da5db436cd",
+    "content-hash": "794442670e46c53a83ac8f700122b0fd",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1083,7 +1083,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2015-06-10 08:27:05"
+            "time": "2015-06-10T08:27:05+00:00"
         },
         {
             "name": "gedmo/doctrine-extensions",
@@ -1946,6 +1946,7 @@
                 "xls",
                 "xlsx"
             ],
+            "abandoned": "phpoffice/phpspreadsheet",
             "time": "2015-05-01T07:00:55+00:00"
         },
         {
@@ -2341,6 +2342,7 @@
                 "compression",
                 "minification"
             ],
+            "abandoned": "symfony/webpack-encore-pack",
             "time": "2016-11-22T11:42:57+00:00"
         },
         {
@@ -2586,35 +2588,17 @@
         },
         {
             "name": "techversed/cryoblock-common-api",
-            "version": "0.0.6",
+            "version": "0.1.0",
             "source": {
                 "type": "git",
-                "url": "git@github.com:techversed/cryoblock-common-api.git",
-                "reference": "051067031e6952dfa38a7235934ad624693d51b0"
+                "url": "https://github.com/techversed/cryoblock-common-api.git",
+                "reference": "4d4449a5a921d759a7eda7ba94b69f7bd74f2abf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/techversed/cryoblock-common-api/zipball/051067031e6952dfa38a7235934ad624693d51b0",
-                "reference": "051067031e6952dfa38a7235934ad624693d51b0",
+                "url": "https://api.github.com/repos/techversed/cryoblock-common-api/zipball/4d4449a5a921d759a7eda7ba94b69f7bd74f2abf",
+                "reference": "4d4449a5a921d759a7eda7ba94b69f7bd74f2abf",
                 "shasum": ""
-            },
-            "require": {
-                "doctrine/dbal": "<2.5",
-                "doctrine/doctrine-bundle": "~1.4",
-                "doctrine/orm": "~2.2,>=2.2.3,<2.5",
-                "friendsofsymfony/user-bundle": "~2.0@dev",
-                "gedmo/doctrine-extensions": "2.4.2",
-                "incenteev/composer-parameter-handler": "~2.0",
-                "jms/serializer-bundle": ">=0.13.0",
-                "oneup/uploader-bundle": "~1.3",
-                "php": ">=5.3.3",
-                "sensio/distribution-bundle": "~3.0,>=3.0.12",
-                "sensio/framework-extra-bundle": "~3.0,>=3.0.2",
-                "symfony/assetic-bundle": "~2.3",
-                "symfony/monolog-bundle": "~2.4",
-                "symfony/swiftmailer-bundle": "~2.3",
-                "symfony/symfony": "~2.7@beta",
-                "uecode/api-key-bundle": "2.1.0"
             },
             "type": "symfony-bundle",
             "autoload": {
@@ -2627,11 +2611,7 @@
             ],
             "description": "Cyoblock common api symfony 2 bundle",
             "homepage": "https://github.com/techversed/cryoblock-common-api",
-            "support": {
-                "source": "https://github.com/techversed/cryoblock-common-api/tree/0.0.6",
-                "issues": "https://github.com/techversed/cryoblock-common-api/issues"
-            },
-            "time": "2017-06-29T18:50:50+00:00"
+            "time": "2018-05-17T17:06:53+00:00"
         },
         {
             "name": "twig/twig",
