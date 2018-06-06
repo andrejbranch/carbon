@@ -145,3 +145,13 @@ services:
         arguments: ["@doctrine.orm.default_entity_manager"]
         tags:
             - { name: form.type, alias: tag }
+
+    app.form.type.spr_binding_partner:
+        class: AppBundle\Form\Type\Production\SprBindingPartnerFormType
+        arguments: ["@doctrine.orm.default_entity_manager"]
+        tags:
+            - { name: form.type, alias: spr_binding_partner }
+
+    app.spr_request_binding_partner.importer:
+        class: AppBundle\Service\Production\SprRequestBindingPartnerImporter
+        arguments: ["@validator"]

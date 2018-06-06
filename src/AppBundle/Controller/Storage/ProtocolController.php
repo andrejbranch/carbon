@@ -21,6 +21,24 @@ class ProtocolController extends CarbonApiController
     const FORM_TYPE = "protocol";
 
     /**
+     * Security config
+     */
+    protected $security = array(
+        'GET' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'POST' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'PUT' => array(
+            'roles' => array('ROLE_USER'),
+        ),
+        'DELETE' => array(
+            'roles' => array('ROLE_USER'),
+        )
+    );
+
+    /**
      * @Route("/protocol", name="protocol_get")
      * @Method("GET")
      *
@@ -51,5 +69,38 @@ class ProtocolController extends CarbonApiController
     public function handlePut()
     {
         return parent::handlePut();
+    }
+
+    /**
+     * @Route("/protocol", name="protocol_patch")
+     * @Method("PATCH")
+     *
+     * @return Response
+     */
+    public function handlePatch()
+    {
+        return parent::handlePatch();
+    }
+
+    /**
+     * @Route("/protocol", name="protocol_delete")
+     * @Method("DELETE")
+     *
+     * @return Response
+     */
+    public function handleDelete()
+    {
+        return parent::handleDelete();
+    }
+
+    /**
+     * @Route("/protocol", name="protocol_purge")
+     * @Method("PURGE")
+     *
+     * @return Response
+     */
+    public function handlePurge()
+    {
+        return parent::handlePurge();
     }
 }

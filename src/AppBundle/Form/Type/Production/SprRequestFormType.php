@@ -36,10 +36,9 @@ class SprRequestFormType extends CryoblockAbstractType
                 'child_accessor' => 'project'
             ))
 
-            ->add('samples', 'cryoblock_mtm', array(
+            ->add('bindingPartners', 'spr_binding_partner', array(
                 'parent_object' => $builder->getForm()->getData(),
-                'accessor' => 'inputSamples',
-                'child_accessor' => 'sample'
+                'accessor' => 'requestBindingPartners',
             ))
         ;
 

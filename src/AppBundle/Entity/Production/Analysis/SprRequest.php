@@ -48,9 +48,10 @@ class SprRequest extends BaseRequest
     protected $notes;
 
     /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Analysis\SprRequestInputSample", mappedBy="request")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Analysis\SprRequestBindingPartner", mappedBy="request")
+     * @JMS\Groups({"default"})
      */
-    protected $inputSamples;
+    protected $requestBindingPartners;
 
     /**
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Production\Analysis\SprRequestProject", mappedBy="request")
@@ -62,6 +63,8 @@ class SprRequest extends BaseRequest
     public $projects;
 
     public $samples;
+
+    public $bindingPartners;
 
     public function getAliasPrefix()
     {
@@ -278,6 +281,30 @@ class SprRequest extends BaseRequest
     public function setRequestProjects($requestProjects)
     {
         $this->requestProjects = $requestProjects;
+
+        return $this;
+    }
+
+    /**
+     * Gets the value of bindingPartners.
+     *
+     * @return mixed
+     */
+    public function getBindingPartners()
+    {
+        return $this->bindingPartners;
+    }
+
+    /**
+     * Sets the value of bindingPartners.
+     *
+     * @param mixed $bindingPartners the binding partners
+     *
+     * @return self
+     */
+    public function setBindingPartners($bindingPartners)
+    {
+        $this->bindingPartners = $bindingPartners;
 
         return $this;
     }
