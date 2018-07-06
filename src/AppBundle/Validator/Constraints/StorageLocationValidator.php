@@ -16,6 +16,8 @@ class StorageLocationValidator extends ConstraintValidator
      */
     protected $em;
 
+    protected $takenLocations = array();
+
     public function __construct(EntityManager $em, TokenStorage $tokenStorage)
     {
         $this->em = $em;
@@ -25,6 +27,10 @@ class StorageLocationValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         $sample = $value;
+
+        if (!$sample->getSampleType() || !$sample->getStorageContainer()) {
+            return;
+        }
 
         if ($sample->getDivision()) {
             $divisionId = $sample->getDivision()->getId();
@@ -38,10 +44,33 @@ class StorageLocationValidator extends ConstraintValidator
             $divisionColumn = $sample->getDivisionColumn();
         }
 
+        // make sure if sample status is not available that division is not specified
+        if ($sample->getStatus() != 'Available' && $sample->getDivision()) {
+            $this->addError($sample, 'Samples that are not available can not be stored in a division.');
+        }
+
+        // make sure 2 locations dont conflict
+        if (isset($divisionId) && isset($divisionRow) && isset($divisionColumn)) {
+
+            if (!array_key_exists($divisionId, $this->takenLocations)) {
+                $this->takenLocations[$divisionId][$divisionRow] = array($divisionColumn => true);
+            } elseif (
+                array_key_exists($divisionRow, $this->takenLocations[$divisionId]) &&
+                !array_key_exists(intval($divisionColumn), $this->takenLocations[$divisionId][$divisionRow])
+            ) {
+                $this->takenLocations[$divisionId][$divisionRow][$divisionColumn] = true;
+            } elseif (
+                array_key_exists($divisionRow, $this->takenLocations[$divisionId]) &&
+                array_key_exists(intval($divisionColumn), $this->takenLocations[$divisionId][$divisionRow])
+            ) {
+                $this->addError($sample, 'Two samples can not occupy the same row and column.');
+            }
+        }
+
         $errors = array();
 
         # Check if a division was found
-        if (!isset($divisionId) ) {
+        if ($sample->getStatus() == 'Available' && !isset($divisionId) ) {
 
             if (!isset($errors['division'])) {
                 $this->addError($sample, self::ERROR_INSUFFICIENT_SPACE);
@@ -55,7 +84,51 @@ class StorageLocationValidator extends ConstraintValidator
             $divisionRepo = $this->em->getRepository('AppBundle\\Entity\\Storage\\Division');
             $canEdit = $divisionRepo->canUserEdit($sample->getDivision(), $user);
             if (!$canEdit) {
-                $this->addError($sample, 'You do not have permission to edit this division.');
+                $this->addError($sample, 'Sorry, you do not have permission to edit this division.');
+            }
+        }
+
+        # Check if division allows for samples type
+        if (isset($divisionId)) {
+
+            if (!$sample->getDivision()->getAllowAllSampleTypes()) {
+
+                $allowsSampleType = false;
+                $divisionSampleTypes = $sample->getDivision()->getDivisionSampleTypes();
+                foreach ($divisionSampleTypes as $divisionSampleType) {
+                    if ($divisionSampleType->getSampleType()->getId() == $sample->getSampleType()->getId()) {
+                        $allowsSampleType = true;
+                    }
+                }
+
+                if (!$allowsSampleType) {
+
+                    $this->addError($sample, sprintf('Sorry, Division %s does not allow sample type %s.', $sample->getDivision()->getId(), $sample->getSampleType()->getName()));
+
+                }
+
+            }
+        }
+
+        # Check if division allows for samples storage container type
+        if (isset($divisionId)) {
+
+            if (!$sample->getDivision()->getAllowAllStorageContainers()) {
+
+                $allowsStorageContainer = false;
+                $divisionStorageContainers = $sample->getDivision()->getDivisionStorageContainers();
+                foreach ($divisionStorageContainers as $divisionStorageContainer) {
+                    if ($divisionStorageContainer->getStorageContainer()->getId() == $sample->getStorageContainer()->getId()) {
+                        $allowsStorageContainer = true;
+                    }
+                }
+
+                if (!$allowsStorageContainer) {
+
+                    $this->addError($sample, sprintf('Sorry, Division %s does not allow storage container type %s.', $sample->getDivision()->getId(), $sample->getStorageContainer()->getName()));
+
+                }
+
             }
         }
 
@@ -71,7 +144,7 @@ class StorageLocationValidator extends ConstraintValidator
             ));
 
             if ($exists && $exists->getId() != $sample->getId()) {
-                $this->addError($sample, sprintf('Division %s - Row %s - Column %s is filled.', $divisionId, $divisionRow, $divisionColumn));
+                $this->addError($sample, sprintf('Sorry, division %s - Row %s - Column %s is filled.', $divisionId, $divisionRow, $divisionColumn));
             }
         }
 
@@ -79,6 +152,12 @@ class StorageLocationValidator extends ConstraintValidator
 
     private function addError($sample, $error)
     {
+        if ($this->context) {
+            $this->context->buildViolation($error)
+                ->addViolation()
+            ;
+        }
+
         $errors = $sample->getErrors();
 
         if (!isset($errors['storageLocation'])) {

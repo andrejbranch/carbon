@@ -92,7 +92,7 @@ class SampleLocationDecider
 
                     while ($completed < $totalSamples) {
 
-                        if (!$this->hasValidLocation($samples[$sampleIndex])) {
+                        if ($samples[$sampleIndex]->getStatus() == 'Available' && !$this->hasValidLocation($samples[$sampleIndex])) {
 
                             $samples[$sampleIndex]->setStorageRecommended(TRUE);
                             $samples[$sampleIndex]->setDivision($matchedDivision);
@@ -122,7 +122,7 @@ class SampleLocationDecider
     {
         $count = 0;
         foreach ($samples as $sample) {
-            if (!$this->hasValidLocation($sample)) {
+            if ($sample->getStatus() == 'Available' && !$this->hasValidLocation($sample)) {
                 $count++;
             }
         }
