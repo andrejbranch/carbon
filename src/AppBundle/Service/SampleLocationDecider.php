@@ -132,9 +132,22 @@ class SampleLocationDecider
 
     private function hasValidLocation($sample)
     {
-        return $sample->getDivision() &&
+        if (
+            $sample->getDivision() &&
+            $sample->getDivision()->getHasDimension() &&
             $sample->getDivisionRow() &&
             $sample->getDivisionColumn()
-        ;
+        ) {
+            return true;
+        }
+
+        if (
+            $sample->getDivision() &&
+            !$sample->getDivision()->getHasDimension()
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }

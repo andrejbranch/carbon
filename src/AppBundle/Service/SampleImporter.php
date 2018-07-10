@@ -1025,7 +1025,8 @@ class SampleImporter
                 'Available',
                 'Depleted',
                 'Destroyed',
-                'Shipped'
+                'Shipped',
+                'Incoming',
             ),
             'message' => 'Invalid status {{ value }}'
         )));
